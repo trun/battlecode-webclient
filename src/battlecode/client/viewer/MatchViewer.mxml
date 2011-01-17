@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:bc="battlecode.client.viewer.*"
+	paddingTop="0" paddingBottom="0" paddingLeft="0" paddingRight="0"
+	frameRate="60" backgroundGradientColors="[#666666,#333333]" >
+
+	<bc:MatchCanvas />
+	
+</mx:Application>
