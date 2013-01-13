@@ -26,16 +26,11 @@
 	[Event(name="progress", type="flash.events.ProgressEvent")]
 	[Event(name="complete", type="flash.events.Event")]
 	public class MatchLoader extends EventDispatcher {
-		
-		private const BASE_PATH:String = "/2010/scrimmage/download/";
-		private const EXTENSION:String = ".xms";
-		
 		private var matchPath:String;
 		private var stream:URLStream;
 		private var matches:Vector.<Match>;
 		private var numMatches:uint = 0;
-		private var cookie:String;
-		
+
 		private var gamesXML:XMLList;
 		private var currentGame:uint = 0;
 		private var gameTimer:Timer;
@@ -52,10 +47,6 @@
 		public function load(file:String):void {
 			matchPath = file;
 			this.stream.load(new URLRequest(file));
-		}
-		
-		public function loadMatch(matchNum:uint):void {
-			load(BASE_PATH + matchNum + EXTENSION);
 		}
 		
 		public function getMatches():Vector.<Match> {
@@ -93,32 +84,68 @@
 				Alert.show("Memory allocation error: " + e.message);
 				return;
 			} catch (e:TypeError) {
-				trace("TypeError: "+e.message);
-				navigateToURL(new URLRequest("/2010/contestants/index"), "_self");
-				return;
+				trace("TypeError: " + e.message);
+				Alert.show("Unauthorized: " + e.message);
+                return;
 			}
 			
 			// clear match bytes
 			matchBytes.clear();
 			
 			// generate new matches
-			gamesXML = xml.child("game");
-			matches = new Vector.<Match>();
-			numMatches = gamesXML.length();
+			numMatches = parseInt(xml.child("ser.MatchHeader").attribute("matchCount"));
+            matches = new Vector.<Match>();
+
+            gamesXML = xml.children();
+            var builder:MatchBuilder;
+            for each (var node:XML in gamesXML) {
+                var nodeName:String = node.name().toString();
+                switch (nodeName) {
+                    case "ser.MatchHeader":
+                        builder = new MatchBuilder();
+                        builder.setHeader(node);
+                        break;
+                    case "ser.MatchFooter":
+                        builder.setFooter(node);
+                        matches.push(builder.build());
+                        builder = null;
+                        break;
+                    case "ser.ExtensibleMetadata":
+                        builder.setExtensibleMetadata(node);
+                        break;
+                    case "ser.GameStats":
+                        builder.setGameStats(node);
+                        break;
+                    case "ser.RoundDelta":
+                        builder.addRoundDelta(node);
+                        break;
+                    case "ser.RoundStats":
+                        builder.addRoundStats(node);
+                        break;
+                    default:
+                        trace("Unknown node: " + node.name());
+                        break;
+                }
+            }
+
+			//gameTimer = new Timer(200);
+			//gameTimer.addEventListener(TimerEvent.TIMER, onTimerTick);
+			//gameTimer.start();
 			
-			gameTimer = new Timer(200);
-			gameTimer.addEventListener(TimerEvent.TIMER, onTimerTick);
-			gameTimer.start();
-			
-			var progressEvent:MatchLoadProgressEvent = new MatchLoadProgressEvent(MatchLoadProgressEvent.MATCH_PARSE_PROGRESS);
-			progressEvent.itemsComplete = currentGame;
-			progressEvent.itemsTotal = numMatches;
-			dispatchEvent(progressEvent);
-			
+			//var progressEvent:MatchLoadProgressEvent = new MatchLoadProgressEvent(MatchLoadProgressEvent.MATCH_PARSE_PROGRESS);
+			//progressEvent.itemsComplete = currentGame;
+			//progressEvent.itemsTotal = numMatches;
+			//dispatchEvent(progressEvent);
+
 			trace("--- XML PARSE ---");
 			trace("MEM USAGE: " + Math.round(System.totalMemory / 1000 / 1000) + "MB");
-			
-			dispatchEvent(e);
+
+            dispatchEvent(e);
+
+            var completeEvent:MatchLoadProgressEvent = new MatchLoadProgressEvent(MatchLoadProgressEvent.MATCH_PARSE_COMPLETE);
+            completeEvent.itemsTotal = numMatches;
+            completeEvent.itemsComplete = numMatches;
+            dispatchEvent(completeEvent);
 		}
 		
 		private function onIOError(e:IOErrorEvent):void {
@@ -130,10 +157,11 @@
 			trace("match load failed: " + e.toString());
 			Alert.show("Could not load the specified match file: Security error");
 		}
-		
+
+        /*
 		private function onTimerTick(e:TimerEvent):void {
 			if (!nextMatchReady) return;
-			
+
 			var match:Match = new Match();
 			match.addEventListener(MatchLoadProgressEvent.GAME_PARSE_PROGRESS, onGameParseProgress);
 			match.addEventListener(MatchLoadProgressEvent.GAME_PARSE_COMPLETE, onGameParseComplete);
@@ -165,6 +193,7 @@
 			
 			dispatchEvent(e);
 		}
+		*/
 		
 	}
 }

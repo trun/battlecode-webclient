@@ -109,7 +109,7 @@
 		private function drawMap():void {
 			var i:uint, j:uint, tile:TerrainTile;
 			var map:GameMap = controller.match.getMap();
-			var terrain:Array = map.getTerrainTileMatrix();
+			var terrain:Array = [];
 			var colorTransform:ColorTransform, scalar:uint;
 			
 			origin = map.getOrigin();
@@ -145,7 +145,7 @@
 		private function drawFlux():void {
 			var i:uint, j:uint, tile:TerrainTile;
 			var map:GameMap = controller.match.getMap();
-			var terrain:Array = map.getTerrainTileMatrix();
+			var terrain:Array = [];
 			var flux:Array = controller.currentState.getFluxMatrix();
 			var colorTransform:ColorTransform, scalar:uint;
 			

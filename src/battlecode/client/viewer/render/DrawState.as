@@ -53,9 +53,6 @@
 			
 			this.map = map;
 			this.origin = map.getOrigin();
-			var offsets:Array = map.getFluxMineOffsets360();
-			this.fluxMineOffsetsX = offsets[0];
-			this.fluxMineOffsetsY = offsets[1];
 		}
 		
 		///////////////////////////////////////////////////////
@@ -180,8 +177,8 @@
 					i--;
 				}
 			}
-			
-			var heightMatrix:Array = map.getTerrainTileMatrix();
+
+			var heightMatrix:Array = [];
 			for (i = 0; i < flux.length; i++) {
 				for (j = 0; j < flux[i].length; j++) {
 					if (roundNum % heightMatrix[i][j].getHeight() == 0) {

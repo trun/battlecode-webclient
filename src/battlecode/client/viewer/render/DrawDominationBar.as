@@ -81,8 +81,6 @@
 			this.toolTip = controller.match.getTeamA() + " vs. " + controller.match.getTeamB() + "\n";
 			this.toolTip += "Game " + (controller.currentMatch+1) + " of " + controller.totalMatches + "\n";
 			this.toolTip += "Map: " + controller.match.getMapName() + "\n";
-			this.toolTip += "Min Points: " + controller.match.getMinPoints() + "\n";
-			this.toolTip += "Max Rounds: " + controller.match.getMaxRounds();
 		}
 		
 		private function drawDomBar():void {
@@ -94,49 +92,6 @@
 			var barMaxWidth:Number = (this.domBarCanvas.width / 2) * .8;
 			
 			this.domBarCanvas.graphics.clear();
-			
-			var minDomPts:int = controller.match.getMinPoints();
-			minDomPts = Math.min(minDomPts, minDomPts * (1.0 - GameConstants.POINTS_DECREASE_PER_ROUND_FACTOR *
-				(controller.currentRound - controller.match.getStraightMaxRounds() + 1)));
-				
-			var sideRatio:Number = minDomPts / controller.match.getMinPoints();
-			
-			leftDomLabel.text = "(+" + minDomPts.toString() + ")";
-			leftDomLabel.y = centerHeight - (leftDomLabel.height / 2) - 10;
-			leftDomLabel.x = centerWidth - barMaxWidth * sideRatio - leftDomLabel.width / 2;
-			
-			rightDomLabel.text = "(+" + minDomPts.toString() + ")";
-			rightDomLabel.y = centerHeight - (rightDomLabel.height / 2) - 10;
-			rightDomLabel.x = centerWidth + barMaxWidth * sideRatio - rightDomLabel.width / 2;
-			
-			// side spikes
-			this.domBarCanvas.graphics.lineStyle(2, 0xFF6666);
-			this.domBarCanvas.graphics.moveTo(centerWidth - barMaxWidth * sideRatio + 1, centerHeight + 10);
-			this.domBarCanvas.graphics.lineTo(centerWidth - barMaxWidth * sideRatio + 1, centerHeight + 2);
-			
-			this.domBarCanvas.graphics.lineStyle(2, 0x9999FF);
-			this.domBarCanvas.graphics.moveTo(centerWidth + barMaxWidth * sideRatio - 1, centerHeight + 10);
-			this.domBarCanvas.graphics.lineTo(centerWidth + barMaxWidth * sideRatio - 1, centerHeight + 2);
-			
-			// domination
-			var topFill:uint = (aPoints > bPoints) ? 0xFFCCCC : 0xCCCCFF;
-			var bottomFill:uint = (aPoints > bPoints) ? 0xFF0000 : 0x0000FF;
-			var domBarWidth:Number = (aPoints - bPoints) / (controller.match.getMinPoints()) * barMaxWidth;
-			if (domBarWidth < -barMaxWidth) domBarWidth = -barMaxWidth;
-			if (domBarWidth > barMaxWidth) domBarWidth = barMaxWidth;
-			
-			var fillMatrix:Matrix = new Matrix();
-			fillMatrix.createGradientBox(barMaxWidth, 12, Math.PI/2, centerWidth, centerHeight - 0);
-			
-			this.domBarCanvas.graphics.lineStyle(1, 0xFFFFFF);
-			this.domBarCanvas.graphics.beginGradientFill(GradientType.LINEAR, [topFill, bottomFill], [1, 1], [0, 255], fillMatrix, "pad");
-			this.domBarCanvas.graphics.drawRect(centerWidth, centerHeight - 0, -domBarWidth, 12);
-			this.domBarCanvas.graphics.endFill();
-			
-			// center spike
-			this.domBarCanvas.graphics.lineStyle(4, 0xCCCCCC);
-			this.domBarCanvas.graphics.moveTo(centerWidth, centerHeight + 16);
-			this.domBarCanvas.graphics.lineTo(centerWidth, centerHeight - 4);
 		}
 		
 	}

@@ -43,26 +43,21 @@
 			
 			// load the match file
 			matchLoader.addEventListener(MatchLoadProgressEvent.MATCH_PARSE_COMPLETE, onMatchParseComplete);
-			//matchLoader.load("matches/test.xms");
-			
+
 			var noMatch:Boolean = true;
 			if (this.parentApplication.parameters) {
 				var params:Object = this.parentApplication.parameters;
 				
 				// load an absolute match file
 				if (params.match_path) {
-					matchLoader.load("matches/" + params.match_path);
-					noMatch = false;
-				}
-				// load a scrimmage match file
-				else if (params.match_num) {
-					matchLoader.loadMatch(parseInt(params.match_num));
+					matchLoader.load(params.match);
 					noMatch = false;
 				}
 			}
-			
+
 			if (noMatch) {
-				Alert.show("No match file specified");
+				//Alert.show("No match file specified");
+                matchLoader.load("../../../matches/match.rms");
 			}
 		}
 		
