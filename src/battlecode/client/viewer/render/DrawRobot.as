@@ -179,9 +179,8 @@
 			this.draw(true);
 		}
 		
-		public function attack(targetLocation:MapLocation, targetLevel:String):void {
+		public function attack(targetLocation:MapLocation):void {
 			this.targetLocation = targetLocation;
-			this.targetLevel = targetLevel;
 			this.addAction(new DrawAction(ActionType.ATTACKING, RobotType.attackDelay(type)));
 		}
 		
@@ -225,12 +224,11 @@
 			}
 		}
 		
-		public function moveToLocation(location:MapLocation, forwards:Boolean):void {
+		public function moveToLocation(location:MapLocation):void {
 			this.movementDelay = Direction.isDiagonal(direction) ?
 									RobotType.movementDelayDiagonal(type) :
 									RobotType.movementDelay(type);
 			this.location = location;
-			this.forwards = forwards;
 			this.addAction(new DrawAction(ActionType.MOVING, movementDelay));
 		}
 		

@@ -131,7 +131,7 @@
 		///////////////////////////////////////////////////////
 		
 		override public function visitAttackSignal(s:AttackSignal):* {
-			getRobot(s.getRobotID()).attack(s.getTargetLoc(), s.getTargetLevel());
+			getRobot(s.getRobotID()).attack(s.getTargetLoc());
 		}
 		
 		override public function visitBroadcastSignal(s:BroadcastSignal):* {
@@ -153,28 +153,8 @@
 			}
 		}
 		
-		override public function visitEnergonTransferSignal(s:EnergonTransferSignal):* {
-			getRobot(s.getRobotID()).transferEnergon(s.getTargetLoc(), s.getTargetLevel(), s.getAmount());
-		}
-		
-		override public function visitEvolutionSignal(s:EvolutionSignal):* {
-			getRobot(s.getRobotID()).evolve(s.getType());
-		}
-		
 		override public function visitFluxChangeSignal(s:FluxChangeSignal):* {
-			var robotIDs:Array = s.getRobotIDs();
-			var flux:Array = s.getFlux();
-			
-			for (var i:uint; i < robotIDs.length; i++) {
-				var robot:DrawRobot = getRobot(robotIDs[i]);
-				if (robot && RobotType.isBuilding(robot.getType())) {
-					robot.setFlux(flux[i]);
-				}
-			}
-		}
-		
-		override public function visitFluxTransferSignal(s:FluxTransferSignal):* {
-			getRobot(s.getRobotID()).transferFlux(s.getTargetLoc(), s.getTargetLevel(), s.getAmount());
+
 		}
 		
 		override public function visitIndicatorStringSignal(s:IndicatorStringSignal):* {
@@ -182,21 +162,12 @@
 		}
 		
 		override public function visitMovementSignal(s:MovementSignal):* {
-			getRobot(s.getRobotID()).moveToLocation(s.getTargetLoc(), s.isMovingForward());
-		}
-		
-		override public function visitSetAuraSignal(s:SetAuraSignal):* {
-			getRobot(s.getRobotID()).setAura(s.getAura());
-		}
-		
-		override public function visitSetDirectionSignal(s:SetDirectionSignal):* {
-            getRobot(s.getRobotID()).setDirection(s.getDirection());
+			getRobot(s.getRobotID()).moveToLocation(s.getTargetLoc());
 		}
 		
 		override public function visitSpawnSignal(s:SpawnSignal):* {
 			var robot:DrawRobot = new DrawRobot(s.getRobotID(), s.getRobotType(), s.getTeam());
 			robot.setLocation(s.getLocation());
-			robot.setDirection(s.getDirection());
             groundRobots[s.getRobotID()] = robot;
 		}
 		
