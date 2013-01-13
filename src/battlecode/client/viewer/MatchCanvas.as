@@ -5,7 +5,11 @@
 	import battlecode.serial.MatchLoader;
 	import flash.events.Event;
 	import flash.events.ProgressEvent;
-	import mx.containers.VBox;
+    import flash.net.FileFilter;
+    import flash.net.FileReference;
+    import flash.system.Capabilities;
+
+    import mx.containers.VBox;
 	import mx.controls.Alert;
 	import mx.events.FlexEvent;
 	
@@ -18,6 +22,8 @@
 		
 		private var matchLoader:MatchLoader;
 		private var controller:MatchController;
+
+        private var file:FileReference;
 		
 		public function MatchCanvas() {
 			this.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationComplete);
@@ -54,6 +60,18 @@
 					noMatch = false;
 				}
 			}
+
+            if (noMatch && Capabilities.playerType == "StandAlone") {
+                file = new FileReference();
+                file.addEventListener(Event.SELECT, function(event:Event):void {
+                    file.load();
+                });
+                file.addEventListener(Event.COMPLETE, function(event:Event):void {
+                    matchLoader.loadData(file.data);
+                });
+                file.browse([new FileFilter("Battlecode Matches (*.rms)", "*.rms")]);
+                noMatch = false;
+            }
 
 			if (noMatch) {
 				//Alert.show("No match file specified");

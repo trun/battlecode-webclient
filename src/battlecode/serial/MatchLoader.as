@@ -48,52 +48,34 @@
 			matchPath = file;
 			this.stream.load(new URLRequest(file));
 		}
-		
-		public function getMatches():Vector.<Match> {
-			return matches;
-		}
-		
-		public function getNumMatches():uint {
-			return numMatches;
-		}
-		
-		private function onDownloadProgress(e:ProgressEvent):void {
-			dispatchEvent(e);
-		}
-		
-		private function onComplete(e:Event):void {
-			// read raw bytes into a new ByteArray
-			var matchBytes:ByteArray = new ByteArray();
-			stream.readBytes(matchBytes);
-			stream.close();
-			stream = null;
-			
-			// decompress the bytes (they are GZIP'd)
-			try {
-				matchBytes = GZIP.decompress(matchBytes);
-			} catch (e:Error) { }
-			
-			trace("--- DECOMPRESSION ---");
-			trace("MEM USAGE: " + Math.round(System.totalMemory / 1024 / 1024) + "MB");
-			
-			try {
-				// parse the xml from the decompressed byte stream
-				var xmlStr:String = matchBytes.readUTFBytes(matchBytes.bytesAvailable);
-				var xml:XML = new XML(xmlStr);
-			} catch (e:MemoryError) {
-				Alert.show("Memory allocation error: " + e.message);
-				return;
-			} catch (e:TypeError) {
-				trace("TypeError: " + e.message);
-				Alert.show("Unauthorized: " + e.message);
+
+        public function loadData(matchBytes:ByteArray):void {
+            // decompress the bytes (they are GZIP'd)
+            try {
+                matchBytes = GZIP.decompress(matchBytes);
+            } catch (e:Error) { }
+
+            trace("--- DECOMPRESSION ---");
+            trace("MEM USAGE: " + Math.round(System.totalMemory / 1024 / 1024) + "MB");
+
+            try {
+                // parse the xml from the decompressed byte stream
+                var xmlStr:String = matchBytes.readUTFBytes(matchBytes.bytesAvailable);
+                var xml:XML = new XML(xmlStr);
+            } catch (e:MemoryError) {
+                Alert.show("Memory allocation error: " + e.message);
                 return;
-			}
-			
-			// clear match bytes
-			matchBytes.clear();
-			
-			// generate new matches
-			numMatches = parseInt(xml.child("ser.MatchHeader").attribute("matchCount"));
+            } catch (e:TypeError) {
+                trace("TypeError: " + e.message);
+                Alert.show("Unauthorized: " + e.message);
+                return;
+            }
+
+            // clear match bytes
+            matchBytes.clear();
+
+            // generate new matches
+            numMatches = parseInt(xml.child("ser.MatchHeader").attribute("matchCount"));
             matches = new Vector.<Match>();
 
             gamesXML = xml.children();
@@ -128,24 +110,46 @@
                 }
             }
 
-			//gameTimer = new Timer(200);
-			//gameTimer.addEventListener(TimerEvent.TIMER, onTimerTick);
-			//gameTimer.start();
-			
-			//var progressEvent:MatchLoadProgressEvent = new MatchLoadProgressEvent(MatchLoadProgressEvent.MATCH_PARSE_PROGRESS);
-			//progressEvent.itemsComplete = currentGame;
-			//progressEvent.itemsTotal = numMatches;
-			//dispatchEvent(progressEvent);
+            //gameTimer = new Timer(200);
+            //gameTimer.addEventListener(TimerEvent.TIMER, onTimerTick);
+            //gameTimer.start();
 
-			trace("--- XML PARSE ---");
-			trace("MEM USAGE: " + Math.round(System.totalMemory / 1000 / 1000) + "MB");
+            //var progressEvent:MatchLoadProgressEvent = new MatchLoadProgressEvent(MatchLoadProgressEvent.MATCH_PARSE_PROGRESS);
+            //progressEvent.itemsComplete = currentGame;
+            //progressEvent.itemsTotal = numMatches;
+            //dispatchEvent(progressEvent);
 
-            dispatchEvent(e);
+            trace("--- XML PARSE ---");
+            trace("MEM USAGE: " + Math.round(System.totalMemory / 1000 / 1000) + "MB");
 
             var completeEvent:MatchLoadProgressEvent = new MatchLoadProgressEvent(MatchLoadProgressEvent.MATCH_PARSE_COMPLETE);
             completeEvent.itemsTotal = numMatches;
             completeEvent.itemsComplete = numMatches;
             dispatchEvent(completeEvent);
+        }
+		
+		public function getMatches():Vector.<Match> {
+			return matches;
+		}
+		
+		public function getNumMatches():uint {
+			return numMatches;
+		}
+		
+		private function onDownloadProgress(e:ProgressEvent):void {
+			dispatchEvent(e);
+		}
+
+		private function onComplete(e:Event):void {
+			// read raw bytes into a new ByteArray
+			var matchBytes:ByteArray = new ByteArray();
+			stream.readBytes(matchBytes);
+			stream.close();
+			stream = null;
+
+            loadData(matchBytes);
+
+            dispatchEvent(e);
 		}
 		
 		private function onIOError(e:IOErrorEvent):void {
