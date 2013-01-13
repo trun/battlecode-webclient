@@ -75,7 +75,8 @@
 				drawWinMarkers();
 			}
 			lastRound = e.currentRound;
-			
+
+            /*
 			var archons:Array = controller.currentState.getArchons(team);
 			var box:uint = 0, i:uint;
 			for (i = 0; i < archons.length; i++) {
@@ -87,6 +88,7 @@
 			for (i = box; i < archonBoxes.length; i++) {
 				archonBoxes[i].removeArchon();
 			}
+			*/
 			
 			if (controller.currentRound == controller.match.getRounds())
 				drawWinMarkers();

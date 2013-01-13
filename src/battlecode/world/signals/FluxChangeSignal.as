@@ -1,23 +1,16 @@
 ﻿package battlecode.world.signals {
-	import battlecode.world.signals.Signal;
-	import battlecode.world.signals.SignalHandler;
-	
-	public class FluxChangeSignal implements Signal{
-		
-		private var robotIDs:Array; // uint[]
-		private var flux:Array; // Number[]
-		
-		public function FluxChangeSignal(robotIDs:Array, flux:Array) {
-			this.robotIDs = robotIDs;
-			this.flux = flux;
+    import battlecode.common.Team;
+
+	public class FluxChangeSignal implements Signal {
+		private var fluxA:Number, fluxB:Number;
+
+		public function FluxChangeSignal(fluxA:Number, fluxB:Number) {
+            this.fluxA = fluxA;
+            this.fluxB = fluxB;
 		}
 		
-		public function getRobotIDs():Array {
-			return robotIDs;
-		}
-		
-		public function getFlux():Array {
-			return flux;
+		public function getFlux(team:String):Number {
+			return (team == Team.A) ? fluxA : fluxB;
 		}
 		
 		public function accept(handler:SignalHandler):*{

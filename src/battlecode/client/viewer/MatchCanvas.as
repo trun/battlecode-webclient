@@ -50,18 +50,15 @@
 			// load the match file
 			matchLoader.addEventListener(MatchLoadProgressEvent.MATCH_PARSE_COMPLETE, onMatchParseComplete);
 
-			var noMatch:Boolean = true;
 			if (this.parentApplication.parameters) {
 				var params:Object = this.parentApplication.parameters;
-				
-				// load an absolute match file
-				if (params.match_path) {
+				if (params.match) {
 					matchLoader.load(params.match);
-					noMatch = false;
+					return;
 				}
 			}
 
-            if (noMatch && Capabilities.playerType == "StandAlone") {
+            if (Capabilities.playerType == "StandAlone") {
                 file = new FileReference();
                 file.addEventListener(Event.SELECT, function(event:Event):void {
                     file.load();
@@ -70,13 +67,10 @@
                     matchLoader.loadData(file.data);
                 });
                 file.browse([new FileFilter("Battlecode Matches (*.rms)", "*.rms")]);
-                noMatch = false;
+                return;
             }
 
-			if (noMatch) {
-				//Alert.show("No match file specified");
-                matchLoader.load("../../../matches/match.rms");
-			}
+            Alert.show("No match file specified");
 		}
 		
 		private function onMatchParseComplete(e:MatchLoadProgressEvent):void {

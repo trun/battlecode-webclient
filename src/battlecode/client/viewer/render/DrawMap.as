@@ -1,23 +1,16 @@
 ﻿package battlecode.client.viewer.render {
 	import battlecode.client.viewer.MatchController;
 	import battlecode.common.MapLocation;
-	import battlecode.common.Team;
 	import battlecode.common.TerrainTile;
 	import battlecode.events.MatchEvent;
 	import battlecode.world.GameMap;
-	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.filters.DropShadowFilter;
 	import flash.geom.ColorTransform;
 	import flash.geom.Rectangle;
-	import flash.text.TextFieldAutoSize;
-	import mx.binding.utils.ChangeWatcher;
 	import mx.containers.Canvas;
 	import mx.core.UIComponent;
-	import mx.core.UITextField;
-	import mx.events.FlexEvent;
-	
+
 	public class DrawMap extends Canvas {
 		
 		private var controller:MatchController;
@@ -25,11 +18,9 @@
 		
 		// various canvases for layering and quick toggling of features
 		private var mapCanvas:UIComponent;
-		private var fluxCanvas:UIComponent;
 		private var gridCanvas:UIComponent;
 		private var groundUnitCanvas:UIComponent;
-		private var convexHullCanvas:UIComponent;
-		private var airUnitCanvas:UIComponent;
+		private var encampmentCanvas:UIComponent;
 		
 		// optimizations for caching
 		private var lastRound:uint = 0;
@@ -43,22 +34,17 @@
 			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			
 			this.mapCanvas = new UIComponent();
-			this.fluxCanvas = new UIComponent();
 			this.gridCanvas = new UIComponent();
 			this.groundUnitCanvas = new UIComponent();
-			this.convexHullCanvas = new UIComponent();
-			this.airUnitCanvas = new UIComponent();
+			this.encampmentCanvas = new UIComponent();
 			
 			this.mapCanvas.cacheAsBitmap = true;
-			this.fluxCanvas.cacheAsBitmap = true;
 			this.gridCanvas.cacheAsBitmap = true;
 			
 			this.addChild(mapCanvas);
-			this.addChild(fluxCanvas);
 			this.addChild(gridCanvas);
 			this.addChild(groundUnitCanvas);
-			this.addChild(convexHullCanvas);
-			this.addChild(airUnitCanvas);
+			this.addChild(encampmentCanvas);
 		}
 		
 		///////////////////////////////////////////////////////
@@ -86,21 +72,19 @@
 		///////////////////////////////////////////////////////
 		
 		public function redrawAll():void {
-			drawFlux();
 			drawMap();
 			drawGridlines();
 			drawUnits();
-			drawConvexHulls();
-			
-			var o:DrawObject;
-			for each (o in controller.currentState.getAirRobots()) {
-				o.draw(true);
-			}
-			
+
 			for each (o in controller.currentState.getGroundRobots()) {
 				o.draw(true);
 			}
-			
+
+            var o:DrawObject;
+            for each (o in controller.currentState.getEncampments()) {
+                o.draw(true);
+            }
+
 			this.scrollRect = new Rectangle(this.mapCanvas.x, this.mapCanvas.y,
 					getMapWidth() * RenderConfiguration.getScalingFactor(),
 					getMapHeight() * RenderConfiguration.getScalingFactor());
@@ -146,22 +130,7 @@
 			var i:uint, j:uint, tile:TerrainTile;
 			var map:GameMap = controller.match.getMap();
 			var terrain:Array = [];
-			var flux:Array = controller.currentState.getFluxMatrix();
 			var colorTransform:ColorTransform, scalar:uint;
-			
-			this.fluxCanvas.graphics.clear();
-			for (i = 0; i < map.getHeight(); i++) {
-				for (j = 0; j < map.getWidth(); j++) {
-					tile = terrain[i][j] as TerrainTile;
-					if (tile.getType() == TerrainTile.LAND) {
-						scalar = (flux[i][j] / 64.0) * 0xFF;
-						colorTransform = new ColorTransform(0, 0, 0 , 1, 0xFF - scalar, 0xCC, 0xFF - scalar, 0);
-						this.fluxCanvas.graphics.beginFill(colorTransform.color, (scalar / 0xFF) * 0.5);
-						this.fluxCanvas.graphics.drawRect(j * getGridSize(), i * getGridSize(), getGridSize(), getGridSize());
-						this.fluxCanvas.graphics.endFill();
-					}
-				}
-			}
 		}
 		
 		private function drawGridlines():void {
@@ -180,13 +149,13 @@
 		private function drawUnits():void {
 			var loc:MapLocation, i:uint, j:uint, robot:DrawRobot;
 			var groundRobots:Object = controller.currentState.getGroundRobots();
-			var airRobots:Object = controller.currentState.getAirRobots();
+			var encampments:Object = controller.currentState.getEncampments();
 			
 			while (groundUnitCanvas.numChildren > 0)
 				groundUnitCanvas.removeChildAt(0);
 			
-			while (airUnitCanvas.numChildren > 0)
-				airUnitCanvas.removeChildAt(0);
+			while (encampmentCanvas.numChildren > 0)
+				encampmentCanvas.removeChildAt(0);
 			
 			for each (robot in groundRobots) {
 				loc = robot.getLocation();
@@ -199,68 +168,22 @@
 				robot.draw();
 			}
 			
-			for each (robot in airRobots) {
+			for each (robot in encampments) {
 				loc = robot.getLocation();
 				j = (loc.getX() - origin.getX());
 				i = (loc.getY() - origin.getY());
 				robot.x = j * getGridSize() + getGridSize() / 2;
 				robot.y = i * getGridSize() + getGridSize() / 2;
 				robot.addEventListener(MouseEvent.CLICK, onRobotSelect, false, 0, true);
-				airUnitCanvas.addChild(robot);
+				encampmentCanvas.addChild(robot);
 				robot.draw();
-			}
-		}
-		
-		private function drawConvexHulls():void {
-			var locs:Array, loc:MapLocation;
-			var x:uint, y:uint, i:uint;
-			
-			convexHullCanvas.graphics.clear();
-			convexHullCanvas.graphics.lineStyle(2, 0xFF0000);
-			convexHullCanvas.graphics.beginFill(0xFF0000, 0.1);
-			for each (locs in controller.currentState.getConvexHulls(Team.A)) {
-				// skip hulls with two or less
-				if (locs.length <= 2)
-					continue;
-				// move to first point
-				loc = locs[locs.length-1];
-				x = (loc.getX() - origin.getX()) * getGridSize() + getGridSize() / 2;
-				y = (loc.getY() - origin.getY()) * getGridSize() + getGridSize() / 2;
-				convexHullCanvas.graphics.moveTo(x, y);
-				// draw hull
-				for (i = 0; i < locs.length; i++) {
-					loc = locs[i];
-					x = (loc.getX() - origin.getX()) * getGridSize() + getGridSize() / 2;
-					y = (loc.getY() - origin.getY()) * getGridSize() + getGridSize() / 2;
-					convexHullCanvas.graphics.lineTo(x, y);
-				}
-			}
-			
-			convexHullCanvas.graphics.lineStyle(2, 0x0000FF);
-			convexHullCanvas.graphics.beginFill(0x0000FF, 0.1);
-			for each (locs in controller.currentState.getConvexHulls(Team.B)) {
-				// skip hulls with two or less
-				if (locs.length <= 2)
-					continue;
-				// move to first point
-				loc = locs[locs.length-1];
-				x = (loc.getX() - origin.getX()) * getGridSize() + getGridSize() / 2;
-				y = (loc.getY() - origin.getY()) * getGridSize() + getGridSize() / 2;
-				convexHullCanvas.graphics.moveTo(x, y);
-				// draw hull
-				for (i = 0; i < locs.length; i++) {
-					loc = locs[i];
-					x = (loc.getX() - origin.getX()) * getGridSize() + getGridSize() / 2;
-					y = (loc.getY() - origin.getY()) * getGridSize() + getGridSize() / 2;
-					convexHullCanvas.graphics.lineTo(x, y);
-				}
 			}
 		}
 		
 		private function updateUnits():void {
 			var loc:MapLocation, i:uint, j:uint, robot:DrawRobot;
 			var groundRobots:Object = controller.currentState.getGroundRobots();
-			var airRobots:Object = controller.currentState.getAirRobots();
+			var encampments:Object = controller.currentState.getEncampments();
 			
 			for each (robot in groundRobots) {
 				loc = robot.getLocation();
@@ -275,7 +198,7 @@
 				robot.draw();
 			}
 			
-			for each (robot in airRobots) {
+			for each (robot in encampments) {
 				loc = robot.getLocation();
 				j = (loc.getX() - origin.getX());
 				i = (loc.getY() - origin.getY());
@@ -283,7 +206,7 @@
 				robot.y = i * getGridSize() + getGridSize() / 2;
 				if (!robot.parent && robot.isAlive()) {
 					robot.addEventListener(MouseEvent.CLICK, onRobotSelect, false, 0, true);
-					airUnitCanvas.addChild(robot);
+					encampmentCanvas.addChild(robot);
 				}
 				robot.draw();
 			}
@@ -295,10 +218,8 @@
 		
 		private function onEnterFrame(e:Event):void {
 			gridCanvas.visible = RenderConfiguration.showGridlines();
-			airUnitCanvas.visible = RenderConfiguration.showAir();
+			encampmentCanvas.visible = RenderConfiguration.showAir();
 			groundUnitCanvas.visible = RenderConfiguration.showGround();
-			convexHullCanvas.visible = RenderConfiguration.showConvexHulls();
-			fluxCanvas.visible = RenderConfiguration.showFlux();
 		}
 		
 		private function onRoundChange(e:MatchEvent):void {
@@ -307,8 +228,7 @@
 			}
 			drawFlux();
 			updateUnits();
-			drawConvexHulls();
-			
+
 			lastRound = e.currentRound;
 			
 			this.visible = (e.currentRound != 0);
@@ -316,7 +236,6 @@
 		
 		private function onMatchChange(e:MatchEvent):void {
 			redrawAll();
-			//this.visible = (e.currentRound != 0);
 		}
 		
 		private function onRobotSelect(e:MouseEvent):void {

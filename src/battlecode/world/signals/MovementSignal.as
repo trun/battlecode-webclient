@@ -6,12 +6,10 @@
 		
 		private var robotID:uint;
 		private var targetLoc:MapLocation;
-		private var movingForward:Boolean;
-		
-		public function MovementSignal(robotID:uint, targetLoc:MapLocation, movingForward:Boolean) {
+
+		public function MovementSignal(robotID:uint, targetLoc:MapLocation) {
 			this.robotID = robotID;
 			this.targetLoc = targetLoc;
-			this.movingForward = movingForward;
 		}
 		
 		public function getRobotID():uint {
@@ -20,10 +18,6 @@
 		
 		public function getTargetLoc():MapLocation {
 			return targetLoc;
-		}
-		
-		public function isMovingForward():Boolean {
-			return movingForward;
 		}
 		
 		public function accept(handler:SignalHandler):* {

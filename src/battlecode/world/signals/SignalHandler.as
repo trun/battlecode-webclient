@@ -1,45 +1,22 @@
 ﻿package battlecode.world.signals {
-	
+
 	public interface SignalHandler {
-		
+
 		function visitAttackSignal(s:AttackSignal):*;
-		
 		function visitBroadcastSignal(s:BroadcastSignal):*;
-		
-		function visitConvexHullSignal(s:ConvexHullSignal):*;
-		
+		function visitCaptureSignal(s:CaptureSignal):*;
 		function visitDeathSignal(s:DeathSignal):*;
-		
-		function visitDeploySignal(s:DeploySignal):*;
-		
-		function visitDoTeleportSignal(s:DoTeleportSignal):*;
-		
 		function visitEnergonChangeSignal(s:EnergonChangeSignal):*;
-		
-		function visitEnergonTransferSignal(s:EnergonTransferSignal):*;
-		
-		function visitEvolutionSignal(s:EvolutionSignal):*;
-		
 		function visitFluxChangeSignal(s:FluxChangeSignal):*;
-		
-		function visitFluxTransferSignal(s:FluxTransferSignal):*;
-		
 		function visitIndicatorStringSignal(s:IndicatorStringSignal):*;
-		
-		function visitMineFluxSignal(s:MineFluxSignal):*;
-		
-		function visitMovementSignal(s:MovementSignal):*;
-		
-		function visitSetAuraSignal(s:SetAuraSignal):*;
-		
-		function visitSetDirectionSignal(s:SetDirectionSignal):*;
-		
-		function visitStartTeleportSignal(s:StartTeleportSignal):*;
-		
-		function visitSpawnSignal(s:SpawnSignal):*;
-		
-		function visitUndeploySignal(s:UndeploySignal):*;
-		
+		function visitMineSignal(s:MineSignal):*;
+        function visitMineLayerSignal(s:MineLayerSignal):*;
+        function visitMovementSignal(s:MovementSignal):*;
+        function visitNodeBirthSignal(s:NodeBirthSignal):*;
+        function visitResearchChangeSignal(s:ResearchChangeSignal):*;
+        function visitShieldChangeSignal(s:ShieldChangeSignal):*;
+        function visitSpawnSignal(s:SpawnSignal):*;
+
 	}
 	
 }

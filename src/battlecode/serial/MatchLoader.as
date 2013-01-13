@@ -141,15 +141,12 @@
 		}
 
 		private function onComplete(e:Event):void {
-			// read raw bytes into a new ByteArray
 			var matchBytes:ByteArray = new ByteArray();
 			stream.readBytes(matchBytes);
 			stream.close();
 			stream = null;
 
             loadData(matchBytes);
-
-            dispatchEvent(e);
 		}
 		
 		private function onIOError(e:IOErrorEvent):void {
