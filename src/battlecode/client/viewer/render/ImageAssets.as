@@ -25,7 +25,21 @@
 		[Embed('/img/units/soldier0.png')] public static const SOLDIER_NEUTRAL:Class;
 		[Embed('/img/units/soldier1.png')] public static const SOLDIER_A:Class;
 		[Embed('/img/units/soldier2.png')] public static const SOLDIER_B:Class;
-		[Embed('/img/units/medbay0.png')] public static const PLACEHOLDER:Class; // TODO
+        [Embed('/img/units/medbay0.png')] public static const MEDBAY_NEUTRAL:Class;
+        [Embed('/img/units/medbay1.png')] public static const MEDBAY_A:Class;
+        [Embed('/img/units/medbay2.png')] public static const MEDBAY_B:Class;
+        [Embed('/img/units/shields0.png')] public static const SHIELDS_NEUTRAL:Class;
+        [Embed('/img/units/shields1.png')] public static const SHIELDS_A:Class;
+        [Embed('/img/units/shields2.png')] public static const SHIELDS_B:Class;
+        [Embed('/img/units/artillery0.png')] public static const ARTILLERY_NEUTRAL:Class;
+        [Embed('/img/units/artillery1.png')] public static const ARTILLERY_A:Class;
+        [Embed('/img/units/artillery2.png')] public static const ARTILLERY_B:Class;
+        [Embed('/img/units/generator0.png')] public static const GENERATOR_NEUTRAL:Class;
+        [Embed('/img/units/generator1.png')] public static const GENERATOR_A:Class;
+        [Embed('/img/units/generator2.png')] public static const GENERATOR_B:Class;
+        [Embed('/img/units/supplier0.png')] public static const SUPPLIER_NEUTRAL:Class;
+        [Embed('/img/units/supplier1.png')] public static const SUPPLIER_A:Class;
+        [Embed('/img/units/supplier2.png')] public static const SUPPLIER_B:Class;
 
 		// explosions images
 		[Embed('/img/explode/explode64_f01.png')] public static const EXPLODE_1:Class;
