@@ -1,5 +1,6 @@
 package battlecode.serial {
     import battlecode.common.MapLocation;
+    import battlecode.common.TerrainTile;
     import battlecode.world.GameMap;
     import battlecode.world.signals.SignalFactory;
 
@@ -27,7 +28,17 @@ package battlecode.serial {
             var mapHeight:int = parseInt(mapXml.attribute("mapHeight"));
             var mapOriginX:int = parseInt(mapXml.attribute("mapOriginX"));
             var mapOriginY:int = parseInt(mapXml.attribute("mapOriginY"));
-            gameMap = new GameMap(mapWidth, mapHeight, new MapLocation(mapOriginX, mapOriginY));
+
+            // map terrain tiles
+			var terrainTiles:Array = new Array(mapHeight);
+			for (var i:int = 0; i < mapHeight; i++) {
+				terrainTiles[i] = new Array(mapWidth);
+				for (var j:int = 0; j < mapWidth; j++) {
+					terrainTiles[i][j] = new TerrainTile(TerrainTile.LAND);
+				}
+			}
+
+            gameMap = new GameMap(mapWidth, mapHeight, new MapLocation(mapOriginX, mapOriginY), terrainTiles);
 
             maxRounds = parseInt(mapXml.attribute("maxRounds"));
         }

@@ -93,26 +93,17 @@
 		private function drawMap():void {
 			var i:uint, j:uint, tile:TerrainTile;
 			var map:GameMap = controller.match.getMap();
-			var terrain:Array = [];
+			var terrain:Array = map.getTerrainTiles();
 			var colorTransform:ColorTransform, scalar:uint;
 			
 			origin = map.getOrigin();
-			
-			var max:uint = 0, min:uint = 100;
-			for (i = 0; i < map.getHeight(); i++) {
-				for (j = 0; j < map.getWidth(); j++) {
-					tile = terrain[i][j] as TerrainTile;
-					max = Math.max(tile.getHeight(), max);
-					min = Math.min(tile.getHeight(), min);
-				}
-			}
 			
 			this.mapCanvas.graphics.clear();
 			for (i = 0; i < map.getHeight(); i++) {
 				for (j = 0; j < map.getWidth(); j++) {
 					tile = terrain[i][j] as TerrainTile;
 					if (tile.getType() == TerrainTile.LAND) {
-						scalar = 0xFF * (tile.getHeight() / max);
+						scalar = 0xFF * 0.8;
 						colorTransform = new ColorTransform(0, 0, 0, 1, scalar, scalar, scalar, 0);
 						this.mapCanvas.graphics.beginFill(colorTransform.color, 1.0);
 						this.mapCanvas.graphics.drawRect(j * getGridSize(), i * getGridSize(), getGridSize(), getGridSize());
@@ -124,13 +115,6 @@
 					}
 				}
 			}
-		}
-		
-		private function drawFlux():void {
-			var i:uint, j:uint, tile:TerrainTile;
-			var map:GameMap = controller.match.getMap();
-			var terrain:Array = [];
-			var colorTransform:ColorTransform, scalar:uint;
 		}
 		
 		private function drawGridlines():void {
@@ -226,7 +210,6 @@
 			if (e.currentRound < lastRound) {
 				drawUnits();
 			}
-			drawFlux();
 			updateUnits();
 
 			lastRound = e.currentRound;
