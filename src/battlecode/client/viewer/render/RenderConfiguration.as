@@ -49,7 +49,7 @@
 		public static function toggleExplosions():void { explosions = !explosions; }
 		public static function toggleRangeHatch():void { rangeHatch = !rangeHatch; }
 		public static function toggleConvexHulls():void { convexHulls = !convexHulls; }
-		public static function toggleFlux():void { flux = !flux; };
+		public static function toggleFlux():void { flux = !flux; }
 		
 		public static function toggleDrawHeight():void {
 			if(!air && !ground) {

@@ -1,25 +1,17 @@
 ﻿package battlecode.client.viewer.render {
 	import battlecode.common.ActionType;
-	import battlecode.common.AuraType;
 	import battlecode.common.Direction;
 	import battlecode.common.GameConstants;
 	import battlecode.common.MapLocation;
 	import battlecode.common.RobotType;
 	import battlecode.common.Team;
 	import battlecode.events.RobotEvent;
-	import flash.display.Sprite;
-	import flash.utils.getTimer;
-	import mx.containers.Box;
 	import mx.containers.Canvas;
-	import mx.containers.VBox;
-	import mx.controls.Button;
 	import mx.controls.Image;
-	import mx.core.BitmapAsset;
 	import mx.core.UIComponent;
 	
 	[Event(name="indicatorStringChange", type="battlecode.events.RobotEvent")]
 	public class DrawRobot extends Canvas implements DrawObject {
-		
 		private var actions:Vector.<DrawAction>;
 		
 		private var broadcastAnimation:BroadcastAnimation;
@@ -37,17 +29,11 @@
 		
 		// movement animation
 		private var drawX:Number, drawY:Number;
-		private var forwards:Boolean = false;
 		private var movementDelay:uint;
 		
 		// attack animation
 		private var targetLocation:MapLocation;
-		private var targetLevel:String
-		
-		// transfer animation
-		private var transferLocation:MapLocation;
-		private var isTransferring:Boolean = false;
-		
+
 		private var selected:Boolean = false;
 		
 		private var robotID:uint;
@@ -105,14 +91,9 @@
 		public function clone():DrawObject {
 			var d:DrawRobot = new DrawRobot(robotID, type, team, overrideSize);
 			d.location = location;
-			d.direction = direction;
 			d.energon = energon;
-			d.flux = flux;
-			d.forwards = forwards;
 			d.movementDelay = movementDelay;
 			d.targetLocation = targetLocation;
-			d.targetLevel = targetLevel;
-			d.aura = aura;
 			d.alive = alive;
 			
 			d.actions = new Vector.<DrawAction>(actions.length);
@@ -138,15 +119,9 @@
 		public function getType():String { return type; }
 		public function getTeam():String { return team; }
 		public function getLocation():MapLocation { return location; }
-		public function getEnergon():Number { return energon; }
-		public function getFlux():Number { return flux; }
 		public function getSelected():Boolean { return selected; }
 		public function getIndicatorString(index:uint):String {
 			return indicatorStrings[index];
-		}
-		
-		public function setDirection(direction:String):void {
-			this.direction = direction;
 		}
 		
 		public function setLocation(location:MapLocation):void {
@@ -155,14 +130,6 @@
 		
 		public function setEnergon(amt:Number):void {
 			this.energon = Math.min(Math.max(0, amt), maxEnergon);
-		}
-		
-		public function setFlux(amt:Number):void {
-			this.flux = Math.min(Math.max(0, amt), maxFlux);
-		}
-		
-		public function setAura(aura:String):void {
-			this.aura = aura;
 		}
 		
 		public function setSelected(val:Boolean):void {
@@ -188,40 +155,9 @@
 			this.broadcastAnimation.broadcast();
 		}
 		
-		public function evolve(type:String):void {
-			this.type = type;
-			this.maxEnergon = RobotType.maxEnergon(type);
-			this.image.source = getUnitAvatar(type, team);
-			this.image.width = getImageSize(true);
-			this.image.height = getImageSize(true);
-			this.image.x = -this.image.width/2;
-			this.image.y = -this.image.height/2;
-			this.addAction(new DrawAction(ActionType.TRANSFORMING, RobotType.wakeDelay(type)));
-		}
-		
 		public function destroyUnit():void {
 			this.explosionAnimation.explode();
 			this.alive = false;
-		}
-		
-		public function drain():void {
-			this.addAction(new DrawAction(ActionType.DRAINING, 1));
-		}
-		
-		public function transferEnergon(target:MapLocation, level:String, amount:Number):void {
-			if (!this.isTransferring) {
-				this.transferLocation = target;
-				this.isTransferring = true;
-				this.addAction(new DrawAction(ActionType.TRANSFERRING, 10));
-			}
-		}
-		
-		public function transferFlux(target:MapLocation, level:String, amount:Number):void {
-			if (!this.isTransferring) {
-				this.transferLocation = target;
-				this.isTransferring = true;
-				this.addAction(new DrawAction(ActionType.TRANSFERRING, 10));
-			}
 		}
 		
 		public function moveToLocation(location:MapLocation):void {
@@ -244,9 +180,6 @@
 				if (o.getRounds() <= 0) {
 					actions.splice(i, 1);
 					i--;
-					// special case for transfers
-					if (o.getType() == ActionType.TRANSFERRING)
-						this.isTransferring = false;
 				}
 			}
 			
@@ -301,15 +234,9 @@
 					case ActionType.MOVING:
 						drawMovement();
 						break;
-					case ActionType.TRANSFORMING:
-						break;
-					case ActionType.TRANSFERRING:
-						drawTransferBar(o.getRounds() / 5);
-						break;
 				}
 			}
 			
-			drawAura();
 			drawEnergonBar();
 			drawSelected();
 			
@@ -325,7 +252,7 @@
 			if (!RenderConfiguration.showEnergon())
 				return;
 			
-			var ratio:Number = RobotType.isBuilding(type) ? (flux / maxFlux) : (energon / maxEnergon);
+			var ratio:Number = RobotType.isEncampment(type) ? (flux / maxFlux) : (energon / maxEnergon);
 			var size:Number = getImageSize();
 			this.graphics.lineStyle();
 			this.graphics.beginFill(0x00FF00, 0.8);
@@ -334,18 +261,6 @@
 			this.graphics.beginFill(0x000000, 0.8);
 			this.graphics.drawRect(-size/2 + ratio*size, size/2, (1 - ratio) * size, 5*getImageScale());
 			this.graphics.endFill();
-		}
-		
-		private function drawTransferBar(alpha:Number):void {
-			if (!RenderConfiguration.showTransfers())
-				return;
-			
-			var targetOffsetX:Number = (transferLocation.getX() - location.getX()) * getImageSize();
-			var targetOffsetY:Number = (transferLocation.getY() - location.getY()) * getImageSize();
-			
-			this.overlayCanvas.graphics.lineStyle(2, 0x00FF00, alpha);
-			this.overlayCanvas.graphics.moveTo(0, 0);
-			this.overlayCanvas.graphics.lineTo(targetOffsetX - drawX, targetOffsetY - drawY);
 		}
 		
 		private function drawAttack():void {
@@ -363,21 +278,6 @@
 			
 			this.x += drawX;
 			this.y += drawY;
-		}
-		
-		private function drawAura():void {
-			if (!aura)
-				return;
-			this.graphics.lineStyle();
-			if (aura == AuraType.OFF) {
-				this.graphics.beginFill(0xFFB345, 0.58);
-			} else if (aura == AuraType.DEF) {
-				this.graphics.beginFill(0x003DF5, 0.58);
-			} else if (aura == AuraType.MOV) {
-				this.graphics.beginFill(0x00F53D, 0.58);
-			}
-			this.graphics.drawCircle(0, 0, RobotType.sensorRadius(type) * getImageSize());
-			this.graphics.endFill();
 		}
 		
 		private function drawSelected():void {
@@ -406,42 +306,19 @@
 		}
 		
 		private function getUnitAvatar(type:String, team:String):Class {
-			switch(type) {
-				case RobotType.ARCHON:
-					return (team == Team.A) ? ImageAssets.ARCHON_A : ImageAssets.ARCHON_B;
-				case RobotType.CHAINER:
-					return (team == Team.A) ? ImageAssets.CHAINER_A : ImageAssets.CHAINER_B;
-				case RobotType.TURRET:
-					return (team == Team.A) ? ImageAssets.TURRET_A : ImageAssets.TURRET_B;
-				case RobotType.SOLDIER:
-					return (team == Team.A) ? ImageAssets.SOLDIER_A : ImageAssets.SOLDIER_B;
-				case RobotType.WOUT:
-					return (team == Team.A) ? ImageAssets.WOUT_A : ImageAssets.WOUT_B;
-				case RobotType.AURA:
-					return (team == Team.A) ? ImageAssets.AURA_A : ImageAssets.AURA_B;
-				case RobotType.COMM:
-					return (team == Team.A) ? ImageAssets.COMM_A : ImageAssets.COMM_B;
-				case RobotType.TELEPORTER:
-					return (team == Team.A) ? ImageAssets.TELEPORTER_A : ImageAssets.TELEPORTER_B;
-			}
-			return null;
+            return ImageAssets[type + "_" + team];
 		}
 		
 		private function getUnitScale(type:String):Number {
 			switch(type) {
-				case RobotType.ARCHON: return 1.2;
-				case RobotType.CHAINER: return .9;
+				case RobotType.HQ: return 1.2;
 				case RobotType.SOLDIER: return .9;
-				case RobotType.WOUT: return .8;
-				case RobotType.TELEPORTER: return .8;
-				case RobotType.AURA: return .8;
-				case RobotType.COMM: return .8;
 				default: return 1.0;
 			}
 		}
 		
 		private function getUnitOffset(type:String):Number {
-			return (RobotType.isAirborne(type)) ? -5 * getImageScale() : 0;
+			return 0;
 		}
 		
 		private function directionToRotation(dir:String):int {
@@ -457,7 +334,7 @@
 				default: return 0;
 			}
 		}
-		
+
 		private function directionOffsetX(dir:String):int {
 			switch (dir) {
 				case Direction.NORTH_EAST: return +1;
@@ -488,16 +365,12 @@
 		
 		private function calculateDrawX(rounds:uint):Number {
 			if (RenderConfiguration.showDiscrete()) return 0;
-			
-			var dir:String = (forwards) ? Direction.opposite(direction) : direction;
-			return getImageSize() * directionOffsetX(dir) * (rounds / movementDelay);
+			return getImageSize() * directionOffsetX(direction) * (rounds / movementDelay);
 		}
 		
 		private function calculateDrawY(rounds:uint):Number {
 			if (RenderConfiguration.showDiscrete()) return 0;
-			
-			var dir:String = (forwards) ? Direction.opposite(direction) : direction;
-			return getImageSize() * directionOffsetY(dir) * (rounds / movementDelay);
+			return getImageSize() * directionOffsetY(direction) * (rounds / movementDelay);
 		}
 		
 		
