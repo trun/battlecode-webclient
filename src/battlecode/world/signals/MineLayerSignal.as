@@ -1,6 +1,6 @@
 package battlecode.world.signals {
 
-    public class MineLayerSignal implements Signal{
+    public class MineLayerSignal implements Signal {
         private var robotID:uint;
         private var laying:Boolean;
 

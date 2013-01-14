@@ -1,7 +1,7 @@
 package battlecode.world.signals {
     import battlecode.common.MapLocation;
 
-    public class NodeBirthSignal implements Signal{
+    public class NodeBirthSignal implements Signal {
         private var loc:MapLocation;
 
         public function NodeBirthSignal(loc:MapLocation) {

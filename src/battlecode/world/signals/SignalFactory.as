@@ -1,15 +1,15 @@
 ﻿package battlecode.world.signals {
-	import battlecode.common.MapLocation;
+    import battlecode.common.MapLocation;
     import battlecode.serial.ParseUtils;
-    import battlecode.serial.ParseUtils;
-	
-	public class SignalFactory {
-		
-		public function SignalFactory() { }
-		
-		public static function createSignal(signalXML:XML):Signal {
-			var signalName:String = signalXML.name();
-			switch(signalName) {
+
+    public class SignalFactory {
+
+        public function SignalFactory() {
+        }
+
+        public static function createSignal(signalXML:XML):Signal {
+            var signalName:String = signalXML.name();
+            switch (signalName) {
                 case "sig.AttackSignal":
                     return createAttackSignal(signalXML);
                 case "sig.BroadcastSignal":
@@ -38,9 +38,9 @@
                     return createShieldChangeSignal(signalXML);
                 case "sig.SpawnSignal":
                     return createSpawnSignal(signalXML);
-			}
-			return null;
-		}
+            }
+            return null;
+        }
 
         public static function createAttackSignal(signalXML:XML):AttackSignal {
             var robotID:uint = parseInt(signalXML.attribute("robotID"));
@@ -72,8 +72,12 @@
             var robotIDs:Array = signalXML.attribute("robotIDs").toString().split(",");
             var energon:Array = signalXML.attribute("energon").toString().split(",");
 
-            robotIDs = robotIDs.map( function(element:*, index:int, arr:Array):uint { return parseInt(element); } );
-            energon = energon.map( function(element:*, index:int, arr:Array):Number { return parseFloat(element); } );
+            robotIDs = robotIDs.map(function (element:*, index:int, arr:Array):uint {
+                return parseInt(element);
+            });
+            energon = energon.map(function (element:*, index:int, arr:Array):Number {
+                return parseFloat(element);
+            });
 
             return new EnergonChangeSignal(robotIDs, energon);
         }
@@ -111,23 +115,31 @@
 
         public static function createResearchChangeSignal(signalXML:XML):ResearchChangeSignal {
             var progress:XMLList = signalXML.child("progress").children();
-            var progressA:Array = progress[0].split(",").map(function(element:*, index:int, arr:Array):Number { return parseFloat(element); } );
-            var progressB:Array = progress[1].split(",").map(function(element:*, index:int, arr:Array):Number { return parseFloat(element); } );
+            var progressA:Array = progress[0].split(",").map(function (element:*, index:int, arr:Array):Number {
+                return parseFloat(element);
+            });
+            var progressB:Array = progress[1].split(",").map(function (element:*, index:int, arr:Array):Number {
+                return parseFloat(element);
+            });
             return new ResearchChangeSignal(progressA, progressB);
         }
 
-		public static function createIndicatorStringSignal(signalXML:XML):IndicatorStringSignal {
-			var robotID:uint = parseInt(signalXML.attribute("robotID"));
-			var index:uint = parseInt(signalXML.attribute("stringIndex"));
-			var str:String = ParseUtils.unencode(signalXML.attribute("newString"));
-			return new IndicatorStringSignal(robotID, index, str);
-		}
+        public static function createIndicatorStringSignal(signalXML:XML):IndicatorStringSignal {
+            var robotID:uint = parseInt(signalXML.attribute("robotID"));
+            var index:uint = parseInt(signalXML.attribute("stringIndex"));
+            var str:String = ParseUtils.unencode(signalXML.attribute("newString"));
+            return new IndicatorStringSignal(robotID, index, str);
+        }
 
         public static function createShieldChangeSignal(signalXML:XML):ShieldChangeSignal {
             var robotIDs:Array = signalXML.attribute("robotIDs").split(",");
-            robotIDs = robotIDs.map( function(element:*, index:int, arr:Array):uint { return parseInt(element); } );
+            robotIDs = robotIDs.map(function (element:*, index:int, arr:Array):uint {
+                return parseInt(element);
+            });
             var shields:Array = signalXML.attribute("shield").split(",");
-            shields = shields.map( function(element:*, index:int, arr:Array):uint { return parseFloat(element); } );
+            shields = shields.map(function (element:*, index:int, arr:Array):uint {
+                return parseFloat(element);
+            });
             return new ShieldChangeSignal(robotIDs, shields);
         }
 
@@ -139,6 +151,6 @@
             var team:String = signalXML.attribute("team").toString();
             return new SpawnSignal(robotID, parentID, loc, type, team);
         }
-	}
-	
+    }
+
 }

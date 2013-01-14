@@ -1,59 +1,57 @@
 ﻿package battlecode.serial {
-	
-	import battlecode.events.MatchLoadProgressEvent;
-	import battlecode.util.GZIP;
-	import flash.errors.MemoryError;
-	import flash.events.Event;
-	import flash.events.EventDispatcher;
-	import flash.events.IOErrorEvent;
-	import flash.events.ProgressEvent;
-	import flash.events.SecurityErrorEvent;
-	import flash.events.TimerEvent;
-	import flash.external.ExternalInterface;
-	import flash.net.navigateToURL;
-	import flash.net.URLRequest;
-	import flash.net.URLRequestHeader;
-	import flash.net.URLStream;
-	import flash.system.System;
-	import flash.utils.ByteArray;
-	import flash.utils.Timer;
-	import mx.controls.Alert;
-	
-	[Event(name="matchParseProgress", type="battlecode.events.MatchLoadProgressEvent")]
-	[Event(name="matchParseComplete", type="battlecode.events.MatchLoadProgressEvent")]
-	[Event(name="gameParseProgress", type="battlecode.events.MatchLoadProgressEvent")]
-	[Event(name="gameParseComplete", type="battlecode.events.MatchLoadProgressEvent")]
-	[Event(name="progress", type="flash.events.ProgressEvent")]
-	[Event(name="complete", type="flash.events.Event")]
-	public class MatchLoader extends EventDispatcher {
-		private var matchPath:String;
-		private var stream:URLStream;
-		private var matches:Vector.<Match>;
-		private var numMatches:uint = 0;
+    import battlecode.events.MatchLoadProgressEvent;
+    import battlecode.util.GZIP;
 
-		private var gamesXML:XMLList;
-		private var currentGame:uint = 0;
-		private var gameTimer:Timer;
-		private var nextMatchReady:Boolean = true;
-		
-		public function MatchLoader() {
-			this.stream = new URLStream();
-			this.stream.addEventListener(ProgressEvent.PROGRESS, onDownloadProgress, false, 0, true);
-			this.stream.addEventListener(Event.COMPLETE, onComplete, false, 0, true);
-			this.stream.addEventListener(IOErrorEvent.IO_ERROR, onIOError, false, 0, true);
-			this.stream.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onSecurityError, false, 0, true);
-		}
-		
-		public function load(file:String):void {
-			matchPath = file;
-			this.stream.load(new URLRequest(file));
-		}
+    import flash.errors.MemoryError;
+    import flash.events.Event;
+    import flash.events.EventDispatcher;
+    import flash.events.IOErrorEvent;
+    import flash.events.ProgressEvent;
+    import flash.events.SecurityErrorEvent;
+    import flash.net.URLRequest;
+    import flash.net.URLStream;
+    import flash.system.System;
+    import flash.utils.ByteArray;
+    import flash.utils.Timer;
+
+    import mx.controls.Alert;
+
+    [Event(name="matchParseProgress", type="battlecode.events.MatchLoadProgressEvent")]
+    [Event(name="matchParseComplete", type="battlecode.events.MatchLoadProgressEvent")]
+    [Event(name="gameParseProgress", type="battlecode.events.MatchLoadProgressEvent")]
+    [Event(name="gameParseComplete", type="battlecode.events.MatchLoadProgressEvent")]
+    [Event(name="progress", type="flash.events.ProgressEvent")]
+    [Event(name="complete", type="flash.events.Event")]
+    public class MatchLoader extends EventDispatcher {
+        private var matchPath:String;
+        private var stream:URLStream;
+        private var matches:Vector.<Match>;
+        private var numMatches:uint = 0;
+
+        private var gamesXML:XMLList;
+        private var currentGame:uint = 0;
+        private var gameTimer:Timer;
+        private var nextMatchReady:Boolean = true;
+
+        public function MatchLoader() {
+            this.stream = new URLStream();
+            this.stream.addEventListener(ProgressEvent.PROGRESS, onDownloadProgress, false, 0, true);
+            this.stream.addEventListener(Event.COMPLETE, onComplete, false, 0, true);
+            this.stream.addEventListener(IOErrorEvent.IO_ERROR, onIOError, false, 0, true);
+            this.stream.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onSecurityError, false, 0, true);
+        }
+
+        public function load(file:String):void {
+            matchPath = file;
+            this.stream.load(new URLRequest(file));
+        }
 
         public function loadData(matchBytes:ByteArray):void {
             // decompress the bytes (they are GZIP'd)
             try {
                 matchBytes = GZIP.decompress(matchBytes);
-            } catch (e:Error) { }
+            } catch (e:Error) {
+            }
 
             trace("--- DECOMPRESSION ---");
             trace("MEM USAGE: " + Math.round(System.totalMemory / 1024 / 1024) + "MB");
@@ -127,74 +125,74 @@
             completeEvent.itemsComplete = numMatches;
             dispatchEvent(completeEvent);
         }
-		
-		public function getMatches():Vector.<Match> {
-			return matches;
-		}
-		
-		public function getNumMatches():uint {
-			return numMatches;
-		}
-		
-		private function onDownloadProgress(e:ProgressEvent):void {
-			dispatchEvent(e);
-		}
 
-		private function onComplete(e:Event):void {
-			var matchBytes:ByteArray = new ByteArray();
-			stream.readBytes(matchBytes);
-			stream.close();
-			stream = null;
+        public function getMatches():Vector.<Match> {
+            return matches;
+        }
+
+        public function getNumMatches():uint {
+            return numMatches;
+        }
+
+        private function onDownloadProgress(e:ProgressEvent):void {
+            dispatchEvent(e);
+        }
+
+        private function onComplete(e:Event):void {
+            var matchBytes:ByteArray = new ByteArray();
+            stream.readBytes(matchBytes);
+            stream.close();
+            stream = null;
 
             loadData(matchBytes);
-		}
-		
-		private function onIOError(e:IOErrorEvent):void {
-			trace("match load failed: " + e.toString());
-			Alert.show("Could not load the specified match file: File " + matchPath + " not found");
-		}
-		
-		private function onSecurityError(e:SecurityError):void {
-			trace("match load failed: " + e.toString());
-			Alert.show("Could not load the specified match file: Security error");
-		}
+        }
+
+        private function onIOError(e:IOErrorEvent):void {
+            trace("match load failed: " + e.toString());
+            Alert.show("Could not load the specified match file: File " + matchPath + " not found");
+        }
+
+        private function onSecurityError(e:SecurityError):void {
+            trace("match load failed: " + e.toString());
+            Alert.show("Could not load the specified match file: Security error");
+        }
 
         /*
-		private function onTimerTick(e:TimerEvent):void {
-			if (!nextMatchReady) return;
+         private function onTimerTick(e:TimerEvent):void {
+         if (!nextMatchReady) return;
 
-			var match:Match = new Match();
-			match.addEventListener(MatchLoadProgressEvent.GAME_PARSE_PROGRESS, onGameParseProgress);
-			match.addEventListener(MatchLoadProgressEvent.GAME_PARSE_COMPLETE, onGameParseComplete);
-			match.parseMatch(gamesXML[currentGame++]);
-			matches.push(match);
-			
-			var progressEvent:MatchLoadProgressEvent = new MatchLoadProgressEvent(MatchLoadProgressEvent.MATCH_PARSE_PROGRESS);
-			progressEvent.itemsComplete = currentGame;
-			progressEvent.itemsTotal = numMatches;
-			dispatchEvent(progressEvent);
-			
-			nextMatchReady = false;
-		}
-		
-		private function onGameParseProgress(e:MatchLoadProgressEvent):void {
-			dispatchEvent(e);
-		}
-		
-		private function onGameParseComplete(e:MatchLoadProgressEvent):void {
-			nextMatchReady = true;
-			
-			if (currentGame == numMatches) {
-				dispatchEvent(new MatchLoadProgressEvent(MatchLoadProgressEvent.MATCH_PARSE_COMPLETE));
-				gameTimer.stop();
-			}
-			
-			trace("--- MATCH "+currentGame+" ---");
-			trace("MEM USAGE: " + Math.round(System.totalMemory / 1024 / 1024) + "MB");
-			
-			dispatchEvent(e);
-		}
-		*/
-		
-	}
+         var match:Match = new Match();
+         match.addEventListener(MatchLoadProgressEvent.GAME_PARSE_PROGRESS, onGameParseProgress);
+         match.addEventListener(MatchLoadProgressEvent.GAME_PARSE_COMPLETE, onGameParseComplete);
+         match.parseMatch(gamesXML[currentGame++]);
+         matches.push(match);
+
+         var progressEvent:MatchLoadProgressEvent = new MatchLoadProgressEvent(MatchLoadProgressEvent.MATCH_PARSE_PROGRESS);
+         progressEvent.itemsComplete = currentGame;
+         progressEvent.itemsTotal = numMatches;
+         dispatchEvent(progressEvent);
+
+         nextMatchReady = false;
+         }
+
+         private function onGameParseProgress(e:MatchLoadProgressEvent):void {
+         dispatchEvent(e);
+         }
+
+         private function onGameParseComplete(e:MatchLoadProgressEvent):void {
+         nextMatchReady = true;
+
+         if (currentGame == numMatches) {
+         dispatchEvent(new MatchLoadProgressEvent(MatchLoadProgressEvent.MATCH_PARSE_COMPLETE));
+         gameTimer.stop();
+         }
+
+         trace("--- MATCH "+currentGame+" ---");
+         trace("MEM USAGE: " + Math.round(System.totalMemory / 1024 / 1024) + "MB");
+
+         dispatchEvent(e);
+         }
+         */
+
+    }
 }

@@ -5,7 +5,6 @@ package battlecode.serial {
     import battlecode.world.signals.SignalFactory;
 
     public class MatchBuilder {
-
         private var matchNum:int = 0;
         private var gameMap:GameMap;
         private var maxRounds:uint;
@@ -30,13 +29,13 @@ package battlecode.serial {
             var mapOriginY:int = parseInt(mapXml.attribute("mapOriginY"));
 
             // map terrain tiles
-			var terrainTiles:Array = new Array(mapHeight);
-			for (var i:int = 0; i < mapHeight; i++) {
-				terrainTiles[i] = new Array(mapWidth);
-				for (var j:int = 0; j < mapWidth; j++) {
-					terrainTiles[i][j] = new TerrainTile(TerrainTile.LAND);
-				}
-			}
+            var terrainTiles:Array = new Array(mapHeight);
+            for (var i:int = 0; i < mapHeight; i++) {
+                terrainTiles[i] = new Array(mapWidth);
+                for (var j:int = 0; j < mapWidth; j++) {
+                    terrainTiles[i][j] = new TerrainTile(TerrainTile.LAND);
+                }
+            }
 
             gameMap = new GameMap(mapWidth, mapHeight, new MapLocation(mapOriginX, mapOriginY), terrainTiles);
 
@@ -78,7 +77,7 @@ package battlecode.serial {
         }
 
         public function build():Match {
-            return new Match(gameMap, deltas, stats, teamA,  teamB, mapName, winner, maxRounds);
+            return new Match(gameMap, deltas, stats, teamA, teamB, mapName, winner, maxRounds);
         }
 
     }

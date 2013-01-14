@@ -1,8 +1,9 @@
 ﻿package battlecode.world.signals {
-	
-	public class DefaultSignalHandler implements SignalHandler {
-		
-		public function DefaultSignalHandler() { }
+
+    public class DefaultSignalHandler implements SignalHandler {
+
+        public function DefaultSignalHandler() {
+        }
 
         public function visitAttackSignal(s:AttackSignal):* {
             return null;
@@ -60,5 +61,5 @@
             return null;
         }
     }
-	
+
 }

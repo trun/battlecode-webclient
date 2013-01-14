@@ -1,34 +1,21 @@
 ﻿package battlecode.serial {
-	import battlecode.common.MapLocation;
-	import battlecode.common.TerrainTile;
-	import battlecode.events.MatchLoadProgressEvent;
-	import battlecode.world.GameMap;
-	import battlecode.world.signals.Signal;
-	import battlecode.world.signals.SignalFactory;
-	import flash.errors.MemoryError;
-	import flash.events.Event;
-	import flash.events.EventDispatcher;
-	import flash.events.ProgressEvent;
-	import flash.events.TimerEvent;
-	import flash.utils.Timer;
-	import mx.controls.Alert;
-	
-	public class Match extends EventDispatcher {
-		
-		private var gameMap:GameMap;
-		private var rounds:uint;
-		private var maxRounds:uint;
-		private var winner:String;
-		private var deltas:Array; // RoundDelta[]
-		private var stats:Array; // RoundStats[]
-		
-		private var teamA:String, teamB:String;
-		private var mapName:String;
-		
-		public function Match(gameMap:GameMap, deltas:Array, stats:Array,
-                              teamA:String, teamB:String, mapName:String,
-                              winner:String, maxRounds:uint) {
-			this.gameMap = gameMap;
+    import battlecode.world.GameMap;
+
+    import flash.events.EventDispatcher;
+
+    public class Match extends EventDispatcher {
+        private var gameMap:GameMap;
+        private var rounds:uint;
+        private var maxRounds:uint;
+        private var winner:String;
+        private var deltas:Array; // RoundDelta[]
+        private var stats:Array; // RoundStats[]
+
+        private var teamA:String, teamB:String;
+        private var mapName:String;
+
+        public function Match(gameMap:GameMap, deltas:Array, stats:Array, teamA:String, teamB:String, mapName:String, winner:String, maxRounds:uint) {
+            this.gameMap = gameMap;
             this.deltas = deltas;
             this.stats = stats;
             this.teamA = teamA;
@@ -37,44 +24,44 @@
             this.winner = winner;
             this.rounds = deltas.length;
             this.maxRounds = maxRounds;
-		}
-		
-		public function getMap():GameMap {
-			return gameMap;
-		}
-		
-		public function getRounds():uint {
-			return rounds;
-		}
-		
-		public function getMaxRounds():uint {
-			return maxRounds;
-		}
-		
-		public function getWinner():String {
-			return winner;
-		}
-		
-		public function getTeamA():String {
-			return teamA;
-		}
-		
-		public function getTeamB():String {
-			return teamB;
-		}
-		
-		public function getMapName():String {
-			return mapName;
-		}
-		
-		public function getRoundDelta(round:uint):RoundDelta {
-			return deltas[round] as RoundDelta;
-		}
-		
-		public function getRoundStats(round:uint):RoundStats {
-			return stats[round] as RoundStats;
-		}
-		
+        }
+
+        public function getMap():GameMap {
+            return gameMap;
+        }
+
+        public function getRounds():uint {
+            return rounds;
+        }
+
+        public function getMaxRounds():uint {
+            return maxRounds;
+        }
+
+        public function getWinner():String {
+            return winner;
+        }
+
+        public function getTeamA():String {
+            return teamA;
+        }
+
+        public function getTeamB():String {
+            return teamB;
+        }
+
+        public function getMapName():String {
+            return mapName;
+        }
+
+        public function getRoundDelta(round:uint):RoundDelta {
+            return deltas[round] as RoundDelta;
+        }
+
+        public function getRoundStats(round:uint):RoundStats {
+            return stats[round] as RoundStats;
+        }
+
 //		public function parseMatch(xml:XML, useProgress:Boolean = true):void {
 //			var mapElement:XMLList = xml.child("mapName");
 //			var metadataElement:XMLList = xml.child("metadata");
@@ -162,7 +149,7 @@
 //			parseTimer.addEventListener(TimerEvent.TIMER, onTimerTick);
 //			parseTimer.start();
 //		}
-		
+
 //		private function onTimerTick(e:TimerEvent):void {
 //			try {
 //				for (var i:uint = currentRound; i < Math.min(rounds, currentRound + ROUNDS_TO_PARSE); i++) {
@@ -198,7 +185,7 @@
 //				Alert.show("Memory allocation error: " + e.message);
 //			}
 //		}
-		
-	}
-	
+
+    }
+
 }

@@ -1,9 +1,10 @@
 ﻿package battlecode.common {
-	
-	public class GameConstants {
-		
-		public function GameConstants() { }
 
-	}
-	
+    public class GameConstants {
+
+        public function GameConstants() {
+        }
+
+    }
+
 }
