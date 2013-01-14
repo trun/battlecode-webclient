@@ -15,6 +15,9 @@
     [Event(name="matchChange", type="battlecode.events.MatchEvent")]
     [Event(name="roundChange", type="battlecode.events.MatchEvent")]
     public class MatchController extends EventDispatcher {
+        private const NORAML_FRAMERATE:int = 15;
+        private const FAST_FRAMERATE:int = 30;
+
         private var stage:Stage;
         private var rollingFramerates:Array;
         private var lastRoundTime:Number;
@@ -55,7 +58,7 @@
 
         private function onApplicationComplete(e:Event):void {
             stage = Application.application.stage;
-            stage.frameRate = (fastForwarding) ? 45 : 30;
+            stage.frameRate = (fastForwarding) ? FAST_FRAMERATE : NORAML_FRAMERATE;
             stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
         }
 
@@ -162,7 +165,7 @@
             dispatchEvent(new Event(PropertyChangeEvent.PROPERTY_CHANGE));
 
             // update delay to reflect fast forward
-            stage.frameRate = (value) ? 45 : 30;
+            stage.frameRate = (value) ? FAST_FRAMERATE : NORAML_FRAMERATE;
         }
 
         [Bindable(event="propertyChange")]
