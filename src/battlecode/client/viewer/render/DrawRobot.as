@@ -311,8 +311,8 @@
 		
 		private function getUnitScale(type:String):Number {
 			switch(type) {
-				case RobotType.HQ: return 1.2;
-				case RobotType.SOLDIER: return .9;
+				case RobotType.HQ: return 1.4;
+				case RobotType.SOLDIER: return 1.0;
 				default: return 1.0;
 			}
 		}

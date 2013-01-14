@@ -59,8 +59,8 @@ package battlecode.serial {
 
         public function addRoundDelta(xml:XML):void {
             var signalXml:XMLList = xml.children();
-            var signals:Array = new Array(signalXml.length());
-            for each (var signal:XML in signal) {
+            var signals:Array = new Array();
+            for each (var signal:XML in signalXml) {
                 signals.push(SignalFactory.createSignal(signal));
             }
             deltas.push(new RoundDelta(signals));

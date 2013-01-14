@@ -1,7 +1,8 @@
 ﻿package battlecode.client.viewer.render {
 	import battlecode.client.viewer.MatchController;
 	import battlecode.common.MapLocation;
-	import battlecode.common.TerrainTile;
+    import battlecode.common.Team;
+    import battlecode.common.TerrainTile;
 	import battlecode.events.MatchEvent;
 	import battlecode.world.GameMap;
 	import flash.events.Event;
@@ -19,9 +20,10 @@
 		// various canvases for layering and quick toggling of features
 		private var mapCanvas:UIComponent;
 		private var gridCanvas:UIComponent;
-		private var groundUnitCanvas:UIComponent;
-		private var encampmentCanvas:UIComponent;
-		
+        private var mineCanvas:UIComponent;
+        private var encampmentCanvas:UIComponent;
+        private var groundUnitCanvas:UIComponent;
+
 		// optimizations for caching
 		private var lastRound:uint = 0;
 		
@@ -35,16 +37,18 @@
 			
 			this.mapCanvas = new UIComponent();
 			this.gridCanvas = new UIComponent();
-			this.groundUnitCanvas = new UIComponent();
-			this.encampmentCanvas = new UIComponent();
-			
+            this.mineCanvas = new UIComponent();
+            this.encampmentCanvas = new UIComponent();
+            this.groundUnitCanvas = new UIComponent();
+
 			this.mapCanvas.cacheAsBitmap = true;
 			this.gridCanvas.cacheAsBitmap = true;
 			
 			this.addChild(mapCanvas);
 			this.addChild(gridCanvas);
-			this.addChild(groundUnitCanvas);
-			this.addChild(encampmentCanvas);
+            this.addChild(mineCanvas);
+            this.addChild(encampmentCanvas);
+            this.addChild(groundUnitCanvas);
 		}
 		
 		///////////////////////////////////////////////////////
@@ -129,17 +133,34 @@
 				}
 			}
 		}
+
+        private function drawMines():void {
+            var mines:Array = controller.currentState.getMines();
+            var i:uint, j:uint, team:String;
+
+            this.mineCanvas.graphics.clear();
+            for (i = 0; i < mines.length; i++) {
+                for (j = 0; j < mines[i].length; j++) {
+                    team = mines[i][j];
+                    if (team != null) {
+                        this.mineCanvas.graphics.beginFill(Team.mineColor(team), 1.0);
+                        this.mineCanvas.graphics.drawCircle((i + .5) * getGridSize(), (j + .5) * getGridSize(), getGridSize() * .25);
+                        this.mineCanvas.graphics.endFill();
+                    }
+                }
+            }
+        }
 		
 		private function drawUnits():void {
 			var loc:MapLocation, i:uint, j:uint, robot:DrawRobot;
-			var groundRobots:Object = controller.currentState.getGroundRobots();
-			var encampments:Object = controller.currentState.getEncampments();
-			
-			while (groundUnitCanvas.numChildren > 0)
+            var encampments:Object = controller.currentState.getEncampments();
+            var groundRobots:Object = controller.currentState.getGroundRobots();
+
+            while (encampmentCanvas.numChildren > 0)
+                encampmentCanvas.removeChildAt(0);
+
+            while (groundUnitCanvas.numChildren > 0)
 				groundUnitCanvas.removeChildAt(0);
-			
-			while (encampmentCanvas.numChildren > 0)
-				encampmentCanvas.removeChildAt(0);
 			
 			for each (robot in groundRobots) {
 				loc = robot.getLocation();
@@ -166,22 +187,9 @@
 		
 		private function updateUnits():void {
 			var loc:MapLocation, i:uint, j:uint, robot:DrawRobot;
-			var groundRobots:Object = controller.currentState.getGroundRobots();
-			var encampments:Object = controller.currentState.getEncampments();
-			
-			for each (robot in groundRobots) {
-				loc = robot.getLocation();
-				j = (loc.getX() - origin.getX());
-				i = (loc.getY() - origin.getY());
-				robot.x = j * getGridSize() + getGridSize() / 2;
-				robot.y = i * getGridSize() + getGridSize() / 2;
-				if (!robot.parent && robot.isAlive()) {
-					robot.addEventListener(MouseEvent.CLICK, onRobotSelect, false, 0, true);
-					groundUnitCanvas.addChild(robot);
-				}
-				robot.draw();
-			}
-			
+            var encampments:Object = controller.currentState.getEncampments();
+            var groundRobots:Object = controller.currentState.getGroundRobots();
+
 			for each (robot in encampments) {
 				loc = robot.getLocation();
 				j = (loc.getX() - origin.getX());
@@ -194,6 +202,19 @@
 				}
 				robot.draw();
 			}
+
+            for each (robot in groundRobots) {
+                loc = robot.getLocation();
+                j = (loc.getX() - origin.getX());
+                i = (loc.getY() - origin.getY());
+                robot.x = j * getGridSize() + getGridSize() / 2;
+                robot.y = i * getGridSize() + getGridSize() / 2;
+                if (!robot.parent && robot.isAlive()) {
+                    robot.addEventListener(MouseEvent.CLICK, onRobotSelect, false, 0, true);
+                    groundUnitCanvas.addChild(robot);
+                }
+                robot.draw();
+            }
 		}
 		
 		///////////////////////////////////////////////////////
@@ -211,6 +232,7 @@
 				drawUnits();
 			}
 			updateUnits();
+            drawMines();
 
 			lastRound = e.currentRound;
 			

@@ -10,14 +10,17 @@
 	import mx.core.UIComponent;
 	
 	public class DrawState extends DefaultSignalHandler {
-		
-		// state
-		private var groundRobots:Object;
-		private var encampments:Object;
+
+        // state
+        private var mines:Array; // Team[][]
+        private var encampments:Object;
+        private var groundRobots:Object;
 
 		// stats
-		private var aPoints:uint;
-		private var bPoints:uint;
+		private var aPoints:Number;
+		private var bPoints:Number;
+        private var aGatheredPoints:Number;
+        private var bGatheredPoints:Number;
 		private var roundNum:uint;
 		
 		// immutables
@@ -28,8 +31,18 @@
 			groundRobots = new Object();
 			encampments = new Object();
 
+            mines = new Array();
+            for (var i:int = 0; i < map.getWidth(); i++) {
+                mines[i] = new Array();
+                for (var j:int = 0; j < map.getHeight(); j++) {
+                    mines[i][j] = null;
+                }
+            }
+
 			aPoints = 0;
 			bPoints = 0;
+			aGatheredPoints = 0;
+			bGatheredPoints = 0;
 			roundNum = 1;
 			
 			this.map = map;
@@ -39,9 +52,10 @@
 		///////////////////////////////////////////////////////
 		///////////////// PROPERTY GETTERS ////////////////////
 		///////////////////////////////////////////////////////
-		
-		public function getGroundRobots():Object { return groundRobots; }
-		public function getEncampments():Object { return encampments }
+
+        public function getMines():Array { return mines }
+        public function getEncampments():Object { return encampments }
+        public function getGroundRobots():Object { return groundRobots; }
 		public function getPoints(team:String):uint { return (team == Team.A) ? aPoints : bPoints; }
 
 		///////////////////////////////////////////////////////
@@ -50,17 +64,25 @@
 		
 		private function copyStateFrom(state:DrawState):void {
 			var a:*;
-			
-			groundRobots = new Object();
-			for (a in state.groundRobots) {
-				groundRobots[a] = state.groundRobots[a].clone();
-			}
+
+            mines = new Array();
+            for (var i:int = 0; i < map.getWidth(); i++) {
+                mines[i] = new Array();
+                for (var j:int = 0; j < map.getHeight(); j++) {
+                    mines[i][j] = state.mines[i][j];
+                }
+            }
 
             encampments = new Object();
             for (a in state.encampments) {
                 encampments[a] = state.encampments[a].clone();
             }
-			
+
+			groundRobots = new Object();
+			for (a in state.groundRobots) {
+				groundRobots[a] = state.groundRobots[a].clone();
+			}
+
 			roundNum = state.roundNum;
 		}
 		
@@ -72,7 +94,7 @@
 		
 		public function applyDelta(delta:RoundDelta):void {
 			updateRound();
-			for each(var signal:Signal in delta.getSignals()) {
+			for each (var signal:Signal in delta.getSignals()) {
 				applySignal(signal);
 			}
 			processEndOfRound();
@@ -85,6 +107,8 @@
 		public function applyStats(stats:RoundStats):void {
 			aPoints = stats.getPoints(Team.A);
 			bPoints = stats.getPoints(Team.B);
+            aGatheredPoints = stats.getGatheredPoints(Team.A);
+            bGatheredPoints = stats.getGatheredPoints(Team.B);
 		}
 		
 		public function updateRound():void {
@@ -101,6 +125,17 @@
 					delete groundRobots[a];
 				}
 			}
+
+            for (a in encampments) {
+                o = encampments[a] as DrawRobot;
+                o.updateRound();
+                if (!o.isAlive()) {
+                    if (o.parent) {
+                        o.parent.removeChild(o);
+                    }
+                    delete encampments[a];
+                }
+            }
 		}
 		
 		private function processEndOfRound():void {
@@ -144,15 +179,9 @@
 		}
 		
 		override public function visitEnergonChangeSignal(s:EnergonChangeSignal):* {
-			var robotIDs:Array = s.getRobotIDs();
-			var energon:Array = s.getEnergon();
-			
-			for (var i:uint; i < robotIDs.length; i++) {
-				var robot:DrawRobot = getRobot(robotIDs[i]);
-				robot.setEnergon(energon[i]);
-			}
+
 		}
-		
+
 		override public function visitFluxChangeSignal(s:FluxChangeSignal):* {
 
 		}
@@ -160,11 +189,20 @@
 		override public function visitIndicatorStringSignal(s:IndicatorStringSignal):* {
 			getRobot(s.getRobotID()).setIndicatorString(s.getIndicatorString(), s.getIndex());
 		}
-		
+
+        override public function visitMineSignal(s:MineSignal):* {
+            var loc:MapLocation = translateCoordinates(s.getLocation());
+            if (s.isBirth()) {
+                mines[loc.getX()][loc.getY()] = s.getTeam();
+            } else {
+                mines[loc.getX()][loc.getY()] = null;
+            }
+        }
+
 		override public function visitMovementSignal(s:MovementSignal):* {
 			getRobot(s.getRobotID()).moveToLocation(s.getTargetLoc());
 		}
-		
+
 		override public function visitSpawnSignal(s:SpawnSignal):* {
 			var robot:DrawRobot = new DrawRobot(s.getRobotID(), s.getRobotType(), s.getTeam());
 			robot.setLocation(s.getLocation());

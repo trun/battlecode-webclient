@@ -87,7 +87,7 @@
 
         public static function createMineSignal(signalXML:XML):MineSignal {
             var loc:MapLocation = ParseUtils.parseLocation(signalXML.attribute("mineLoc"));
-            var team:String = signalXML.attribute("team").toString();
+            var team:String = signalXML.attribute("mineTeam").toString();
             var birth:Boolean = ParseUtils.parseBoolean(signalXML.attribute("birth"));
             return new MineSignal(loc, team, birth);
         }
