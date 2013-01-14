@@ -328,11 +328,11 @@
         private function getUnitScale(type:String):Number {
             switch (type) {
                 case RobotType.HQ:
-                    return 1.4;
+                    return 2.0;
                 case RobotType.SOLDIER:
                     return 1.0;
                 default:
-                    return 1.0;
+                    return 1.6;
             }
         }
 
