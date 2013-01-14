@@ -109,7 +109,7 @@
         }
 
         public static function createNodeBirthSignal(signalXML:XML):NodeBirthSignal {
-            var loc:MapLocation = ParseUtils.parseLocation(signalXML.attribute("loc"));
+            var loc:MapLocation = ParseUtils.parseLocation(signalXML.attribute("location"));
             return new NodeBirthSignal(loc);
         }
 

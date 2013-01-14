@@ -154,6 +154,7 @@
 
         private function drawUnits():void {
             var loc:MapLocation, i:uint, j:uint, robot:DrawRobot;
+            var neutralEncampments:Object = controller.currentState.getNeutralEncampments();
             var encampments:Object = controller.currentState.getEncampments();
             var groundRobots:Object = controller.currentState.getGroundRobots();
 
@@ -162,17 +163,6 @@
 
             while (groundUnitCanvas.numChildren > 0)
                 groundUnitCanvas.removeChildAt(0);
-
-            for each (robot in groundRobots) {
-                loc = robot.getLocation();
-                j = (loc.getX() - origin.getX());
-                i = (loc.getY() - origin.getY());
-                robot.x = j * getGridSize() + getGridSize() / 2;
-                robot.y = i * getGridSize() + getGridSize() / 2;
-                robot.addEventListener(MouseEvent.CLICK, onRobotSelect, false, 0, true);
-                groundUnitCanvas.addChild(robot);
-                robot.draw();
-            }
 
             for each (robot in encampments) {
                 loc = robot.getLocation();
@@ -184,14 +174,50 @@
                 encampmentCanvas.addChild(robot);
                 robot.draw();
             }
+
+            for each (robot in neutralEncampments) {
+                loc = robot.getLocation();
+                j = (loc.getX() - origin.getX());
+                i = (loc.getY() - origin.getY());
+                robot.x = j * getGridSize() + getGridSize() / 2;
+                robot.y = i * getGridSize() + getGridSize() / 2;
+                robot.addEventListener(MouseEvent.CLICK, onRobotSelect, false, 0, true);
+                encampmentCanvas.addChild(robot);
+                robot.draw();
+            }
+
+            for each (robot in groundRobots) {
+                loc = robot.getLocation();
+                j = (loc.getX() - origin.getX());
+                i = (loc.getY() - origin.getY());
+                robot.x = j * getGridSize() + getGridSize() / 2;
+                robot.y = i * getGridSize() + getGridSize() / 2;
+                robot.addEventListener(MouseEvent.CLICK, onRobotSelect, false, 0, true);
+                groundUnitCanvas.addChild(robot);
+                robot.draw();
+            }
         }
 
         private function updateUnits():void {
             var loc:MapLocation, i:uint, j:uint, robot:DrawRobot;
+            var neutralEncampments:Object = controller.currentState.getNeutralEncampments();
             var encampments:Object = controller.currentState.getEncampments();
             var groundRobots:Object = controller.currentState.getGroundRobots();
 
             for each (robot in encampments) {
+                loc = robot.getLocation();
+                j = (loc.getX() - origin.getX());
+                i = (loc.getY() - origin.getY());
+                robot.x = j * getGridSize() + getGridSize() / 2;
+                robot.y = i * getGridSize() + getGridSize() / 2;
+                if (!robot.parent && robot.isAlive()) {
+                    robot.addEventListener(MouseEvent.CLICK, onRobotSelect, false, 0, true);
+                    encampmentCanvas.addChild(robot);
+                }
+                robot.draw();
+            }
+
+            for each (robot in neutralEncampments) {
                 loc = robot.getLocation();
                 j = (loc.getX() - origin.getX());
                 i = (loc.getY() - origin.getY());

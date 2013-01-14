@@ -72,6 +72,8 @@
         public static const SUPPLIER_A:Class;
         [Embed('/img/units/supplier2.png')]
         public static const SUPPLIER_B:Class;
+        [Embed('/img/units/encampment0.png')]
+        public static const ENCAMPMENT_NEUTRAL:Class;
 
         // explosions images
         [Embed('/img/explode/explode64_f01.png')]

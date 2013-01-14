@@ -268,7 +268,7 @@
             if (!RenderConfiguration.showEnergon())
                 return;
 
-            var ratio:Number = RobotType.isEncampment(type) ? (flux / maxFlux) : (energon / maxEnergon);
+            var ratio:Number = energon / maxEnergon;
             var size:Number = getImageSize();
             this.graphics.lineStyle();
             this.graphics.beginFill(0x00FF00, 0.8);
@@ -330,6 +330,8 @@
                 case RobotType.HQ:
                     return 2.0;
                 case RobotType.SOLDIER:
+                    return 1.0;
+                case RobotType.ENCAMPMENT:
                     return 1.0;
                 default:
                     return 1.6;

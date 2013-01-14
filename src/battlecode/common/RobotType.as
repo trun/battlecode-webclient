@@ -8,6 +8,7 @@
         public static const ARTILLERY:String = "ARTILLERY";
         public static const GENERATOR:String = "GENERATOR";
         public static const SUPPLIER:String = "SUPPLIER";
+        public static const ENCAMPMENT:String = "ENCAMPMENT";
 
         public function RobotType() {
         }
@@ -29,7 +30,7 @@
                 case SUPPLIER:
                     return 300.0;
             }
-            return 0;
+            return 1;
         }
 
         public static function maxFlux(type:String):Number {
@@ -49,7 +50,7 @@
                 case SUPPLIER:
                     return 300.0;
             }
-            return 0;
+            return 1;
         }
 
         public static function movementDelay(type:String):uint {

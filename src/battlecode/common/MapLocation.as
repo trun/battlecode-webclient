@@ -45,6 +45,10 @@
             return x == o.x && y == o.y;
         }
 
+        public function toString():String {
+            return x + "," + y;
+        }
+
     }
 
 }

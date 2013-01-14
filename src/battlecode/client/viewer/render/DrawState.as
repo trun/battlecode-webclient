@@ -1,5 +1,6 @@
 ﻿package battlecode.client.viewer.render {
     import battlecode.common.MapLocation;
+    import battlecode.common.RobotType;
     import battlecode.common.Team;
     import battlecode.serial.RoundDelta;
     import battlecode.serial.RoundStats;
@@ -9,6 +10,7 @@
     public class DrawState extends DefaultSignalHandler {
         // state
         private var mines:Array; // Team[][]
+        private var neutralEncampments:Object;
         private var encampments:Object;
         private var groundRobots:Object;
 
@@ -24,8 +26,9 @@
         private var origin:MapLocation;
 
         public function DrawState(map:GameMap) {
-            groundRobots = new Object();
+            neutralEncampments = new Object();
             encampments = new Object();
+            groundRobots = new Object();
 
             mines = new Array();
             for (var i:int = 0; i < map.getWidth(); i++) {
@@ -50,7 +53,11 @@
         ///////////////////////////////////////////////////////
 
         public function getMines():Array {
-            return mines
+            return mines;
+        }
+
+        public function getNeutralEncampments():Object {
+            return neutralEncampments;
         }
 
         public function getEncampments():Object {
@@ -78,6 +85,11 @@
                 for (var j:int = 0; j < map.getHeight(); j++) {
                     mines[i][j] = state.mines[i][j];
                 }
+            }
+
+            neutralEncampments = new Object();
+            for (a in state.neutralEncampments) {
+                neutralEncampments[a] = state.neutralEncampments[a].clone();
             }
 
             encampments = new Object();
@@ -180,6 +192,16 @@
             getRobot(s.getRobotID()).broadcast();
         }
 
+        override public function visitCaptureSignal(s:CaptureSignal):* {
+            var o:DrawRobot = neutralEncampments[s.getLocation()];
+            if (o) {
+                if (o.parent) {
+                    o.parent.removeChild(o);
+                }
+                delete neutralEncampments[s.getLocation()];
+            }
+        }
+
         override public function visitDeathSignal(s:DeathSignal):* {
             var robot:DrawRobot = getRobot(s.getRobotID());
             robot.destroyUnit();
@@ -208,6 +230,12 @@
 
         override public function visitMovementSignal(s:MovementSignal):* {
             getRobot(s.getRobotID()).moveToLocation(s.getTargetLoc());
+        }
+
+        override public function visitNodeBirthSignal(s:NodeBirthSignal):* {
+            var encampment:DrawRobot = new DrawRobot(0, RobotType.ENCAMPMENT, Team.NEUTRAL);
+            encampment.setLocation(s.getLocation());
+            neutralEncampments[s.getLocation()] = encampment;
         }
 
         override public function visitSpawnSignal(s:SpawnSignal):* {
