@@ -184,10 +184,6 @@
         /////////////////// SIGNAL HANDLERS ///////////////////
         ///////////////////////////////////////////////////////
 
-        override public function visitAttackSignal(s:AttackSignal):* {
-            getRobot(s.getRobotID()).attack(s.getTargetLoc());
-        }
-
         override public function visitBroadcastSignal(s:BroadcastSignal):* {
             getRobot(s.getRobotID()).broadcast();
         }
@@ -208,11 +204,11 @@
         }
 
         override public function visitEnergonChangeSignal(s:EnergonChangeSignal):* {
-
+            // TODO
         }
 
         override public function visitFluxChangeSignal(s:FluxChangeSignal):* {
-
+            // TODO
         }
 
         override public function visitIndicatorStringSignal(s:IndicatorStringSignal):* {
