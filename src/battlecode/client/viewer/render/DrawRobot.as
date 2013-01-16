@@ -338,12 +338,8 @@
             switch (type) {
                 case RobotType.HQ:
                     return 2.0;
-                case RobotType.SOLDIER:
-                    return 1.0;
-                case RobotType.ENCAMPMENT:
-                    return 1.0;
                 default:
-                    return 1.6;
+                    return 1.0;
             }
         }
 
