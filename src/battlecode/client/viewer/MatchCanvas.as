@@ -1,6 +1,6 @@
 ﻿package battlecode.client.viewer {
     import battlecode.client.util.MatchLoadProgressBar;
-    import battlecode.events.MatchLoadProgressEvent;
+    import battlecode.events.ParseEvent;
     import battlecode.serial.MatchLoader;
 
     import flash.events.Event;
@@ -46,7 +46,7 @@
             addChild(progressBar);
 
             // load the match file
-            matchLoader.addEventListener(MatchLoadProgressEvent.MATCH_PARSE_COMPLETE, onMatchParseComplete);
+            matchLoader.addEventListener(ParseEvent.COMPLETE, onMatchParseComplete);
 
             if (this.parentApplication.parameters) {
                 var params:Object = this.parentApplication.parameters;
@@ -71,7 +71,7 @@
             Alert.show("No match file specified");
         }
 
-        private function onMatchParseComplete(e:MatchLoadProgressEvent):void {
+        private function onMatchParseComplete(e:ParseEvent):void {
             controller.setMatches(matchLoader.getMatches());
 
             addChild(controlBar);

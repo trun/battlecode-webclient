@@ -1,5 +1,5 @@
 ﻿package battlecode.serial {
-    import battlecode.events.MatchLoadProgressEvent;
+    import battlecode.events.ParseEvent;
     import battlecode.util.GZIP;
 
     import flash.errors.MemoryError;
@@ -8,18 +8,18 @@
     import flash.events.IOErrorEvent;
     import flash.events.ProgressEvent;
     import flash.events.SecurityErrorEvent;
+    import flash.events.TimerEvent;
     import flash.net.URLRequest;
     import flash.net.URLStream;
     import flash.system.System;
     import flash.utils.ByteArray;
     import flash.utils.Timer;
+    import flash.utils.getTimer;
 
     import mx.controls.Alert;
 
-    [Event(name="matchParseProgress", type="battlecode.events.MatchLoadProgressEvent")]
-    [Event(name="matchParseComplete", type="battlecode.events.MatchLoadProgressEvent")]
-    [Event(name="gameParseProgress", type="battlecode.events.MatchLoadProgressEvent")]
-    [Event(name="gameParseComplete", type="battlecode.events.MatchLoadProgressEvent")]
+    [Event(name="parseProgress", type="battlecode.events.ParseEvent")]
+    [Event(name="parseComplete", type="battlecode.events.ParseEvent")]
     [Event(name="progress", type="flash.events.ProgressEvent")]
     [Event(name="complete", type="flash.events.Event")]
     public class MatchLoader extends EventDispatcher {
@@ -27,11 +27,11 @@
         private var stream:URLStream;
         private var matches:Vector.<Match>;
         private var numMatches:uint = 0;
+        private var builder:MatchBuilder;
 
         private var gamesXML:XMLList;
-        private var currentGame:uint = 0;
+        private var currentIndex:uint = 0;
         private var gameTimer:Timer;
-        private var nextMatchReady:Boolean = true;
 
         public function MatchLoader() {
             this.stream = new URLStream();
@@ -77,53 +77,14 @@
             matches = new Vector.<Match>();
 
             gamesXML = xml.children();
-            var builder:MatchBuilder;
-            for each (var node:XML in gamesXML) {
-                var nodeName:String = node.name().toString();
-                switch (nodeName) {
-                    case "ser.MatchHeader":
-                        builder = new MatchBuilder();
-                        builder.setHeader(node);
-                        break;
-                    case "ser.MatchFooter":
-                        builder.setFooter(node);
-                        matches.push(builder.build());
-                        builder = null;
-                        break;
-                    case "ser.ExtensibleMetadata":
-                        builder.setExtensibleMetadata(node);
-                        break;
-                    case "ser.GameStats":
-                        builder.setGameStats(node);
-                        break;
-                    case "ser.RoundDelta":
-                        builder.addRoundDelta(node);
-                        break;
-                    case "ser.RoundStats":
-                        builder.addRoundStats(node);
-                        break;
-                    default:
-                        trace("Unknown node: " + node.name());
-                        break;
-                }
-            }
 
-            //gameTimer = new Timer(200);
-            //gameTimer.addEventListener(TimerEvent.TIMER, onTimerTick);
-            //gameTimer.start();
 
-            //var progressEvent:MatchLoadProgressEvent = new MatchLoadProgressEvent(MatchLoadProgressEvent.MATCH_PARSE_PROGRESS);
-            //progressEvent.itemsComplete = currentGame;
-            //progressEvent.itemsTotal = numMatches;
-            //dispatchEvent(progressEvent);
+            gameTimer = new Timer(200);
+            gameTimer.addEventListener(TimerEvent.TIMER, onTimerTick);
+            gameTimer.start();
 
             trace("--- XML PARSE ---");
             trace("MEM USAGE: " + Math.round(System.totalMemory / 1000 / 1000) + "MB");
-
-            var completeEvent:MatchLoadProgressEvent = new MatchLoadProgressEvent(MatchLoadProgressEvent.MATCH_PARSE_COMPLETE);
-            completeEvent.itemsTotal = numMatches;
-            completeEvent.itemsComplete = numMatches;
-            dispatchEvent(completeEvent);
         }
 
         public function getMatches():Vector.<Match> {
@@ -157,42 +118,54 @@
             Alert.show("Could not load the specified match file: Security error");
         }
 
-        /*
-         private function onTimerTick(e:TimerEvent):void {
-         if (!nextMatchReady) return;
+        private function onTimerTick(e:TimerEvent):void {
+            for (var i:int = 0; i < 1000 && currentIndex < gamesXML.length(); i++, currentIndex++) {
+                var node:XML = gamesXML[currentIndex];
+                var nodeName:String = node.name().toString();
+                switch (nodeName) {
+                    case "ser.MatchHeader":
+                        builder = new MatchBuilder();
+                        builder.setHeader(node);
+                        break;
+                    case "ser.MatchFooter":
+                        builder.setFooter(node);
+                        matches.push(builder.build());
+                        builder = null;
+                        break;
+                    case "ser.ExtensibleMetadata":
+                        builder.setExtensibleMetadata(node);
+                        break;
+                    case "ser.GameStats":
+                        builder.setGameStats(node);
+                        break;
+                    case "ser.RoundDelta":
+                        builder.addRoundDelta(node);
+                        break;
+                    case "ser.RoundStats":
+                        builder.addRoundStats(node);
+                        break;
+                    default:
+                        trace("Unknown node: " + node.name());
+                        break;
+                }
+            }
 
-         var match:Match = new Match();
-         match.addEventListener(MatchLoadProgressEvent.GAME_PARSE_PROGRESS, onGameParseProgress);
-         match.addEventListener(MatchLoadProgressEvent.GAME_PARSE_COMPLETE, onGameParseComplete);
-         match.parseMatch(gamesXML[currentGame++]);
-         matches.push(match);
+            var progressEvent:ParseEvent;
+            if (matches.length == numMatches) {
+                progressEvent = new ParseEvent(ParseEvent.COMPLETE);
 
-         var progressEvent:MatchLoadProgressEvent = new MatchLoadProgressEvent(MatchLoadProgressEvent.MATCH_PARSE_PROGRESS);
-         progressEvent.itemsComplete = currentGame;
-         progressEvent.itemsTotal = numMatches;
-         dispatchEvent(progressEvent);
+                trace("--- MATCH "+numMatches+" ---");
+                trace("MEM USAGE: " + Math.round(System.totalMemory / 1024 / 1024) + "MB");
 
-         nextMatchReady = false;
-         }
-
-         private function onGameParseProgress(e:MatchLoadProgressEvent):void {
-         dispatchEvent(e);
-         }
-
-         private function onGameParseComplete(e:MatchLoadProgressEvent):void {
-         nextMatchReady = true;
-
-         if (currentGame == numMatches) {
-         dispatchEvent(new MatchLoadProgressEvent(MatchLoadProgressEvent.MATCH_PARSE_COMPLETE));
-         gameTimer.stop();
-         }
-
-         trace("--- MATCH "+currentGame+" ---");
-         trace("MEM USAGE: " + Math.round(System.totalMemory / 1024 / 1024) + "MB");
-
-         dispatchEvent(e);
-         }
-         */
-
+                gameTimer.stop();
+            } else {
+                progressEvent = new ParseEvent(ParseEvent.PROGRESS);
+            }
+            progressEvent.rowsParsed = currentIndex;
+            progressEvent.rowsTotal = gamesXML.length();
+            progressEvent.matchesParsed = matches.length;
+            progressEvent.matchesTotal = numMatches;
+            dispatchEvent(progressEvent);
+        }
     }
 }

@@ -1,6 +1,6 @@
 ﻿package battlecode.client.util {
     import battlecode.client.viewer.render.ImageAssets;
-    import battlecode.events.MatchLoadProgressEvent;
+    import battlecode.events.ParseEvent;
     import battlecode.serial.MatchLoader;
 
     import flash.events.Event;
@@ -13,7 +13,6 @@
     import mx.events.FlexEvent;
 
     public class MatchLoadProgressBar extends VBox {
-
         private var parseProgressBar:ProgressBar;
         private var matchProgressBar:ProgressBar;
 
@@ -34,8 +33,8 @@
 
             matchLoader.addEventListener(ProgressEvent.PROGRESS, onMatchDownloadProgress);
             matchLoader.addEventListener(Event.COMPLETE, onMatchDownloadComplete);
-            matchLoader.addEventListener(MatchLoadProgressEvent.MATCH_PARSE_PROGRESS, onMatchParseProgress);
-            matchLoader.addEventListener(MatchLoadProgressEvent.GAME_PARSE_PROGRESS, onGameParseProgress);
+            matchLoader.addEventListener(ParseEvent.PROGRESS, onMatchParseProgress);
+            matchLoader.addEventListener(ParseEvent.COMPLETE, onMatchParseProgress);
             this.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationComplete);
         }
 
@@ -49,12 +48,9 @@
             matchProgressBar.label = "%1 of %2";
         }
 
-        private function onMatchParseProgress(e:MatchLoadProgressEvent):void {
-            matchProgressBar.setProgress(e.itemsComplete, e.itemsTotal);
-        }
-
-        private function onGameParseProgress(e:MatchLoadProgressEvent):void {
-            parseProgressBar.setProgress(e.itemsComplete, e.itemsTotal);
+        private function onMatchParseProgress(e:ParseEvent):void {
+            parseProgressBar.setProgress(e.rowsParsed, e.rowsTotal);
+            matchProgressBar.setProgress(e.matchesParsed, e.matchesTotal);
         }
 
         private function onCreationComplete(e:Event):void {
