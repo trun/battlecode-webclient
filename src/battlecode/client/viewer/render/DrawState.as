@@ -204,7 +204,13 @@
         }
 
         override public function visitEnergonChangeSignal(s:EnergonChangeSignal):* {
-            // TODO
+            var robotIDs:Array = s.getRobotIDs();
+            var energon:Array = s.getEnergon();
+
+            for (var i:uint; i < robotIDs.length; i++) {
+                var robot:DrawRobot = getRobot(robotIDs[i]);
+                robot.setEnergon(energon[i]);
+            }
         }
 
         override public function visitFluxChangeSignal(s:FluxChangeSignal):* {

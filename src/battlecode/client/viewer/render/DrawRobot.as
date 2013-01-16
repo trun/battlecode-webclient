@@ -45,7 +45,6 @@
         private var maxEnergon:Number = 0;
         private var flux:Number = 0;
         private var maxFlux:Number = 0;
-        private var aura:String;
         private var alive:Boolean = true;
 
         public function DrawRobot(robotID:uint, type:String, team:String, overrideSize:Number = 0) {
@@ -53,7 +52,6 @@
             this.type = type;
             this.team = team;
             this.maxEnergon = RobotType.maxEnergon(type);
-            this.maxFlux = RobotType.maxFlux(type);
 
             this.actions = new Vector.<DrawAction>();
 
@@ -198,9 +196,6 @@
                 }
             }
 
-            // clear aura
-            aura = null;
-
             // update animations
             broadcastAnimation.updateRound();
             explosionAnimation.updateRound();
@@ -268,8 +263,11 @@
             if (!RenderConfiguration.showEnergon())
                 return;
 
+            if (getType() == RobotType.ENCAMPMENT)
+                return;
+
             var ratio:Number = energon / maxEnergon;
-            var size:Number = getImageSize();
+            var size:Number = getImageSize(true);
             this.graphics.lineStyle();
             this.graphics.beginFill(0x00FF00, 0.8);
             this.graphics.drawRect(-size / 2, size / 2, ratio * size, 5 * getImageScale());

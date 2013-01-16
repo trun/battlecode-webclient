@@ -16,41 +16,21 @@
         public static function maxEnergon(type:String):Number {
             switch (type) {
                 case HQ:
-                    return 75.0;
+                    return 500.0;
                 case SOLDIER:
                     return 40.0;
                 case MEDBAY:
-                    return 30.0;
+                    return 100.0;
                 case SHIELDS:
-                    return 300.0;
+                    return 100.0;
                 case ARTILLERY:
-                    return 500.0;
+                    return 100.0;
                 case GENERATOR:
-                    return 300.0;
+                    return 100.0;
                 case SUPPLIER:
-                    return 300.0;
+                    return 100.0;
             }
-            return 1;
-        }
-
-        public static function maxFlux(type:String):Number {
-            switch (type) {
-                case HQ:
-                    return 75.0;
-                case SOLDIER:
-                    return 40.0;
-                case MEDBAY:
-                    return 30.0;
-                case SHIELDS:
-                    return 300.0;
-                case ARTILLERY:
-                    return 500.0;
-                case GENERATOR:
-                    return 300.0;
-                case SUPPLIER:
-                    return 300.0;
-            }
-            return 1;
+            return 100;
         }
 
         public static function movementDelay(type:String):uint {
@@ -64,15 +44,11 @@
         public static function attackDelay(type:String):uint {
             switch (type) {
                 case SOLDIER:
-                    return 5;
-            }
-            return 0;
-        }
-
-        public static function wakeDelay(type:String):uint {
-            switch (type) {
-                case SOLDIER:
-                    return 40;
+                case MEDBAY:
+                case SHIELDS:
+                    return 1;
+                case ARTILLERY:
+                    return 20;
             }
             return 0;
         }
@@ -82,7 +58,7 @@
                 case SOLDIER:
                     return 14;
             }
-            return 0;
+            return 14;
         }
 
         public static function isEncampment(type:String):Boolean {

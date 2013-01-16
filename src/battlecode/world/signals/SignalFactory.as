@@ -72,6 +72,10 @@
             var robotIDs:Array = signalXML.attribute("robotIDs").toString().split(",");
             var energon:Array = signalXML.attribute("energon").toString().split(",");
 
+            if (robotIDs.length == 0 || robotIDs[0].length == 0) {
+                return null;
+            }
+
             robotIDs = robotIDs.map(function (element:*, index:int, arr:Array):uint {
                 return parseInt(element);
             });
