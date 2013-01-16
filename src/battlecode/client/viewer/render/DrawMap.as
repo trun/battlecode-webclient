@@ -79,14 +79,19 @@
         public function redrawAll():void {
             drawMap();
             drawGridlines();
+            drawMines();
             drawUnits();
-
-            for each (o in controller.currentState.getGroundRobots()) {
-                o.draw(true);
-            }
 
             var o:DrawObject;
             for each (o in controller.currentState.getEncampments()) {
+                o.draw(true);
+            }
+
+            for each (o in controller.currentState.getNeutralEncampments()) {
+                o.draw(true);
+            }
+
+            for each (o in controller.currentState.getGroundRobots()) {
                 o.draw(true);
             }
 

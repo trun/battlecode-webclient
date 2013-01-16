@@ -277,6 +277,21 @@
             this.graphics.endFill();
         }
 
+        private function drawMiningBar():void {
+            if (!RenderConfiguration.showEnergon())
+                return;
+
+            var ratio:Number = energon / maxEnergon;
+            var size:Number = getImageSize(true);
+            this.graphics.lineStyle();
+            this.graphics.beginFill(0x00FF00, 0.8);
+            this.graphics.drawRect(-size / 2, size / 2, ratio * size, 5 * getImageScale());
+            this.graphics.endFill();
+            this.graphics.beginFill(0x000000, 0.8);
+            this.graphics.drawRect(-size / 2 + ratio * size, size / 2, (1 - ratio) * size, 5 * getImageScale());
+            this.graphics.endFill();
+        }
+
         private function drawAttack():void {
             var targetOffsetX:Number = (targetLocation.getX() - location.getX()) * getImageSize();
             var targetOffsetY:Number = (targetLocation.getY() - location.getY()) * getImageSize();
