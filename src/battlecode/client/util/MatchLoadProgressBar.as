@@ -19,6 +19,7 @@
         public function MatchLoadProgressBar(matchLoader:MatchLoader) {
             parseProgressBar = new ProgressBar();
             parseProgressBar.mode = ProgressBarMode.MANUAL;
+            parseProgressBar.indeterminate = true;
             parseProgressBar.labelPlacement = ProgressBarLabelPlacement.BOTTOM;
             parseProgressBar.label = "Loading match...";
             parseProgressBar.percentWidth = 80;
@@ -28,6 +29,7 @@
             matchProgressBar.enabled = false;
             matchProgressBar.mode = ProgressBarMode.MANUAL;
             matchProgressBar.percentWidth = 80;
+            matchProgressBar.labelPlacement = ProgressBarLabelPlacement.BOTTOM;
             matchProgressBar.label = "";
             matchProgressBar.maximum = matchLoader.getNumMatches();
 
@@ -43,14 +45,15 @@
         }
 
         private function onMatchDownloadComplete(e:Event):void {
-            matchProgressBar.enabled = true;
+            parseProgressBar.indeterminate = false;
             parseProgressBar.label = "Parsing match...";
+            matchProgressBar.enabled = true;
             matchProgressBar.label = "%1 of %2";
         }
 
         private function onMatchParseProgress(e:ParseEvent):void {
             parseProgressBar.setProgress(e.rowsParsed, e.rowsTotal);
-            matchProgressBar.setProgress(e.matchesParsed, e.matchesTotal);
+            matchProgressBar.setProgress(e.matchesParsed + 1, e.matchesTotal);
         }
 
         private function onCreationComplete(e:Event):void {

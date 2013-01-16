@@ -73,18 +73,19 @@
             matchBytes.clear();
 
             // generate new matches
-            numMatches = parseInt(xml.child("ser.MatchHeader").attribute("matchCount"));
+            numMatches = parseInt(xml.child("ser.MatchHeader").length());
             matches = new Vector.<Match>();
 
             gamesXML = xml.children();
 
-
-            gameTimer = new Timer(200);
+            gameTimer = new Timer(30);
             gameTimer.addEventListener(TimerEvent.TIMER, onTimerTick);
             gameTimer.start();
 
             trace("--- XML PARSE ---");
             trace("MEM USAGE: " + Math.round(System.totalMemory / 1000 / 1000) + "MB");
+
+            dispatchEvent(new Event(Event.COMPLETE));
         }
 
         public function getMatches():Vector.<Match> {
@@ -119,8 +120,9 @@
         }
 
         private function onTimerTick(e:TimerEvent):void {
-            for (var i:int = 0; i < 1000 && currentIndex < gamesXML.length(); i++, currentIndex++) {
-                var node:XML = gamesXML[currentIndex];
+            var start = getTimer();
+            while(getTimer() - start < 30 && currentIndex < gamesXML.length()) {
+                var node:XML = gamesXML[currentIndex++];
                 var nodeName:String = node.name().toString();
                 switch (nodeName) {
                     case "ser.MatchHeader":
@@ -131,6 +133,8 @@
                         builder.setFooter(node);
                         matches.push(builder.build());
                         builder = null;
+                        trace("--- MATCH "+matches.length+" ---");
+                        trace("MEM USAGE: " + Math.round(System.totalMemory / 1024 / 1024) + "MB");
                         break;
                     case "ser.ExtensibleMetadata":
                         builder.setExtensibleMetadata(node);
@@ -153,10 +157,6 @@
             var progressEvent:ParseEvent;
             if (matches.length == numMatches) {
                 progressEvent = new ParseEvent(ParseEvent.COMPLETE);
-
-                trace("--- MATCH "+numMatches+" ---");
-                trace("MEM USAGE: " + Math.round(System.totalMemory / 1024 / 1024) + "MB");
-
                 gameTimer.stop();
             } else {
                 progressEvent = new ParseEvent(ParseEvent.PROGRESS);
