@@ -12,8 +12,7 @@
         private static var explosions:Boolean = true;
         private static var rangeHatch:Boolean = false;
         private static var ground:Boolean = true;
-        private static var air:Boolean = true;
-        private static var convexHulls:Boolean = true;
+        private static var encampments:Boolean = true;
         private static var flux:Boolean = true;
         private static var tournament:Boolean = true;
 
@@ -68,12 +67,8 @@
             return ground;
         }
 
-        public static function showAir():Boolean {
-            return air;
-        }
-
-        public static function showConvexHulls():Boolean {
-            return convexHulls;
+        public static function showEncampments():Boolean {
+            return encampments;
         }
 
         public static function showFlux():Boolean {
@@ -112,27 +107,23 @@
             rangeHatch = !rangeHatch;
         }
 
-        public static function toggleConvexHulls():void {
-            convexHulls = !convexHulls;
-        }
-
         public static function toggleFlux():void {
             flux = !flux;
         }
 
         public static function toggleDrawHeight():void {
-            if (!air && !ground) {
+            if (!encampments && !ground) {
                 ground = true;
-                air = true;
-            } else if (ground && !air) {
+                encampments = true;
+            } else if (ground && !encampments) {
                 ground = false;
-                air = true;
-            } else if (air && !ground) {
+                encampments = true;
+            } else if (encampments && !ground) {
                 ground = false;
-                air = false;
+                encampments = false;
             } else {
                 ground = true;
-                air = false;
+                encampments = false;
             }
         }
 

@@ -295,11 +295,22 @@
         }
 
         private function drawSelected():void {
-            var size:Number = getImageSize();
+            var size:Number = getImageSize(true);
 
             if (selected) {
                 this.graphics.lineStyle(2, 0xFFFFFF);
-                this.graphics.drawRect(-size / 2, -size / 2, size, size);
+                this.graphics.moveTo(-size / 2, -size / 4);
+                this.graphics.lineTo(-size / 2, -size / 2);
+                this.graphics.lineTo(-size / 4, -size / 2);
+                this.graphics.moveTo(size / 2, -size / 4);
+                this.graphics.lineTo(size / 2, -size / 2);
+                this.graphics.lineTo(size / 4, -size / 2);
+                this.graphics.moveTo(size / 2, size / 4);
+                this.graphics.lineTo(size / 2, size / 2);
+                this.graphics.lineTo(size / 4, size / 2);
+                this.graphics.moveTo(-size / 2, size / 4);
+                this.graphics.lineTo(-size / 2, size / 2);
+                this.graphics.lineTo(-size / 4, size / 2);
             }
         }
 

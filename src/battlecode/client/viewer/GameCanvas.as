@@ -137,10 +137,6 @@
                 case "b":
                     RenderConfiguration.toggleBroadcast();
                     break;
-                case "C":
-                case "c":
-                    RenderConfiguration.toggleConvexHulls();
-                    break;
                 case "D":
                 case "d":
                     RenderConfiguration.toggleDiscrete();

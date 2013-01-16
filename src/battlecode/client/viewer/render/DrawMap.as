@@ -250,7 +250,7 @@
 
         private function onEnterFrame(e:Event):void {
             gridCanvas.visible = RenderConfiguration.showGridlines();
-            encampmentCanvas.visible = RenderConfiguration.showAir();
+            encampmentCanvas.visible = RenderConfiguration.showEncampments();
             groundUnitCanvas.visible = RenderConfiguration.showGround();
         }
 
