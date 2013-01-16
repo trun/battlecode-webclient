@@ -117,6 +117,7 @@
 
         private function onMatchChange(e:MatchEvent):void {
             centerMap();
+            controller.currentRound += 1;
         }
 
         // listens for width/height changes to recenter map
