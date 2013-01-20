@@ -1,7 +1,4 @@
 ﻿package battlecode.client.viewer.render {
-    import battlecode.client.viewer.render.DrawRobot;
-    import battlecode.client.viewer.render.DrawRobot;
-    import battlecode.common.GameConstants;
     import battlecode.common.MapLocation;
     import battlecode.common.ResearchType;
     import battlecode.common.RobotType;
@@ -247,7 +244,7 @@
                 if (o.parent) {
                     o.parent.removeChild(o);
                 }
-                delete neutralEncampments[s.getLocation()]; // TODO dont delete just hide
+                delete neutralEncampments[s.getLocation()];
             }
 
             var robot:DrawRobot = getRobot(s.getParentID());
@@ -261,6 +258,12 @@
             if (robot.getType() == RobotType.HQ) {
                 var hq:DrawRobot = robot.getTeam() == Team.A ? hqA : hqB;
                 hq.destroyUnit();
+            }
+
+            if (RobotType.isEncampment(robot.getType())) {
+                var encampment:DrawRobot = new DrawRobot(0, RobotType.ENCAMPMENT, Team.NEUTRAL);
+                encampment.setLocation(robot.getLocation());
+                neutralEncampments[robot.getLocation()] = encampment;
             }
         }
 
