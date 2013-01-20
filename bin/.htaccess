@@ -1,5 +1,0 @@
-DirectoryIndex index.php index.html
-Options +FollowSymLinks -Indexes
-
-RewriteEngine on
-RewriteRule ^([^/\.]+)/?$ index.php?match_num=$1 [L]
