@@ -134,7 +134,7 @@
             this.gridCanvas.graphics.clear();
             for (i = 0; i < map.getHeight(); i++) {
                 for (j = 0; j < map.getWidth(); j++) {
-                    this.gridCanvas.graphics.lineStyle(.5, 0x666666, 0.5);
+                    this.gridCanvas.graphics.lineStyle(.5, 0x999999, 0.3);
                     this.gridCanvas.graphics.drawRect(j * getGridSize(), i * getGridSize(), getGridSize(), getGridSize());
                 }
             }
