@@ -29,6 +29,18 @@
         [Embed('/img/client/icons/arrow_in.png')]
         public static const EXIT_FULLSCREEN_ICON:Class;
 
+        // research icons
+        [Embed('/img/units/pickaxe.png')]
+        public static const RESEARCH_PIXAXE:Class;
+        [Embed('/img/units/defusion.png')]
+        public static const RESEARCH_DEFUSION:Class;
+        [Embed('/img/units/vision.png')]
+        public static const RESEARCH_VISION:Class;
+        [Embed('/img/units/fusion.png')]
+        public static const RESEARCH_FUSION:Class;
+        [Embed('/img/units/nuke.png')]
+        public static const RESEARCH_NUKE:Class;
+
         // unit avatars
         [Embed('/img/units/hq0.png')]
         public static const HQ_NEUTRAL:Class;

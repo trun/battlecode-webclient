@@ -1,6 +1,7 @@
 ﻿package battlecode.client.viewer.render {
 
     import battlecode.client.viewer.MatchController;
+    import battlecode.common.ResearchType;
     import battlecode.common.Team;
     import battlecode.events.MatchEvent;
     import battlecode.serial.Match;
@@ -18,6 +19,7 @@
 
         private var pointLabel:Label;
         private var hqBox:DrawHUDHQ;
+        private var researchBoxes:Array;
         private var winMarkerCanvas:Canvas;
 
         private var lastRound:uint = 0;
@@ -55,10 +57,22 @@
             hqBox = new DrawHUDHQ();
             addChild(hqBox);
 
+            researchBoxes = new Array();
+            researchBoxes[0] = new DrawHUDResearch(ResearchType.PIXAXE);
+            researchBoxes[1] = new DrawHUDResearch(ResearchType.DEFUSION);
+            researchBoxes[2] = new DrawHUDResearch(ResearchType.VISION);
+            researchBoxes[3] = new DrawHUDResearch(ResearchType.FUSION);
+            researchBoxes[4] = new DrawHUDResearch(ResearchType.NUKE);
+
+            for each (var researchBox:DrawHUDResearch in researchBoxes) {
+                addChild(researchBox);
+            }
+
             addChild(winMarkerCanvas);
 
             repositionWinMarkers();
             resizeHQBox();
+            drawResearchBoxes();
         }
 
         private function onRoundChange(e:MatchEvent):void {
@@ -76,14 +90,22 @@
                 hq.draw();
             }
 
-            if (controller.currentRound == controller.match.getRounds())
+            var progress:Array = controller.currentState.getResearchProgress(team);
+            for (var i:int = 0; i < researchBoxes.length; i++) {
+                researchBoxes[i].setProgress(progress[i]);
+            }
+            drawResearchBoxes();
+
+            if (controller.currentRound == controller.match.getRounds()) {
                 drawWinMarkers();
+            }
         }
 
         private function onMatchChange(e:MatchEvent):void {
             pointLabel.text = "0";
             hqBox.removeRobot();
             drawWinMarkers();
+            drawResearchBoxes();
         }
 
         private function resizeHQBox():void {
@@ -91,6 +113,19 @@
             hqBox.resize(boxSize);
             hqBox.x = (180 - boxSize) / 2;
             hqBox.y = 50;
+        }
+
+        private function drawResearchBoxes():void {
+            var i:uint = 0;
+            for each (var researchBox:DrawHUDResearch in researchBoxes) {
+                if (researchBox.getProgress() == 0) {
+                    continue;
+                }
+                researchBox.resize(hqBox.width);
+                researchBox.x = (180 - hqBox.width) / 2;
+                researchBox.y = ((researchBox.height + 10) * i) + hqBox.height + hqBox.y + 10;
+                i++;
+            }
         }
 
         private function drawWinMarkers():void {
@@ -122,6 +157,7 @@
         private function onResize(e:ResizeEvent):void {
             repositionWinMarkers();
             resizeHQBox();
+            drawResearchBoxes();
         }
 
     }

@@ -24,6 +24,8 @@
         private var aGatheredPoints:Number;
         private var bGatheredPoints:Number;
         private var roundNum:uint;
+        private var progressA:Array;
+        private var progressB:Array;
 
         // immutables
         private var map:GameMap;
@@ -49,6 +51,9 @@
             aGatheredPoints = 0;
             bGatheredPoints = 0;
             roundNum = 1;
+
+            progressA = [ 0.0, 0.0, 0.0, 0.0, 0.0 ];
+            progressB = [ 0.0, 0.0, 0.0, 0.0, 0.0 ];
 
             this.map = map;
             this.origin = map.getOrigin();
@@ -86,6 +91,10 @@
             return (team == Team.A) ? aFlux : bFlux;
         }
 
+        public function getResearchProgress(team:String):Array {
+            return team == Team.A ? progressA : progressB;
+        }
+
         ///////////////////////////////////////////////////////
         /////////////////// CORE FUNCTIONS ////////////////////
         ///////////////////////////////////////////////////////
@@ -118,6 +127,9 @@
 
             hqA = state.hqA ? state.hqA.clone() as DrawRobot : null;
             hqB = state.hqB ? state.hqB.clone() as DrawRobot : null;
+
+            progressA = state.progressA.concat();
+            progressB = state.progressB.concat();
 
             roundNum = state.roundNum;
         }
@@ -286,6 +298,11 @@
             var encampment:DrawRobot = new DrawRobot(0, RobotType.ENCAMPMENT, Team.NEUTRAL);
             encampment.setLocation(s.getLocation());
             neutralEncampments[s.getLocation()] = encampment;
+        }
+
+        override public function visitResearchChangeSignal(s:ResearchChangeSignal):* {
+            progressA = s.getProgress(Team.A);
+            progressB = s.getProgress(Team.B);
         }
 
         override public function visitSpawnSignal(s:SpawnSignal):* {
