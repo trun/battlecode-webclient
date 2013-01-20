@@ -1,11 +1,14 @@
 ﻿package battlecode.client.viewer.render {
     import battlecode.common.ResearchType;
 
+    import flash.utils.getTimer;
+
     import mx.containers.Canvas;
     import mx.controls.Image;
 
     public class DrawHUDResearch extends Canvas {
         private var image:Image;
+        private var type:String;
         private var progress:Number;
 
         public function DrawHUDResearch(type:String) {
@@ -23,6 +26,7 @@
             image.y = 0;
 
             progress = 0;
+            this.type = type;
 
             addChild(image);
         }
@@ -50,10 +54,16 @@
             visible = true;
             this.graphics.clear();
 
+            var color:uint = progress < 1.0 ? 0x00FFFF : 0x00FF00;
+            if (progress < 1.0 && progress > 0.5
+                    && type == ResearchType.NUKE && Math.floor(getTimer() / 400) % 2 == 0) {
+                color = 0xFFFF66;
+            }
+
             // draw progress bar
             var progressBarWidth:Number = width - image.width;
             this.graphics.lineStyle();
-            this.graphics.beginFill(progress < 1.0 ? 0x00FFFF : 0x00FF00, 0.8);
+            this.graphics.beginFill(color, 0.8);
             this.graphics.drawRect(0, (height / 2) - 2.5, progress * progressBarWidth, 5);
             this.graphics.endFill();
             this.graphics.beginFill(0x000000, 0.8);
