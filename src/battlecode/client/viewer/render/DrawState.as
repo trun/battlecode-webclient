@@ -239,14 +239,6 @@
         }
 
         override public function visitCaptureSignal(s:CaptureSignal):* {
-            var o:DrawRobot = neutralEncampments[s.getLocation()];
-            if (o) {
-                if (o.parent) {
-                    o.parent.removeChild(o);
-                }
-                delete neutralEncampments[s.getLocation()];
-            }
-
             var robot:DrawRobot = getRobot(s.getParentID());
             robot.capture();
         }
@@ -331,9 +323,20 @@
             var robot:DrawRobot = new DrawRobot(s.getRobotID(), s.getRobotType(), s.getTeam());
             robot.setLocation(s.getLocation());
             groundRobots[s.getRobotID()] = robot;
+
             if (s.getRobotType() == RobotType.HQ) {
                 if (s.getTeam() == Team.A) hqA = robot.clone() as DrawRobot;
                 if (s.getTeam() == Team.B) hqB = robot.clone() as DrawRobot;
+            }
+
+            if (RobotType.isEncampment(s.getRobotType())) {
+                var o:DrawRobot = neutralEncampments[s.getLocation()];
+                if (o) {
+                    if (o.parent) {
+                        o.parent.removeChild(o);
+                    }
+                    delete neutralEncampments[s.getLocation()];
+                }
             }
         }
 
