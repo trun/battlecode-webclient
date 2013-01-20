@@ -234,6 +234,10 @@
         /////////////////// SIGNAL HANDLERS ///////////////////
         ///////////////////////////////////////////////////////
 
+        override public function visitAttackSignal(s:AttackSignal):* {
+            getRobot(s.getRobotID()).attack(s.getTargetLoc());
+        }
+
         override public function visitBroadcastSignal(s:BroadcastSignal):* {
             getRobot(s.getRobotID()).broadcast();
         }

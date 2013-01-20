@@ -177,8 +177,10 @@
         }
 
         public function attack(targetLocation:MapLocation):void {
-            this.targetLocation = targetLocation;
-            this.addAction(new DrawAction(ActionType.ATTACKING, RobotType.attackDelay(type)));
+            if (type == RobotType.ARTILLERY) {
+                this.targetLocation = targetLocation;
+                this.addAction(new DrawAction(ActionType.ATTACKING, RobotType.attackDelay(type)));
+            }
         }
 
         public function broadcast():void {
