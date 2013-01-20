@@ -1,5 +1,6 @@
 ﻿package battlecode.client.viewer {
     import battlecode.client.util.MatchLoadProgressBar;
+    import battlecode.client.viewer.render.RenderConfiguration;
     import battlecode.events.ParseEvent;
     import battlecode.serial.MatchLoader;
 
@@ -53,6 +54,9 @@
                 if (params.match) {
                     matchLoader.load(params.match);
                     return;
+                }
+                if (params.tournament == "true") {
+                    RenderConfiguration.setTournamentMode(true);
                 }
             }
 

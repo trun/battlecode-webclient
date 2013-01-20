@@ -14,7 +14,7 @@
         private static var ground:Boolean = true;
         private static var encampments:Boolean = true;
         private static var flux:Boolean = true;
-        private static var tournament:Boolean = true;
+        private static var tournament:Boolean = false;
 
         public function RenderConfiguration() {
         }

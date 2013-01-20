@@ -1,4 +1,5 @@
 ﻿package battlecode.world.signals {
+    import battlecode.client.viewer.render.RenderConfiguration;
     import battlecode.common.MapLocation;
     import battlecode.serial.ParseUtils;
 
@@ -22,8 +23,8 @@
                     return createEnergonChangeSignal(signalXML);
                 case "sig.FluxChangeSignal":
                     return createFluxChangeSignal(signalXML);
-                //case "sig.IndicatorStringSignal":
-                //    return createIndicatorStringSignal(signalXML);
+                case "sig.IndicatorStringSignal":
+                    return createIndicatorStringSignal(signalXML);
                 case "sig.MineSignal":
                     return createMineSignal(signalXML);
                 case "sig.MinelayerSignal":
@@ -129,6 +130,9 @@
         }
 
         public static function createIndicatorStringSignal(signalXML:XML):IndicatorStringSignal {
+            if (RenderConfiguration.isTournament()) {
+                return null;
+            }
             var robotID:uint = parseInt(signalXML.attribute("robotID"));
             var index:uint = parseInt(signalXML.attribute("stringIndex"));
             var str:String = ParseUtils.unencode(signalXML.attribute("newString"));
