@@ -58,13 +58,9 @@
             addChild(hqBox);
 
             researchBoxes = new Array();
-            researchBoxes[0] = new DrawHUDResearch(ResearchType.PIXAXE);
-            researchBoxes[1] = new DrawHUDResearch(ResearchType.DEFUSION);
-            researchBoxes[2] = new DrawHUDResearch(ResearchType.VISION);
-            researchBoxes[3] = new DrawHUDResearch(ResearchType.FUSION);
-            researchBoxes[4] = new DrawHUDResearch(ResearchType.NUKE);
-
-            for each (var researchBox:DrawHUDResearch in researchBoxes) {
+            for each (var type:String in ResearchType.values()) {
+                var researchBox:DrawHUDResearch = new DrawHUDResearch(type);
+                researchBoxes.push(researchBox);
                 addChild(researchBox);
             }
 
