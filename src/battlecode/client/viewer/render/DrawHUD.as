@@ -87,7 +87,7 @@
         }
 
         private function resizeHQBox():void {
-            var boxSize:Number = Math.min(75, (height - 70 - pointLabel.height - winMarkerCanvas.height) / 6 - 20);
+            var boxSize:Number = Math.min(100, (height - 70 - pointLabel.height - winMarkerCanvas.height) - 20);
             hqBox.resize(boxSize);
             hqBox.x = (180 - boxSize) / 2;
             hqBox.y = 50;

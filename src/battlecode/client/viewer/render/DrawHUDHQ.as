@@ -7,8 +7,8 @@
         private var robot:DrawRobot;
 
         public function DrawHUDHQ() {
-            width = 120;
-            height = 120;
+            width = 100;
+            height = 100;
 
             horizontalScrollPolicy = "off";
             verticalScrollPolicy = "off";
