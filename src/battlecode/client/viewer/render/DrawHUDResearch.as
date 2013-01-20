@@ -18,6 +18,8 @@
             horizontalScrollPolicy = "off";
             verticalScrollPolicy = "off";
 
+            toolTip = type;
+
             image = new Image();
             image.source = ResearchType.getImageAsset(type);
             image.width = 50;
