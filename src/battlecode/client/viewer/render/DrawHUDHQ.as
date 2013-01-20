@@ -27,7 +27,7 @@
             if (o != robot) {
                 removeRobot();
                 robot = o;
-                robot.setOverrideSize(width * 0.6);
+                robot.setOverrideSize(width * 0.7);
                 o.x = width / 2;
                 o.y = height / 2;
                 addChild(o);
@@ -43,7 +43,7 @@
             width = image.width = size;
             height = image.height = size;
             if (robot) {
-                robot.setOverrideSize(size * 0.55);
+                robot.setOverrideSize(size * 0.7);
                 robot.x = width / 2;
                 robot.y = height / 2;
             }
