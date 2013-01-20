@@ -1,5 +1,9 @@
 ﻿package battlecode.client.viewer.render {
+    import battlecode.client.viewer.render.DrawRobot;
+    import battlecode.client.viewer.render.DrawRobot;
+    import battlecode.common.GameConstants;
     import battlecode.common.MapLocation;
+    import battlecode.common.ResearchType;
     import battlecode.common.RobotType;
     import battlecode.common.Team;
     import battlecode.serial.RoundDelta;
@@ -245,6 +249,9 @@
                 }
                 delete neutralEncampments[s.getLocation()]; // TODO dont delete just hide
             }
+
+            var robot:DrawRobot = getRobot(s.getParentID());
+            robot.capture();
         }
 
         override public function visitDeathSignal(s:DeathSignal):* {
@@ -287,6 +294,18 @@
                 mines[loc.getX()][loc.getY()] = s.getTeam();
             } else {
                 mines[loc.getX()][loc.getY()] = null;
+            }
+        }
+
+        override public function visitMineLayerSignal(s:MineLayerSignal):* {
+            var robot:DrawRobot = getRobot(s.getRobotID());
+            if (s.isLaying()) {
+                robot.layMine();
+            } else {
+                // TODO mining stopping - not enough info on the signal?
+                var researchProgress:Array = robot.getTeam() == Team.A ? progressA : progressB;
+                var hasUpgrade:Boolean = researchProgress[ResearchType.getField(ResearchType.PIXAXE)] == 1.0;
+                robot.diffuseMine(hasUpgrade);
             }
         }
 

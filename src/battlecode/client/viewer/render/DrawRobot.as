@@ -1,6 +1,7 @@
 ﻿package battlecode.client.viewer.render {
     import battlecode.common.ActionType;
     import battlecode.common.Direction;
+    import battlecode.common.GameConstants;
     import battlecode.common.MapLocation;
     import battlecode.common.RobotType;
     import battlecode.common.Team;
@@ -159,6 +160,22 @@
             this.draw(true);
         }
 
+        public function capture():void {
+            this.addAction(new DrawAction(ActionType.CAPTURING, GameConstants.CAPTURE_DELAY));
+        }
+
+        public function layMine():void {
+            this.addAction(new DrawAction(ActionType.MINING, GameConstants.MINE_LAY_DELAY));
+        }
+
+        public function stopLayingMine():void {
+            this.addAction(new DrawAction(ActionType.MINING_STOPPING, GameConstants.MINE_LAY_STOP_DELAY));
+        }
+
+        public function diffuseMine(hasUpgrade:Boolean):void {
+            this.addAction(new DrawAction(ActionType.DEFUSING, hasUpgrade ? GameConstants.MINE_DIFFUSE_DELAY : GameConstants.MINE_DIFFUSE_UPGRADE_DELAY))
+        }
+
         public function attack(targetLocation:MapLocation):void {
             this.targetLocation = targetLocation;
             this.addAction(new DrawAction(ActionType.ATTACKING, RobotType.attackDelay(type)));
@@ -245,6 +262,12 @@
                     case ActionType.MOVING:
                         drawMovement();
                         break;
+                    case ActionType.CAPTURING:
+                    case ActionType.MINING:
+                    case ActionType.MINING_STOPPING:
+                    case ActionType.DEFUSING:
+                        drawActionBar(o);
+                        break;
                 }
             }
 
@@ -277,18 +300,43 @@
             this.graphics.endFill();
         }
 
-        private function drawMiningBar():void {
-            if (!RenderConfiguration.showEnergon())
-                return;
+        private function drawActionBar(action:DrawAction):void {
+            var yOffset:Number = RenderConfiguration.showEnergon() ? 5 * getImageScale() : 0;
+            var color:uint;
+            switch (action.getType()) {
+                case ActionType.CAPTURING:
+                    color = 0x4C4CFF;
+                    break;
+                case ActionType.MINING:
+                    color = 0xFF00CC;
+                    break;
+                case ActionType.MINING_STOPPING:
+                    color = 0xFF0000;
+                    break;
+                case ActionType.DEFUSING:
+                    color = 0x00FFFF;
+                    break;
+                default:
+                    color = 0x000000;
+                    break;
+            }
 
-            var ratio:Number = energon / maxEnergon;
+            var ratio:Number;
+            switch (action.getType()) {
+                case ActionType.MINING_STOPPING:
+                    ratio = action.getRounds() / action.getMaxRounds();
+                    break;
+                default:
+                    ratio = (action.getMaxRounds() - action.getRounds()) / action.getMaxRounds();
+                    break;
+            }
             var size:Number = getImageSize(true);
             this.graphics.lineStyle();
-            this.graphics.beginFill(0x00FF00, 0.8);
-            this.graphics.drawRect(-size / 2, size / 2, ratio * size, 5 * getImageScale());
+            this.graphics.beginFill(color, 0.8);
+            this.graphics.drawRect(-size / 2, size / 2 + yOffset, ratio * size, 5 * getImageScale());
             this.graphics.endFill();
             this.graphics.beginFill(0x000000, 0.8);
-            this.graphics.drawRect(-size / 2 + ratio * size, size / 2, (1 - ratio) * size, 5 * getImageScale());
+            this.graphics.drawRect(-size / 2 + ratio * size, size / 2  + yOffset, (1 - ratio) * size, 5 * getImageScale());
             this.graphics.endFill();
         }
 
