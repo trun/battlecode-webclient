@@ -120,7 +120,7 @@
         }
 
         private function onTimerTick(e:TimerEvent):void {
-            var start = getTimer();
+            var start:Number = getTimer();
             while(getTimer() - start < 30 && currentIndex < gamesXML.length()) {
                 var node:XML = gamesXML[currentIndex++];
                 var nodeName:String = node.name().toString();

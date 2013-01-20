@@ -17,7 +17,7 @@
         private var team:String;
 
         private var pointLabel:Label;
-        private var archonBoxes:Array; // DrawArchonHUD[]
+        private var hqBox:DrawHUDHQ;
         private var winMarkerCanvas:Canvas;
 
         private var lastRound:uint = 0;
@@ -52,43 +52,29 @@
 
             addChild(pointLabel);
 
-            archonBoxes = new Array();
-            for (var i:uint = 0; i < 6; i++) {
-                var archonBox:DrawHUDArchon = new DrawHUDArchon();
-                archonBoxes.push(archonBox);
-                addChild(archonBox);
-            }
+            hqBox = new DrawHUDHQ();
+            addChild(hqBox);
 
             addChild(winMarkerCanvas);
 
             repositionWinMarkers();
-            resizeArchonBoxes();
+            resizeHQBox();
         }
 
         private function onRoundChange(e:MatchEvent):void {
-            pointLabel.text = String(controller.currentState.getPoints(team));
+            pointLabel.text = String(controller.currentState.getFlux(team));
 
             if (e.currentRound <= lastRound) {
-                for each (var archonBox:DrawHUDArchon in archonBoxes) {
-                    archonBox.removeArchon();
-                }
+                hqBox.removeRobot();
                 drawWinMarkers();
             }
             lastRound = e.currentRound;
 
-            /*
-             var archons:Array = controller.currentState.getArchons(team);
-             var box:uint = 0, i:uint;
-             for (i = 0; i < archons.length; i++) {
-             if (archons[i].isAlive()) {
-             archonBoxes[box++].setArchon(archons[i]);
-             archons[i].draw();
-             }
-             }
-             for (i = box; i < archonBoxes.length; i++) {
-             archonBoxes[i].removeArchon();
-             }
-             */
+            var hq:DrawRobot = controller.currentState.getHQ(team);
+            if (hq.isAlive()) {
+                hqBox.setRobot(hq);
+                hq.draw();
+            }
 
             if (controller.currentRound == controller.match.getRounds())
                 drawWinMarkers();
@@ -96,19 +82,15 @@
 
         private function onMatchChange(e:MatchEvent):void {
             pointLabel.text = "0";
-            for each (var archonBox:DrawHUDArchon in archonBoxes) {
-                archonBox.removeArchon();
-            }
+            hqBox.removeRobot();
             drawWinMarkers();
         }
 
-        private function resizeArchonBoxes():void {
+        private function resizeHQBox():void {
             var boxSize:Number = Math.min(75, (height - 70 - pointLabel.height - winMarkerCanvas.height) / 6 - 20);
-            for (var i:uint = 0; i < 6; i++) {
-                archonBoxes[i].resize(boxSize);
-                archonBoxes[i].x = (180 - boxSize) / 2;
-                archonBoxes[i].y = ((boxSize + 20) * i) + 50;
-            }
+            hqBox.resize(boxSize);
+            hqBox.x = (180 - boxSize) / 2;
+            hqBox.y = 50;
         }
 
         private function drawWinMarkers():void {
@@ -139,7 +121,7 @@
 
         private function onResize(e:ResizeEvent):void {
             repositionWinMarkers();
-            resizeArchonBoxes();
+            resizeHQBox();
         }
 
     }

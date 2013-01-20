@@ -343,7 +343,7 @@
 
         private function updateRoundLabels():void {
             if (controller.match) {
-                roundLabel.text = controller.currentRound + " of " + controller.match.getMaxRounds();
+                roundLabel.text = controller.currentRound + " of " + Math.max(controller.match.getMaxRounds(), controller.match.getRounds());
             }
         }
 

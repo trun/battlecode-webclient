@@ -2,13 +2,13 @@
     import mx.containers.Canvas;
     import mx.controls.Image;
 
-    public class DrawHUDArchon extends Canvas {
+    public class DrawHUDHQ extends Canvas {
         private var image:Image;
-        private var archon:DrawRobot;
+        private var robot:DrawRobot;
 
-        public function DrawHUDArchon() {
-            width = 75;
-            height = 75;
+        public function DrawHUDHQ() {
+            width = 120;
+            height = 120;
 
             horizontalScrollPolicy = "off";
             verticalScrollPolicy = "off";
@@ -23,29 +23,29 @@
             addChild(image);
         }
 
-        public function setArchon(o:DrawRobot):void {
-            if (o != archon) {
-                removeArchon();
-                archon = o;
-                archon.setOverrideSize(width * 0.6);
+        public function setRobot(o:DrawRobot):void {
+            if (o != robot) {
+                removeRobot();
+                robot = o;
+                robot.setOverrideSize(width * 0.6);
                 o.x = width / 2;
                 o.y = height / 2;
                 addChild(o);
             }
         }
 
-        public function removeArchon():void {
-            if (archon && archon.parent == this)
-                removeChild(archon);
+        public function removeRobot():void {
+            if (robot && robot.parent == this)
+                removeChild(robot);
         }
 
         public function resize(size:Number):void {
             width = image.width = size;
             height = image.height = size;
-            if (archon) {
-                archon.setOverrideSize(size * 0.55);
-                archon.x = width / 2;
-                archon.y = height / 2;
+            if (robot) {
+                robot.setOverrideSize(size * 0.55);
+                robot.x = width / 2;
+                robot.y = height / 2;
             }
         }
 

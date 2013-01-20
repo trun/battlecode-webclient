@@ -13,10 +13,14 @@
         private var neutralEncampments:Object;
         private var encampments:Object;
         private var groundRobots:Object;
+        private var hqA:DrawRobot;
+        private var hqB:DrawRobot;
 
         // stats
         private var aPoints:Number;
         private var bPoints:Number;
+        private var aFlux:Number;
+        private var bFlux:Number;
         private var aGatheredPoints:Number;
         private var bGatheredPoints:Number;
         private var roundNum:uint;
@@ -40,6 +44,8 @@
 
             aPoints = 0;
             bPoints = 0;
+            aFlux = 0;
+            bFlux = 0;
             aGatheredPoints = 0;
             bGatheredPoints = 0;
             roundNum = 1;
@@ -68,8 +74,16 @@
             return groundRobots;
         }
 
+        public function getHQ(team:String):DrawRobot {
+            return team == Team.A ? hqA : hqB;
+        }
+
         public function getPoints(team:String):uint {
             return (team == Team.A) ? aPoints : bPoints;
+        }
+
+        public function getFlux(team:String):uint {
+            return (team == Team.A) ? aFlux : bFlux;
         }
 
         ///////////////////////////////////////////////////////
@@ -101,6 +115,9 @@
             for (a in state.groundRobots) {
                 groundRobots[a] = state.groundRobots[a].clone();
             }
+
+            hqA = state.hqA ? state.hqA.clone() as DrawRobot : null;
+            hqB = state.hqB ? state.hqB.clone() as DrawRobot : null;
 
             roundNum = state.roundNum;
         }
@@ -155,6 +172,26 @@
                     delete encampments[a];
                 }
             }
+
+            if (hqA) {
+                hqA.updateRound();
+                if (!hqA.isAlive()) {
+                    if (hqA.parent) {
+                        hqA.parent.removeChild(hqA);
+                    }
+                    hqA = null;
+                }
+            }
+
+            if (hqB) {
+                hqB.updateRound();
+                if (!hqB.isAlive()) {
+                    if (hqB.parent) {
+                        hqB.parent.removeChild(hqB);
+                    }
+                    hqB = null;
+                }
+            }
         }
 
         private function processEndOfRound():void {
@@ -194,13 +231,18 @@
                 if (o.parent) {
                     o.parent.removeChild(o);
                 }
-                delete neutralEncampments[s.getLocation()];
+                delete neutralEncampments[s.getLocation()]; // TODO dont delete just hide
             }
         }
 
         override public function visitDeathSignal(s:DeathSignal):* {
             var robot:DrawRobot = getRobot(s.getRobotID());
             robot.destroyUnit();
+
+            if (robot.getType() == RobotType.HQ) {
+                var hq:DrawRobot = robot.getTeam() == Team.A ? hqA : hqB;
+                hq.destroyUnit();
+            }
         }
 
         override public function visitEnergonChangeSignal(s:EnergonChangeSignal):* {
@@ -210,11 +252,17 @@
             for (var i:uint; i < robotIDs.length; i++) {
                 var robot:DrawRobot = getRobot(robotIDs[i]);
                 robot.setEnergon(energon[i]);
+
+                if (robot.getType() == RobotType.HQ) {
+                    var hq:DrawRobot = robot.getTeam() == Team.A ? hqA : hqB;
+                    hq.setEnergon(energon[i]);
+                }
             }
         }
 
         override public function visitFluxChangeSignal(s:FluxChangeSignal):* {
-            // TODO
+            aFlux = s.getFlux(Team.A);
+            bFlux = s.getFlux(Team.B);
         }
 
         override public function visitIndicatorStringSignal(s:IndicatorStringSignal):* {
@@ -244,6 +292,10 @@
             var robot:DrawRobot = new DrawRobot(s.getRobotID(), s.getRobotType(), s.getTeam());
             robot.setLocation(s.getLocation());
             groundRobots[s.getRobotID()] = robot;
+            if (s.getRobotType() == RobotType.HQ) {
+                if (s.getTeam() == Team.A) hqA = robot.clone() as DrawRobot;
+                if (s.getTeam() == Team.B) hqB = robot.clone() as DrawRobot;
+            }
         }
 
     }
