@@ -50,11 +50,6 @@
             visible = true;
             this.graphics.clear();
 
-            // draw background
-            this.graphics.beginFill(0x999999);
-            this.graphics.drawRect(width, height, 0, 0);
-            this.graphics.endFill();
-
             // draw progress bar
             var progressBarWidth:Number = width - image.width;
             this.graphics.lineStyle();
