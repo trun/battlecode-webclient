@@ -289,10 +289,14 @@
 
         override public function visitMineSignal(s:MineSignal):* {
             var loc:MapLocation = translateCoordinates(s.getLocation());
-            if (s.isBirth()) {
-                mines[loc.getX()][loc.getY()] = s.getTeam();
-            } else {
-                mines[loc.getX()][loc.getY()] = null;
+            if (map.isOnMap(loc)) {
+                if (s.isBirth()) {
+                    if (!mines[loc.getX()][loc.getY()]) {
+                        mines[loc.getX()][loc.getY()] = s.getTeam();
+                    }
+                } else {
+                    mines[loc.getX()][loc.getY()] = null;
+                }
             }
         }
 
@@ -301,7 +305,6 @@
             if (s.isLaying()) {
                 robot.layMine();
             } else {
-                // TODO mining stopping - not enough info on the signal?
                 var researchProgress:Array = robot.getTeam() == Team.A ? progressA : progressB;
                 var hasUpgrade:Boolean = researchProgress[ResearchType.getField(ResearchType.PIXAXE)] == 1.0;
                 robot.diffuseMine(hasUpgrade);

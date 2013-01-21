@@ -53,6 +53,7 @@
             this.type = type;
             this.team = team;
             this.maxEnergon = RobotType.maxEnergon(type);
+            this.movementDelay = 0;
 
             this.actions = new Vector.<DrawAction>();
 
@@ -285,7 +286,7 @@
         ///////////////////////////////////////////////////////
 
         private function drawEnergonBar():void {
-            if (!RenderConfiguration.showEnergon())
+            if (!RenderConfiguration.showEnergon() && getType() != RobotType.HQ)
                 return;
 
             if (getType() == RobotType.ENCAMPMENT)
@@ -482,13 +483,11 @@
         }
 
         private function calculateDrawX(rounds:uint):Number {
-            if (RenderConfiguration.showDiscrete()) return 0;
-            return getImageSize() * directionOffsetX(direction) * (rounds / movementDelay);
+            return 0;
         }
 
         private function calculateDrawY(rounds:uint):Number {
-            if (RenderConfiguration.showDiscrete()) return 0;
-            return getImageSize() * directionOffsetY(direction) * (rounds / movementDelay);
+            return 0;
         }
 
 

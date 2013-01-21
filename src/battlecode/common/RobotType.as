@@ -38,7 +38,7 @@
         }
 
         public static function movementDelayDiagonal(type:String):uint {
-            return movementDelay(type) * Math.SQRT2;
+            return 1;
         }
 
         public static function attackDelay(type:String):uint {
