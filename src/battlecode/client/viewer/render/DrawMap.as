@@ -150,7 +150,7 @@
                     team = mines[i][j];
                     if (team != null) {
                         this.mineCanvas.graphics.beginFill(Team.mineColor(team), 1.0);
-                        this.mineCanvas.graphics.drawCircle((i + .5) * getGridSize(), (j + .5) * getGridSize(), getGridSize() * .25);
+                        this.mineCanvas.graphics.drawRect((i + .1) * getGridSize(), (j + .1) * getGridSize(), getGridSize() * .8, getGridSize() * .8);
                         this.mineCanvas.graphics.endFill();
                     }
                 }

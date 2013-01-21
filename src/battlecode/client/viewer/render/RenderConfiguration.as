@@ -7,7 +7,7 @@
         private static var broadcast:Boolean = false;
         private static var discrete:Boolean = false;
         private static var energon:Boolean = true;
-        private static var gridlines:Boolean = true;
+        private static var gridlines:Boolean = false;
         private static var transfers:Boolean = false;
         private static var explosions:Boolean = true;
         private static var rangeHatch:Boolean = false;
