@@ -174,7 +174,7 @@
         }
 
         public function diffuseMine(hasUpgrade:Boolean):void {
-            this.addAction(new DrawAction(ActionType.DEFUSING, hasUpgrade ? GameConstants.MINE_DIFFUSE_DELAY : GameConstants.MINE_DIFFUSE_UPGRADE_DELAY))
+            this.addAction(new DrawAction(ActionType.DEFUSING, hasUpgrade ? GameConstants.MINE_DIFFUSE_UPGRADE_DELAY: GameConstants.MINE_DIFFUSE_DELAY))
         }
 
         public function attack(targetLocation:MapLocation):void {

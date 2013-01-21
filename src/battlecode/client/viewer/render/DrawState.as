@@ -306,7 +306,7 @@
                 robot.layMine();
             } else {
                 var researchProgress:Array = robot.getTeam() == Team.A ? progressA : progressB;
-                var hasUpgrade:Boolean = researchProgress[ResearchType.getField(ResearchType.PIXAXE)] == 1.0;
+                var hasUpgrade:Boolean = researchProgress[ResearchType.getField(ResearchType.DEFUSION)] == 1.0;
                 robot.diffuseMine(hasUpgrade);
             }
         }
