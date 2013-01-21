@@ -41,6 +41,41 @@
             }
         }
 
+        public function directionTo(loc:MapLocation):String {
+            var dx:int = loc.x - this.x;
+            var dy:int = loc.y - this.y;
+
+            if (Math.abs(dx) >= 2.414 * Math.abs(dy)) {
+                if (dx > 0) {
+                    return Direction.EAST;
+                } else if (dx < 0) {
+                    return Direction.WEST;
+                } else {
+                    return Direction.OMNI;
+                }
+            } else if (Math.abs(dy) >= 2.414 * Math.abs(dx)) {
+                if (dy > 0) {
+                    return Direction.SOUTH;
+                } else {
+                    return Direction.NORTH;
+                }
+            } else {
+                if (dy > 0) {
+                    if (dx > 0) {
+                        return Direction.SOUTH_EAST;
+                    } else {
+                        return Direction.SOUTH_WEST;
+                    }
+                } else {
+                    if (dx > 0) {
+                        return Direction.NORTH_EAST;
+                    } else {
+                        return Direction.NORTH_WEST;
+                    }
+                }
+            }
+        }
+
         public function equals(o:MapLocation):Boolean {
             return x == o.x && y == o.y;
         }

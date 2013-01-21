@@ -194,6 +194,7 @@
         }
 
         public function moveToLocation(location:MapLocation):void {
+            this.direction = this.location.directionTo(location);
             this.movementDelay = Direction.isDiagonal(direction) ?
                     RobotType.movementDelayDiagonal(type) :
                     RobotType.movementDelay(type);
