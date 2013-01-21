@@ -220,6 +220,9 @@
             // update animations
             broadcastAnimation.updateRound();
             explosionAnimation.updateRound();
+
+            // update tooltip
+            this.toolTip = "Robot " + getRobotID() + " " + getType() + " Energon: " + energon + " Loc: " + getLocation().toString();
         }
 
         public function draw(force:Boolean = false):void {
