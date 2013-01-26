@@ -16,7 +16,8 @@ Copyright (c) 2010 Trevor Rundell. MIT Licensed.
  -  D - toggle discrete movement (off by default)
  -  X - toggle rendering of explosions (on by default)
  -  E - toggle rendering of energy bars (on by default)
- -  H - toggle rendering of unit heights (all, ground, air, none)
+ -  H - toggle rendering of unit heights (all, soliders, encampments, none)
  -  G - toggle rendering of grid lines (off by default)
+ -  M - toggle rendering of mines (on by default)
  -  K - toggle keyframe processing (slow)
  -  Spacebar - toggle play / pause
