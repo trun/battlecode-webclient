@@ -8,12 +8,10 @@
         private static var discrete:Boolean = false;
         private static var energon:Boolean = true;
         private static var gridlines:Boolean = false;
-        private static var transfers:Boolean = false;
+        private static var mines:Boolean = true;
         private static var explosions:Boolean = true;
-        private static var rangeHatch:Boolean = false;
         private static var ground:Boolean = true;
         private static var encampments:Boolean = true;
-        private static var flux:Boolean = true;
         private static var tournament:Boolean = false;
 
         public function RenderConfiguration() {
@@ -51,16 +49,8 @@
             return gridlines;
         }
 
-        public static function showTransfers():Boolean {
-            return transfers;
-        }
-
         public static function showExplosions():Boolean {
             return explosions;
-        }
-
-        public static function showRangeHatch():Boolean {
-            return rangeHatch;
         }
 
         public static function showGround():Boolean {
@@ -71,8 +61,8 @@
             return encampments;
         }
 
-        public static function showFlux():Boolean {
-            return flux;
+        public static function showMines():Boolean {
+            return mines;
         }
 
         public static function isTournament():Boolean {
@@ -95,20 +85,12 @@
             gridlines = !gridlines;
         }
 
-        public static function toggleTransfers():void {
-            transfers = !transfers;
-        }
-
         public static function toggleExplosions():void {
             explosions = !explosions;
         }
 
-        public static function toggleRangeHatch():void {
-            rangeHatch = !rangeHatch;
-        }
-
-        public static function toggleFlux():void {
-            flux = !flux;
+        public static function toggleMines():void {
+            mines = !mines;
         }
 
         public static function toggleDrawHeight():void {

@@ -120,10 +120,6 @@
             if (e.ctrlKey || e.altKey) return;
 
             switch (String.fromCharCode(e.charCode)) {
-                case "A":
-                case "a":
-                    RenderConfiguration.toggleRangeHatch();
-                    break;
                 case "B":
                 case "b":
                     RenderConfiguration.toggleBroadcast();
@@ -152,17 +148,13 @@
                 case "k":
                     controller.keyframeRate = (controller.keyframeRate) ? 0 : 50; // toggle keyframing
                     break;
-                case "O":
-                case "o":
-                    RenderConfiguration.toggleFlux();
+                case "M":
+                case "m":
+                    RenderConfiguration.toggleMines();
                     break;
                 case "S":
                 case "s":
                     if (!trySkip(200)) if (!trySkip(100)) trySkip(50); // skip ahead
-                    break;
-                case "T":
-                case "t":
-                    RenderConfiguration.toggleTransfers();
                     break;
                 case "X":
                 case "x":

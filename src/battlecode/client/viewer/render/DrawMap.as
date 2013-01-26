@@ -257,6 +257,7 @@
             gridCanvas.visible = RenderConfiguration.showGridlines();
             encampmentCanvas.visible = RenderConfiguration.showEncampments();
             groundUnitCanvas.visible = RenderConfiguration.showGround();
+            mineCanvas.visible = RenderConfiguration.showMines();
         }
 
         private function onRoundChange(e:MatchEvent):void {
