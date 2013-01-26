@@ -329,7 +329,6 @@
         override public function visitSpawnSignal(s:SpawnSignal):* {
             var robot:DrawRobot = new DrawRobot(s.getRobotID(), s.getRobotType(), s.getTeam());
             robot.setLocation(s.getLocation());
-            groundRobots[s.getRobotID()] = robot;
 
             if (s.getRobotType() == RobotType.HQ) {
                 if (s.getTeam() == Team.A) hqA = robot.clone() as DrawRobot;
@@ -344,6 +343,9 @@
                     }
                     delete neutralEncampments[s.getLocation()];
                 }
+                encampments[s.getRobotID()] = robot;
+            } else {
+                groundRobots[s.getRobotID()] = robot;
             }
         }
 
