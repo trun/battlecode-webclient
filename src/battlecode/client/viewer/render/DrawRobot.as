@@ -60,7 +60,7 @@
             this.overrideSize = overrideSize;
 
             // set the unit avatar image
-            var avatarClass:Class = getUnitAvatar(type, team);
+            var avatarClass:Class = ImageAssets.getRobotAvatar(type, team);
             this.imageCanvas = new UIComponent();
             this.image = new Image();
             this.image.source = avatarClass;
@@ -398,10 +398,6 @@
             if (overrideSize)
                 return 1.0;
             return RenderConfiguration.getScalingFactor();
-        }
-
-        private function getUnitAvatar(type:String, team:String):Class {
-            return ImageAssets[type + "_" + team];
         }
 
         private function getUnitScale(type:String):Number {

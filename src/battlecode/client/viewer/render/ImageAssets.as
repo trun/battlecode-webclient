@@ -108,6 +108,10 @@
         public function ImageAssets() {
         }
 
+        public static function getRobotAvatar(type:String, team:String):Class {
+            return ImageAssets[type + "_" + team];
+        }
+
     }
 
 }

@@ -27,6 +27,7 @@
         private var roundNum:uint;
         private var progressA:Array;
         private var progressB:Array;
+        private var unitCounts:Object;
 
         // immutables
         private var map:GameMap;
@@ -55,6 +56,14 @@
 
             progressA = [ 0.0, 0.0, 0.0, 0.0, 0.0 ];
             progressB = [ 0.0, 0.0, 0.0, 0.0, 0.0 ];
+
+            unitCounts = new Object();
+            unitCounts[Team.A] = new Object();
+            unitCounts[Team.B] = new Object();
+            for each (var type:String in RobotType.values()) {
+                unitCounts[Team.A][type] = 0;
+                unitCounts[Team.B][type] = 0;
+            }
 
             this.map = map;
             this.origin = map.getOrigin();
@@ -96,6 +105,10 @@
             return team == Team.A ? progressA : progressB;
         }
 
+        public function getUnitCount(type:String, team:String):int {
+            return unitCounts[team][type];
+        }
+
         ///////////////////////////////////////////////////////
         /////////////////// CORE FUNCTIONS ////////////////////
         ///////////////////////////////////////////////////////
@@ -131,6 +144,14 @@
 
             progressA = state.progressA.concat();
             progressB = state.progressB.concat();
+
+            unitCounts = new Object();
+            unitCounts[Team.A] = new Object();
+            unitCounts[Team.B] = new Object();
+            for (a in state.unitCounts[Team.A]) {
+                unitCounts[Team.A][a] = state.unitCounts[Team.A][a];
+                unitCounts[Team.B][a] = state.unitCounts[Team.B][a];
+            }
 
             roundNum = state.roundNum;
         }
@@ -261,6 +282,8 @@
                 encampment.setLocation(robot.getLocation());
                 neutralEncampments[robot.getLocation()] = encampment;
             }
+
+            unitCounts[robot.getTeam()][robot.getType()]--;
         }
 
         override public function visitEnergonChangeSignal(s:EnergonChangeSignal):* {
@@ -347,6 +370,11 @@
             } else {
                 groundRobots[s.getRobotID()] = robot;
             }
+
+            if (RobotType.isEncampment(s.getRobotType())) {
+                trace(s.getRobotType())
+            }
+            unitCounts[s.getTeam()][s.getRobotType()]++;
         }
 
     }

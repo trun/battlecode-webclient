@@ -1,7 +1,9 @@
 ﻿package battlecode.client.viewer.render {
 
     import battlecode.client.viewer.MatchController;
+    import battlecode.client.viewer.render.DrawHUDUnit;
     import battlecode.common.ResearchType;
+    import battlecode.common.RobotType;
     import battlecode.common.Team;
     import battlecode.events.MatchEvent;
     import battlecode.serial.Match;
@@ -20,6 +22,7 @@
         private var pointLabel:Label;
         private var hqBox:DrawHUDHQ;
         private var researchBoxes:Array;
+        private var unitBoxes:Array;
         private var winMarkerCanvas:Canvas;
 
         private var lastRound:uint = 0;
@@ -64,11 +67,19 @@
                 addChild(researchBox);
             }
 
+            unitBoxes = new Array();
+            for each (var unit:String in RobotType.ground()) {
+                var unitBox:DrawHUDUnit = new DrawHUDUnit(unit, team);
+                unitBoxes.push(unitBox);
+                addChild(unitBox);
+            }
+
             addChild(winMarkerCanvas);
 
             repositionWinMarkers();
             resizeHQBox();
             drawResearchBoxes();
+            drawUnitCounts();
         }
 
         private function onRoundChange(e:MatchEvent):void {
@@ -92,6 +103,11 @@
             }
             drawResearchBoxes();
 
+            for each (var unitBox:DrawHUDUnit in unitBoxes) {
+                unitBox.setCount(controller.currentState.getUnitCount(unitBox.getType(), team));
+            }
+            drawUnitCounts();
+
             if (controller.currentRound == controller.match.getRounds()) {
                 drawWinMarkers();
             }
@@ -113,13 +129,25 @@
 
         private function drawResearchBoxes():void {
             var i:uint = 0;
+            var bottomUnitBox:DrawHUDUnit = unitBoxes[unitBoxes.length - 1];
+            var top:Number = bottomUnitBox.y + bottomUnitBox.height + 10;
             for each (var researchBox:DrawHUDResearch in researchBoxes) {
                 if (researchBox.getProgress() == 0) {
                     continue;
                 }
                 researchBox.resize(hqBox.width);
                 researchBox.x = (180 - hqBox.width) / 2;
-                researchBox.y = ((researchBox.height + 10) * i) + hqBox.height + hqBox.y + 10;
+                researchBox.y = ((researchBox.height + 10) * i) + top;
+                i++;
+            }
+        }
+
+        private function drawUnitCounts():void {
+            var top:Number = hqBox.height + hqBox.y + 10;
+            var i:uint = 0;
+            for each (var unitBox:DrawHUDUnit in unitBoxes) {
+                unitBox.x = (180 - unitBox.width * 2) / 2 + (i % 2) * unitBox.width;
+                unitBox.y = ((unitBox.height + 10) * Math.floor(i / 2)) + top;
                 i++;
             }
         }

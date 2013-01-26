@@ -13,6 +13,14 @@
         public function RobotType() {
         }
 
+        public static function values():Array {
+            return [ HQ, SOLDIER, MEDBAY, SHIELDS, ARTILLERY, SUPPLIER, GENERATOR, ENCAMPMENT ];
+        }
+
+        public static function ground():Array {
+            return [ SOLDIER, ARTILLERY, SUPPLIER, GENERATOR, SHIELDS, MEDBAY ];
+        }
+
         public static function maxEnergon(type:String):Number {
             switch (type) {
                 case HQ:
