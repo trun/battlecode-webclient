@@ -371,9 +371,6 @@
                 groundRobots[s.getRobotID()] = robot;
             }
 
-            if (RobotType.isEncampment(s.getRobotType())) {
-                trace(s.getRobotType())
-            }
             unitCounts[s.getTeam()][s.getRobotType()]++;
         }
 
