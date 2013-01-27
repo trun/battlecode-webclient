@@ -3,6 +3,14 @@ Copyright (c) 2010 Trevor Rundell. MIT Licensed.
 # Requirements
 
 -  Flex 3 SDK
+ - Java JDK 6+
+ - Ant
+
+Be sure to set your `FLEX_HOME` environment variable and then run...
+
+```
+ant build
+```
 
 # Online Demos
 
@@ -19,5 +27,6 @@ Copyright (c) 2010 Trevor Rundell. MIT Licensed.
  -  H - toggle rendering of unit heights (all, soliders, encampments, none)
  -  G - toggle rendering of grid lines (off by default)
  -  M - toggle rendering of mines (on by default)
+ -  O - toggle hats (on by default)
  -  K - toggle keyframe processing (slow)
  -  Spacebar - toggle play / pause
