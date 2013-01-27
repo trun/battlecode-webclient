@@ -105,6 +105,31 @@
         [Embed('/img/explode/explode64_f08.png')]
         public static const EXPLODE_8:Class;
 
+        [Embed('/img/explode/nuke256_f01.png')]
+        public static const NUKE_1:Class;
+        [Embed('/img/explode/nuke256_f02.png')]
+        public static const NUKE_2:Class;
+        [Embed('/img/explode/nuke256_f03.png')]
+        public static const NUKE_3:Class;
+        [Embed('/img/explode/nuke256_f04.png')]
+        public static const NUKE_4:Class;
+        [Embed('/img/explode/nuke256_f05.png')]
+        public static const NUKE_5:Class;
+        [Embed('/img/explode/nuke256_f06.png')]
+        public static const NUKE_6:Class;
+        [Embed('/img/explode/nuke256_f07.png')]
+        public static const NUKE_7:Class;
+        [Embed('/img/explode/nuke256_f08.png')]
+        public static const NUKE_8:Class;
+        [Embed('/img/explode/nuke256_f09.png')]
+        public static const NUKE_9:Class;
+        [Embed('/img/explode/nuke256_f10.png')]
+        public static const NUKE_10:Class;
+        [Embed('/img/explode/nuke256_f11.png')]
+        public static const NUKE_11:Class;
+        [Embed('/img/explode/nuke256_f12.png')]
+        public static const NUKE_12:Class;
+
         public function ImageAssets() {
         }
 

@@ -17,7 +17,7 @@
         }
 
         public function draw(force:Boolean = false):void {
-            if (!RenderConfiguration.showExplosions()) {
+            if (!RenderConfiguration.showExplosions() || !exploding) {
                 this.image.source = null;
                 return;
             }

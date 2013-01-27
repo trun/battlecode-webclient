@@ -92,7 +92,7 @@
             lastRound = e.currentRound;
 
             var hq:DrawRobot = controller.currentState.getHQ(team);
-            if (hq.isAlive()) {
+            if (hq && hq.isAlive()) {
                 hqBox.setRobot(hq);
                 hq.draw();
             }

@@ -20,6 +20,17 @@
             }
         }
 
+        public static function opposite(team:String):String {
+            switch (team) {
+                case A:
+                    return B;
+                case B:
+                    return A;
+                default:
+                    return null;
+            }
+        }
+
     }
 
 }

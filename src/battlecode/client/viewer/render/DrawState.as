@@ -16,6 +16,8 @@
         private var groundRobots:Object;
         private var hqA:DrawRobot;
         private var hqB:DrawRobot;
+        private var nukeA:Boolean;
+        private var nukeB:Boolean;
 
         // stats
         private var aPoints:Number;
@@ -33,7 +35,7 @@
         private var map:GameMap;
         private var origin:MapLocation;
 
-        public function DrawState(map:GameMap) {
+        public function DrawState(map:GameMap, nukeA:Boolean, nukeB:Boolean) {
             neutralEncampments = new Object();
             encampments = new Object();
             groundRobots = new Object();
@@ -64,6 +66,9 @@
                 unitCounts[Team.A][type] = 0;
                 unitCounts[Team.B][type] = 0;
             }
+
+            this.nukeA = nukeA;
+            this.nukeB = nukeB;
 
             this.map = map;
             this.origin = map.getOrigin();
@@ -157,7 +162,7 @@
         }
 
         public function clone():DrawState {
-            var state:DrawState = new DrawState(map);
+            var state:DrawState = new DrawState(map, nukeA, nukeB);
             state.copyStateFrom(this);
             return state;
         }
@@ -270,11 +275,20 @@
 
         override public function visitDeathSignal(s:DeathSignal):* {
             var robot:DrawRobot = getRobot(s.getRobotID());
-            robot.destroyUnit();
 
             if (robot.getType() == RobotType.HQ) {
                 var hq:DrawRobot = robot.getTeam() == Team.A ? hqA : hqB;
-                hq.destroyUnit();
+
+                var deathByNuke:Boolean = robot.getTeam() == Team.A ? nukeB : nukeA;
+                if (deathByNuke) {
+                    hq.nukeUnit();
+                    robot.nukeUnit();
+                } else {
+                    hq.destroyUnit();
+                    robot.destroyUnit();
+                }
+            } else {
+                robot.destroyUnit();
             }
 
             if (RobotType.isEncampment(robot.getType())) {

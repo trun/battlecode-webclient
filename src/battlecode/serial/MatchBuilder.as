@@ -1,7 +1,10 @@
 package battlecode.serial {
     import battlecode.common.MapLocation;
+    import battlecode.common.Team;
     import battlecode.common.TerrainTile;
     import battlecode.world.GameMap;
+    import battlecode.world.signals.ResearchChangeSignal;
+    import battlecode.world.signals.Signal;
     import battlecode.world.signals.SignalFactory;
 
     public class MatchBuilder {
@@ -13,6 +16,7 @@ package battlecode.serial {
 
         private var teamA:String, teamB:String, winner:String;
         private var mapName:String;
+        private var nukeA:Boolean = false, nukeB:Boolean = false;
 
         public function MatchBuilder() {
             deltas = [];
@@ -59,8 +63,19 @@ package battlecode.serial {
         public function addRoundDelta(xml:XML):void {
             var signalXml:XMLList = xml.children();
             var signals:Array = new Array();
-            for each (var signal:XML in signalXml) {
-                signals.push(SignalFactory.createSignal(signal));
+            for each (var signalXML:XML in signalXml) {
+                var signal:Signal = SignalFactory.createSignal(signalXML);
+                signals.push(signal);
+
+                // check for victory by nuke
+                if (signal is ResearchChangeSignal) {
+                    if ((signal as ResearchChangeSignal).getProgress(Team.A)[4] >= 1.0) {
+                        nukeA = true;
+                    }
+                    if ((signal as ResearchChangeSignal).getProgress(Team.B)[4] >= 1.0) {
+                        nukeB = true;
+                    }
+                }
             }
             deltas.push(new RoundDelta(signals));
         }
@@ -77,7 +92,7 @@ package battlecode.serial {
         }
 
         public function build():Match {
-            return new Match(gameMap, deltas, stats, teamA, teamB, mapName, winner, maxRounds);
+            return new Match(gameMap, deltas, stats, teamA, teamB, mapName, winner, maxRounds, nukeA, nukeB);
         }
 
     }

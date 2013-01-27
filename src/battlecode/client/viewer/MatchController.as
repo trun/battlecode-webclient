@@ -193,7 +193,7 @@
                 _currentMatch = value;
                 _currentRound = 0;
                 _match = matches[value];
-                _currentState = new DrawState(match.getMap());
+                _currentState = new DrawState(match.getMap(), match.getNukeA(), match.getNukeB());
                 _prevEnabled = value > 0;
                 _nextEnabled = value < matches.length - 1;
                 keyframes = new Vector.<DrawState>(uint(match.getRounds() / 50) + 1, true);

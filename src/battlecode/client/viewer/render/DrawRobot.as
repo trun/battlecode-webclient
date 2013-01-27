@@ -17,6 +17,7 @@
 
         private var broadcastAnimation:BroadcastAnimation;
         private var explosionAnimation:ExplosionAnimation;
+        private var nukeAnimation:NukeAnimation;
 
         private var overlayCanvas:UIComponent;
         private var imageCanvas:UIComponent;
@@ -44,8 +45,6 @@
         private var direction:String;
         private var energon:Number = 0;
         private var maxEnergon:Number = 0;
-        private var flux:Number = 0;
-        private var maxFlux:Number = 0;
         private var alive:Boolean = true;
 
         public function DrawRobot(robotID:uint, type:String, team:String, overrideSize:Number = 0) {
@@ -86,6 +85,9 @@
 
             this.explosionAnimation = new ExplosionAnimation();
             this.addChild(explosionAnimation);
+
+            this.nukeAnimation = new NukeAnimation();
+            this.addChild(nukeAnimation);
         }
 
         public function clone():DrawObject {
@@ -103,10 +105,13 @@
 
             d.removeChild(d.broadcastAnimation);
             d.removeChild(d.explosionAnimation);
+            d.removeChild(d.nukeAnimation);
             d.broadcastAnimation = broadcastAnimation.clone() as BroadcastAnimation;
             d.explosionAnimation = explosionAnimation.clone() as ExplosionAnimation;
+            d.nukeAnimation = nukeAnimation.clone() as NukeAnimation;
             d.addChild(d.broadcastAnimation);
             d.addChild(d.explosionAnimation);
+            d.addChild(d.nukeAnimation);
 
             return d;
         }
@@ -193,6 +198,11 @@
             this.alive = false;
         }
 
+        public function nukeUnit():void {
+            this.nukeAnimation.explode();
+            this.alive = false;
+        }
+
         public function moveToLocation(location:MapLocation):void {
             this.direction = this.location.directionTo(location);
             this.movementDelay = Direction.isDiagonal(direction) ?
@@ -203,7 +213,7 @@
         }
 
         public function isAlive():Boolean {
-            return alive || explosionAnimation.isAlive();
+            return alive || explosionAnimation.isAlive() || nukeAnimation.isAlive();
         }
 
         public function updateRound():void {
@@ -220,13 +230,14 @@
             // update animations
             broadcastAnimation.updateRound();
             explosionAnimation.updateRound();
+            nukeAnimation.updateRound();
 
             // update tooltip
             this.toolTip = "Robot " + getRobotID() + " " + getType() + " Energon: " + energon + " Loc: " + getLocation().toString();
         }
 
         public function draw(force:Boolean = false):void {
-            if (explosionAnimation.isExploding()) {
+            if (explosionAnimation.isExploding() || nukeAnimation.isExploding()) {
                 this.imageCanvas.visible = false;
                 this.overlayCanvas.visible = false;
                 this.graphics.clear();
