@@ -3,8 +3,8 @@ Copyright (c) 2010 Trevor Rundell. MIT Licensed.
 # Requirements
 
 -  Flex 3 SDK
- - Java JDK 6+
- - Ant
+-  Java JDK 6+
+-  Ant
 
 Be sure to set your `FLEX_HOME` environment variable and then run...
 
