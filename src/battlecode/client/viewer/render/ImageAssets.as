@@ -130,11 +130,34 @@
         [Embed('/img/explode/nuke256_f12.png')]
         public static const NUKE_12:Class;
 
+        [Embed('/img/hats/batman.png')]
+        public static const HAT_BATMAN:Class;
+        [Embed('/img/hats/bird.png')]
+        public static const HAT_BIRD:Class;
+        [Embed('/img/hats/bunny.png')]
+        public static const HAT_BUNNY:Class;
+        [Embed('/img/hats/christmas.png')]
+        public static const HAT_CHRISTMAS:Class;
+        [Embed('/img/hats/duck.png')]
+        public static const HAT_DUCK:Class;
+        [Embed('/img/hats/fedora.png')]
+        public static const HAT_FEDORA:Class;
+        [Embed('/img/hats/kipmud.png')]
+        public static const HAT_KIPMUD:Class;
+        [Embed('/img/hats/smiley.png')]
+        public static const HAT_SMILEY:Class;
+
         public function ImageAssets() {
         }
 
         public static function getRobotAvatar(type:String, team:String):Class {
             return ImageAssets[type + "_" + team];
+        }
+
+        private static const HATS:Array = [ HAT_BATMAN, HAT_BIRD, HAT_BUNNY, HAT_CHRISTMAS, HAT_DUCK, HAT_FEDORA, HAT_KIPMUD, HAT_SMILEY ];
+
+        public static function getHatAvatar(i:int):Class {
+            return HATS[((i % HATS.length) + HATS.length) % HATS.length];
         }
 
     }

@@ -21,6 +21,7 @@
 
         private var overlayCanvas:UIComponent;
         private var imageCanvas:UIComponent;
+        private var hatCanvas:UIComponent;
         private var image:Image;
 
         // size
@@ -46,6 +47,8 @@
         private var energon:Number = 0;
         private var maxEnergon:Number = 0;
         private var alive:Boolean = true;
+        private var hats:Array;
+        private var hatImages:Array;
 
         public function DrawRobot(robotID:uint, type:String, team:String, overrideSize:Number = 0) {
             this.robotID = robotID;
@@ -53,6 +56,8 @@
             this.team = team;
             this.maxEnergon = RobotType.maxEnergon(type);
             this.movementDelay = 0;
+            this.hats = new Array();
+            this.hatImages = new Array();
 
             this.actions = new Vector.<DrawAction>();
 
@@ -76,6 +81,9 @@
             this.overlayCanvas = new UIComponent();
             this.addChild(overlayCanvas);
 
+            this.hatCanvas = new UIComponent();
+            this.addChild(hatCanvas);
+
             // set the hit area for click selection
             this.hitArea = imageCanvas;
 
@@ -97,6 +105,8 @@
             d.movementDelay = movementDelay;
             d.targetLocation = targetLocation;
             d.alive = alive;
+            d.hats = hats.concat();
+            d.hatImages = new Array();
 
             d.actions = new Vector.<DrawAction>(actions.length);
             for each (var o:DrawAction in actions) {
@@ -212,6 +222,10 @@
             this.addAction(new DrawAction(ActionType.MOVING, movementDelay));
         }
 
+        public function wearHat(hat:int):void {
+            hats.push(hat);
+        }
+
         public function isAlive():Boolean {
             return alive || explosionAnimation.isAlive() || nukeAnimation.isAlive();
         }
@@ -291,6 +305,7 @@
 
             drawEnergonBar();
             drawSelected();
+            drawHats();
 
             // draw animations
             broadcastAnimation.draw(force);
@@ -392,6 +407,28 @@
                 this.graphics.moveTo(-size / 2, size / 4);
                 this.graphics.lineTo(-size / 2, size / 2);
                 this.graphics.lineTo(-size / 4, size / 2);
+            }
+        }
+
+        private function drawHats():void {
+            if (!RenderConfiguration.showHats()) {
+                hatCanvas.visible = false;
+                return;
+            }
+
+            hatCanvas.visible = true;
+            while (hatImages.length < hats.length) {
+                var hatImage:Image = new Image();
+                var hatSource:Class = ImageAssets.getHatAvatar(hats[hatImages.length]);
+                hatImage.source = new hatSource();
+                hatImage.width = RenderConfiguration.getGridSize();
+                hatImage.height = RenderConfiguration.getGridSize();
+                //hatImage.width = 16;
+                //hatImage.height = 16;
+                hatImage.x = -RenderConfiguration.getGridSize() / 2;
+                hatImage.y = -RenderConfiguration.getGridSize() - hatImage.height * hatImages.length;
+                hatCanvas.addChild(hatImage);
+                hatImages.push(hatImage);
             }
         }
 

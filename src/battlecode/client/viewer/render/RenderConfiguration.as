@@ -9,6 +9,7 @@
         private static var energon:Boolean = true;
         private static var gridlines:Boolean = false;
         private static var mines:Boolean = true;
+        private static var hats:Boolean = true;
         private static var explosions:Boolean = true;
         private static var ground:Boolean = true;
         private static var encampments:Boolean = true;
@@ -65,6 +66,10 @@
             return mines;
         }
 
+        public static function showHats():Boolean {
+            return hats;
+        }
+
         public static function isTournament():Boolean {
             return tournament;
         }
@@ -91,6 +96,10 @@
 
         public static function toggleMines():void {
             mines = !mines;
+        }
+
+        public static function toggleHats():void {
+            hats = !hats;
         }
 
         public static function toggleDrawHeight():void {

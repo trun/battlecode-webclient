@@ -320,6 +320,10 @@
             bFlux = s.getFlux(Team.B);
         }
 
+        override public function visitHatSignal(s:HatSignal):* {
+            getRobot(s.getRobotID()).wearHat(s.getHat());
+        }
+
         override public function visitIndicatorStringSignal(s:IndicatorStringSignal):* {
             getRobot(s.getRobotID()).setIndicatorString(s.getIndicatorString(), s.getIndex());
         }

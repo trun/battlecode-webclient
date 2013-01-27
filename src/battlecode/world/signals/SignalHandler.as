@@ -14,6 +14,8 @@
 
         function visitFluxChangeSignal(s:FluxChangeSignal):*;
 
+        function visitHatSignal(s:HatSignal):*;
+
         function visitIndicatorStringSignal(s:IndicatorStringSignal):*;
 
         function visitMineSignal(s:MineSignal):*;

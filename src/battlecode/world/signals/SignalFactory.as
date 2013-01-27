@@ -23,6 +23,8 @@
                     return createEnergonChangeSignal(signalXML);
                 case "sig.FluxChangeSignal":
                     return createFluxChangeSignal(signalXML);
+                case "sig.HatSignal":
+                    return createHatSignal(signalXML);
                 case "sig.IndicatorStringSignal":
                     return createIndicatorStringSignal(signalXML);
                 case "sig.MineSignal":
@@ -92,6 +94,12 @@
             var fluxA:Number = parseFloat(flux[0]);
             var fluxB:Number = parseFloat(flux[1]);
             return new FluxChangeSignal(fluxA, fluxB);
+        }
+
+        public static function createHatSignal(signalXML:XML):HatSignal {
+            var robotID:uint = parseInt(signalXML.attribute("robotID"));
+            var hat:int = parseInt(signalXML.attribute("hat"));
+            return new HatSignal(robotID, hat);
         }
 
         public static function createMineSignal(signalXML:XML):MineSignal {

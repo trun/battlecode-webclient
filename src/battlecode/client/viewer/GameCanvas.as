@@ -152,6 +152,10 @@
                 case "m":
                     RenderConfiguration.toggleMines();
                     break;
+                case "O":
+                case "o":
+                    RenderConfiguration.toggleHats();
+                    break;
                 case "S":
                 case "s":
                     if (!trySkip(200)) if (!trySkip(100)) trySkip(50); // skip ahead

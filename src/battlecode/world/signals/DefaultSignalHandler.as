@@ -29,6 +29,10 @@
             return null;
         }
 
+        public function visitHatSignal(s:HatSignal):* {
+            return null;
+        }
+
         public function visitIndicatorStringSignal(s:IndicatorStringSignal):* {
             return null;
         }
