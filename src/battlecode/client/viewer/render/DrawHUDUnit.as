@@ -9,9 +9,9 @@ package battlecode.client.viewer.render {
         private var type:String;
         private var team:String;
 
-        public function DrawHUDUnit(type:String,  team:String) {
-            width = 70;
-            height = 25;
+        public function DrawHUDUnit(type:String, team:String) {
+            width = 35;
+            height = 60;
 
             horizontalScrollPolicy = "off";
             verticalScrollPolicy = "off";
@@ -20,22 +20,21 @@ package battlecode.client.viewer.render {
             image.source = ImageAssets.getRobotAvatar(type, team);
             image.width = 25;
             image.height = 25;
-            image.x = 0;
+            image.x = 5;
             image.y = 0;
 
             addChild(image);
 
             countLabel = new Label();
-            countLabel.width = width - image.width - 5;
+            countLabel.width = width;
             countLabel.height = 30;
-            countLabel.x = image.width + 5;
-            countLabel.y = 2;
+            countLabel.x = 0;
+            countLabel.y = image.height + 5;
             countLabel.setStyle("color", 0xFFFFFF);
             countLabel.setStyle("fontSize", 18);
             countLabel.setStyle("fontWeight", "bold");
             countLabel.setStyle("textAlign", "center");
             countLabel.setStyle("fontFamily", "Courier New");
-            countLabel.setStyle("textAlign", "left");
             countLabel.text = "00";
 
             addChild(countLabel);

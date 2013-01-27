@@ -423,8 +423,6 @@
                 hatImage.source = new hatSource();
                 hatImage.width = RenderConfiguration.getGridSize();
                 hatImage.height = RenderConfiguration.getGridSize();
-                //hatImage.width = 16;
-                //hatImage.height = 16;
                 hatImage.x = -RenderConfiguration.getGridSize() / 2;
                 hatImage.y = -RenderConfiguration.getGridSize() - hatImage.height * hatImages.length;
                 hatCanvas.addChild(hatImage);

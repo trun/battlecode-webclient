@@ -146,8 +146,8 @@
             var top:Number = hqBox.height + hqBox.y + 10;
             var i:uint = 0;
             for each (var unitBox:DrawHUDUnit in unitBoxes) {
-                unitBox.x = (180 - unitBox.width * 2) / 2 + (i % 2) * unitBox.width;
-                unitBox.y = ((unitBox.height + 10) * Math.floor(i / 2)) + top;
+                unitBox.x = (180 - unitBox.width * 3) / 2 + (i % 3) * unitBox.width;
+                unitBox.y = ((unitBox.height + 10) * Math.floor(i / 3)) + top;
                 i++;
             }
         }
@@ -182,6 +182,7 @@
             repositionWinMarkers();
             resizeHQBox();
             drawResearchBoxes();
+            drawUnitCounts();
         }
 
     }
