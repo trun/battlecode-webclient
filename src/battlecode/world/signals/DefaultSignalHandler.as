@@ -29,19 +29,7 @@
             return null;
         }
 
-        public function visitHatSignal(s:HatSignal):* {
-            return null;
-        }
-
         public function visitIndicatorStringSignal(s:IndicatorStringSignal):* {
-            return null;
-        }
-
-        public function visitMineSignal(s:MineSignal):* {
-            return null;
-        }
-
-        public function visitMineLayerSignal(s:MineLayerSignal):* {
             return null;
         }
 
@@ -49,11 +37,11 @@
             return null;
         }
 
-        public function visitNodeBirthSignal(s:NodeBirthSignal):* {
+        public function visitNeutralsDensitySignal(s:NeutralsDensitySignal):* {
             return null;
         }
 
-        public function visitResearchChangeSignal(s:ResearchChangeSignal):* {
+        public function visitNeutralsTeamSignal(s:NeutralsTeamSignal):* {
             return null;
         }
 

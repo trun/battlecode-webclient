@@ -1,9 +1,7 @@
 package battlecode.serial {
     import battlecode.common.MapLocation;
-    import battlecode.common.Team;
     import battlecode.common.TerrainTile;
     import battlecode.world.GameMap;
-    import battlecode.world.signals.ResearchChangeSignal;
     import battlecode.world.signals.Signal;
     import battlecode.world.signals.SignalFactory;
 
@@ -62,20 +60,10 @@ package battlecode.serial {
 
         public function addRoundDelta(xml:XML):void {
             var signalXml:XMLList = xml.children();
-            var signals:Array = new Array();
+            var signals:Array = [];
             for each (var signalXML:XML in signalXml) {
                 var signal:Signal = SignalFactory.createSignal(signalXML);
                 signals.push(signal);
-
-                // check for victory by nuke
-                if (signal is ResearchChangeSignal) {
-                    if ((signal as ResearchChangeSignal).getProgress(Team.A)[4] >= 1.0) {
-                        nukeA = true;
-                    }
-                    if ((signal as ResearchChangeSignal).getProgress(Team.B)[4] >= 1.0) {
-                        nukeB = true;
-                    }
-                }
             }
             deltas.push(new RoundDelta(signals));
         }

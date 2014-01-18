@@ -2,7 +2,7 @@
     import battlecode.common.MapLocation;
 
     public class ParseUtils {
-        private static var whitespace:Array = [ "\n", "\r", "\t" ];
+        private static const whitespace:Array = [ "\n", "\r", "\t" ];
 
         public function ParseUtils() {
         }
@@ -13,7 +13,7 @@
         }
 
         public static function parseBoolean(str:String):Boolean {
-            return (str == "true") ? true : false;
+            return str == "true";
         }
 
         public static function trim(str:String):String {

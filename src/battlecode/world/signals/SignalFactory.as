@@ -1,5 +1,6 @@
 ﻿package battlecode.world.signals {
     import battlecode.client.viewer.render.RenderConfiguration;
+    import battlecode.common.AttackType;
     import battlecode.common.MapLocation;
     import battlecode.serial.ParseUtils;
 
@@ -23,20 +24,14 @@
                     return createEnergonChangeSignal(signalXML);
                 case "sig.FluxChangeSignal":
                     return createFluxChangeSignal(signalXML);
-                case "sig.HatSignal":
-                    return createHatSignal(signalXML);
                 case "sig.IndicatorStringSignal":
                     return createIndicatorStringSignal(signalXML);
-                case "sig.MineSignal":
-                    return createMineSignal(signalXML);
-                case "sig.MinelayerSignal":
-                    return createMineLayerSignal(signalXML);
                 case "sig.MovementSignal":
                     return createMovementSignal(signalXML);
-                case "sig.NodeBirthSignal":
-                    return createNodeBirthSignal(signalXML);
-                case "sig.ResearchChangeSignal":
-                    return createResearchChangeSignal(signalXML);
+                case "sig.NeutralsDensitySignal":
+                    return createNeutralsDensitySignal(signalXML);
+                case "sig.NeutralsTeamSignal":
+                    return createNeutralsTeamSignal(signalXML);
                 case "sig.ShieldChangeSignal":
                     return createShieldChangeSignal(signalXML);
                 case "sig.SpawnSignal":
@@ -48,7 +43,8 @@
         public static function createAttackSignal(signalXML:XML):AttackSignal {
             var robotID:uint = parseInt(signalXML.attribute("robotID"));
             var loc:MapLocation = ParseUtils.parseLocation(signalXML.attribute("targetLoc"));
-            return new AttackSignal(robotID, loc);
+            var attackType:String = AttackType.fromType(parseInt(signalXML.attribute("attackType")));
+            return new AttackSignal(robotID, loc, attackType);
         }
 
         public static function createBroadcastSignal(signalXML:XML):BroadcastSignal {
@@ -96,45 +92,32 @@
             return new FluxChangeSignal(fluxA, fluxB);
         }
 
-        public static function createHatSignal(signalXML:XML):HatSignal {
-            var robotID:uint = parseInt(signalXML.attribute("robotID"));
-            var hat:int = parseInt(signalXML.attribute("hat"));
-            return new HatSignal(robotID, hat);
-        }
-
-        public static function createMineSignal(signalXML:XML):MineSignal {
-            var loc:MapLocation = ParseUtils.parseLocation(signalXML.attribute("mineLoc"));
-            var team:String = signalXML.attribute("mineTeam").toString();
-            var birth:Boolean = ParseUtils.parseBoolean(signalXML.attribute("birth"));
-            return new MineSignal(loc, team, birth);
-        }
-
-        public static function createMineLayerSignal(signalXML:XML):MineLayerSignal {
-            var robotID:uint = parseInt(signalXML.attribute("robotID"));
-            var laying:Boolean = ParseUtils.parseBoolean(signalXML.attribute("isLaying"));
-            return new MineLayerSignal(robotID, laying);
-        }
-
         public static function createMovementSignal(signalXML:XML):MovementSignal {
             var robotID:uint = parseInt(signalXML.attribute("robotID"));
             var loc:MapLocation = ParseUtils.parseLocation(signalXML.attribute("newLoc"));
-            return new MovementSignal(robotID, loc);
+            var type:String = signalXML.child("mt").text();
+            var delay:uint = parseInt(signalXML.attribute("delay"));
+            return new MovementSignal(robotID, loc, type, delay);
         }
 
-        public static function createNodeBirthSignal(signalXML:XML):NodeBirthSignal {
-            var loc:MapLocation = ParseUtils.parseLocation(signalXML.attribute("location"));
-            return new NodeBirthSignal(loc);
+        public static function createNeutralsDensitySignal(signalXML:XML):NeutralsDensitySignal {
+            var amounts:Array = [];
+            for each (var row:XML in signalXML.child("amounts").children()) {
+                amounts.push(row.text().map(function (element:*, index:int, arr:Array):uint {
+                    return parseInt(element);
+                }))
+            }
+            return new NeutralsDensitySignal(amounts);
         }
 
-        public static function createResearchChangeSignal(signalXML:XML):ResearchChangeSignal {
-            var progress:XMLList = signalXML.child("progress").children();
-            var progressA:Array = progress[0].split(",").map(function (element:*, index:int, arr:Array):Number {
-                return parseFloat(element);
-            });
-            var progressB:Array = progress[1].split(",").map(function (element:*, index:int, arr:Array):Number {
-                return parseFloat(element);
-            });
-            return new ResearchChangeSignal(progressA, progressB);
+        public static function createNeutralsTeamSignal(signalXML:XML):NeutralsTeamSignal {
+            var teams:Array = [];
+            for each (var row:XML in signalXML.child("teams").children()) {
+                teams.push(row.text().map(function (element:*, index:int, arr:Array):uint {
+                    return parseInt(element);
+                }))
+            }
+            return new NeutralsTeamSignal(teams);
         }
 
         public static function createIndicatorStringSignal(signalXML:XML):IndicatorStringSignal {

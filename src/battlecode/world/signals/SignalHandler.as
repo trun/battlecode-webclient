@@ -14,19 +14,13 @@
 
         function visitFluxChangeSignal(s:FluxChangeSignal):*;
 
-        function visitHatSignal(s:HatSignal):*;
-
         function visitIndicatorStringSignal(s:IndicatorStringSignal):*;
-
-        function visitMineSignal(s:MineSignal):*;
-
-        function visitMineLayerSignal(s:MineLayerSignal):*;
 
         function visitMovementSignal(s:MovementSignal):*;
 
-        function visitNodeBirthSignal(s:NodeBirthSignal):*;
+        function visitNeutralsDensitySignal(s:NeutralsDensitySignal):*;
 
-        function visitResearchChangeSignal(s:ResearchChangeSignal):*;
+        function visitNeutralsTeamSignal(s:NeutralsTeamSignal):*;
 
         function visitShieldChangeSignal(s:ShieldChangeSignal):*;
 
