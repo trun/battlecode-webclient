@@ -14,13 +14,13 @@
         }
 
         public static function ground():Array {
-            return [ SOLDIER, SOLDIER, PASTR, NOISETOWER ];
+            return [ SOLDIER, PASTR, NOISETOWER ];
         }
 
         public static function maxEnergon(type:String):Number {
             switch (type) {
                 case HQ:
-                    return Number.MAX_VALUE;
+                    return int.MAX_VALUE;
                 case SOLDIER:
                     return 100.0;
                 case PASTR:

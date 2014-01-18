@@ -79,17 +79,9 @@
         public function redrawAll():void {
             drawMap();
             drawGridlines();
-            drawMines();
             drawUnits();
 
             var o:DrawObject;
-            for each (o in controller.currentState.getEncampments()) {
-                o.draw(true);
-            }
-
-            for each (o in controller.currentState.getNeutralEncampments()) {
-                o.draw(true);
-            }
 
             for each (o in controller.currentState.getGroundRobots()) {
                 o.draw(true);
@@ -113,13 +105,20 @@
                 for (j = 0; j < map.getWidth(); j++) {
                     tile = terrain[i][j] as TerrainTile;
                     if (tile.getType() == TerrainTile.LAND) {
-                        scalar = 0xFF * 0.8;
+                        scalar = 0xFF * 0.9;
+                        colorTransform = new ColorTransform(0, 0, 0, 1, scalar, scalar, scalar, 0);
+                        this.mapCanvas.graphics.beginFill(colorTransform.color, 1.0);
+                        this.mapCanvas.graphics.drawRect(j * getGridSize(), i * getGridSize(), getGridSize(), getGridSize());
+                        this.mapCanvas.graphics.endFill();
+                    } else if (tile.getType() == TerrainTile.ROAD) {
+                        scalar = 0xFF * 0.7;
                         colorTransform = new ColorTransform(0, 0, 0, 1, scalar, scalar, scalar, 0);
                         this.mapCanvas.graphics.beginFill(colorTransform.color, 1.0);
                         this.mapCanvas.graphics.drawRect(j * getGridSize(), i * getGridSize(), getGridSize(), getGridSize());
                         this.mapCanvas.graphics.endFill();
                     } else {
-                        this.mapCanvas.graphics.beginFill(0x000000, 1.0);
+                        colorTransform = new ColorTransform(0, 0, 0, 1, 0x00, 0x00, 0x99, 0);
+                        this.mapCanvas.graphics.beginFill(colorTransform.color, 1.0);
                         this.mapCanvas.graphics.drawRect(j * getGridSize(), i * getGridSize(), getGridSize(), getGridSize());
                         this.mapCanvas.graphics.endFill();
                     }
@@ -140,27 +139,8 @@
             }
         }
 
-        private function drawMines():void {
-            var mines:Array = controller.currentState.getMines();
-            var i:uint, j:uint, team:String;
-
-            this.mineCanvas.graphics.clear();
-            for (i = 0; i < mines.length; i++) {
-                for (j = 0; j < mines[i].length; j++) {
-                    team = mines[i][j];
-                    if (team != null) {
-                        this.mineCanvas.graphics.beginFill(Team.mineColor(team), 1.0);
-                        this.mineCanvas.graphics.drawRect((i + .1) * getGridSize(), (j + .1) * getGridSize(), getGridSize() * .8, getGridSize() * .8);
-                        this.mineCanvas.graphics.endFill();
-                    }
-                }
-            }
-        }
-
         private function drawUnits():void {
             var loc:MapLocation, i:uint, j:uint, robot:DrawRobot;
-            var neutralEncampments:Object = controller.currentState.getNeutralEncampments();
-            var encampments:Object = controller.currentState.getEncampments();
             var groundRobots:Object = controller.currentState.getGroundRobots();
 
             while (encampmentCanvas.numChildren > 0)
@@ -168,28 +148,6 @@
 
             while (groundUnitCanvas.numChildren > 0)
                 groundUnitCanvas.removeChildAt(0);
-
-            for each (robot in encampments) {
-                loc = robot.getLocation();
-                j = (loc.getX() - origin.getX());
-                i = (loc.getY() - origin.getY());
-                robot.x = j * getGridSize() + getGridSize() / 2;
-                robot.y = i * getGridSize() + getGridSize() / 2;
-                robot.addEventListener(MouseEvent.CLICK, onRobotSelect, false, 0, true);
-                encampmentCanvas.addChild(robot);
-                robot.draw();
-            }
-
-            for each (robot in neutralEncampments) {
-                loc = robot.getLocation();
-                j = (loc.getX() - origin.getX());
-                i = (loc.getY() - origin.getY());
-                robot.x = j * getGridSize() + getGridSize() / 2;
-                robot.y = i * getGridSize() + getGridSize() / 2;
-                robot.addEventListener(MouseEvent.CLICK, onRobotSelect, false, 0, true);
-                encampmentCanvas.addChild(robot);
-                robot.draw();
-            }
 
             for each (robot in groundRobots) {
                 loc = robot.getLocation();
@@ -205,35 +163,7 @@
 
         private function updateUnits():void {
             var loc:MapLocation, i:uint, j:uint, robot:DrawRobot;
-            var neutralEncampments:Object = controller.currentState.getNeutralEncampments();
-            var encampments:Object = controller.currentState.getEncampments();
             var groundRobots:Object = controller.currentState.getGroundRobots();
-
-            for each (robot in encampments) {
-                loc = robot.getLocation();
-                j = (loc.getX() - origin.getX());
-                i = (loc.getY() - origin.getY());
-                robot.x = j * getGridSize() + getGridSize() / 2;
-                robot.y = i * getGridSize() + getGridSize() / 2;
-                if (!robot.parent && robot.isAlive()) {
-                    robot.addEventListener(MouseEvent.CLICK, onRobotSelect, false, 0, true);
-                    encampmentCanvas.addChild(robot);
-                }
-                robot.draw();
-            }
-
-            for each (robot in neutralEncampments) {
-                loc = robot.getLocation();
-                j = (loc.getX() - origin.getX());
-                i = (loc.getY() - origin.getY());
-                robot.x = j * getGridSize() + getGridSize() / 2;
-                robot.y = i * getGridSize() + getGridSize() / 2;
-                if (!robot.parent && robot.isAlive()) {
-                    robot.addEventListener(MouseEvent.CLICK, onRobotSelect, false, 0, true);
-                    encampmentCanvas.addChild(robot);
-                }
-                robot.draw();
-            }
 
             for each (robot in groundRobots) {
                 loc = robot.getLocation();
@@ -265,7 +195,6 @@
                 drawUnits();
             }
             updateUnits();
-            drawMines();
 
             lastRound = e.currentRound;
 

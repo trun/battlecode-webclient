@@ -1,8 +1,6 @@
 ﻿package battlecode.client.viewer.render {
 
     import battlecode.client.viewer.MatchController;
-    import battlecode.client.viewer.render.DrawHUDUnit;
-    import battlecode.common.ResearchType;
     import battlecode.common.RobotType;
     import battlecode.common.Team;
     import battlecode.events.MatchEvent;
@@ -60,13 +58,6 @@
             hqBox = new DrawHUDHQ();
             addChild(hqBox);
 
-            researchBoxes = new Array();
-            for each (var type:String in ResearchType.values()) {
-                var researchBox:DrawHUDResearch = new DrawHUDResearch(type);
-                researchBoxes.push(researchBox);
-                addChild(researchBox);
-            }
-
             unitBoxes = new Array();
             for each (var unit:String in RobotType.ground()) {
                 var unitBox:DrawHUDUnit = new DrawHUDUnit(unit, team);
@@ -97,12 +88,6 @@
                 hq.draw();
             }
 
-            var progress:Array = controller.currentState.getResearchProgress(team);
-            for (var i:int = 0; i < researchBoxes.length; i++) {
-                researchBoxes[i].setProgress(progress[i]);
-            }
-            drawResearchBoxes();
-
             for each (var unitBox:DrawHUDUnit in unitBoxes) {
                 unitBox.setCount(controller.currentState.getUnitCount(unitBox.getType(), team));
             }
@@ -131,15 +116,6 @@
             var i:uint = 0;
             var bottomUnitBox:DrawHUDUnit = unitBoxes[unitBoxes.length - 1];
             var top:Number = bottomUnitBox.y + bottomUnitBox.height + 10;
-            for each (var researchBox:DrawHUDResearch in researchBoxes) {
-                if (researchBox.getProgress() == 0) {
-                    continue;
-                }
-                researchBox.resize(hqBox.width);
-                researchBox.x = (180 - hqBox.width) / 2;
-                researchBox.y = ((researchBox.height + 10) * i) + top;
-                i++;
-            }
         }
 
         private function drawUnitCounts():void {

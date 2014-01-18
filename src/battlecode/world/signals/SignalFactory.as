@@ -3,6 +3,7 @@
     import battlecode.common.AttackType;
     import battlecode.common.MapLocation;
     import battlecode.serial.ParseUtils;
+    import battlecode.serial.ParseUtils;
 
     public class SignalFactory {
 
@@ -79,7 +80,7 @@
                 return parseInt(element);
             });
             energon = energon.map(function (element:*, index:int, arr:Array):Number {
-                return parseFloat(element);
+                return ParseUtils.parseNumber(element);
             });
 
             return new EnergonChangeSignal(robotIDs, energon);
@@ -103,7 +104,7 @@
         public static function createNeutralsDensitySignal(signalXML:XML):NeutralsDensitySignal {
             var amounts:Array = [];
             for each (var row:XML in signalXML.child("amounts").children()) {
-                amounts.push(row.text().map(function (element:*, index:int, arr:Array):uint {
+                amounts.push(row.text().split(",").map(function (element:*, index:int, arr:Array):uint {
                     return parseInt(element);
                 }))
             }
@@ -113,7 +114,7 @@
         public static function createNeutralsTeamSignal(signalXML:XML):NeutralsTeamSignal {
             var teams:Array = [];
             for each (var row:XML in signalXML.child("teams").children()) {
-                teams.push(row.text().map(function (element:*, index:int, arr:Array):uint {
+                teams.push(row.text().split(",").map(function (element:*, index:int, arr:Array):uint {
                     return parseInt(element);
                 }))
             }

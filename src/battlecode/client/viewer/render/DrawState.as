@@ -1,6 +1,5 @@
 ﻿package battlecode.client.viewer.render {
     import battlecode.common.MapLocation;
-    import battlecode.common.ResearchType;
     import battlecode.common.RobotType;
     import battlecode.common.Team;
     import battlecode.serial.RoundDelta;
@@ -10,14 +9,9 @@
 
     public class DrawState extends DefaultSignalHandler {
         // state
-        private var mines:Array; // Team[][]
-        private var neutralEncampments:Object;
-        private var encampments:Object;
         private var groundRobots:Object;
         private var hqA:DrawRobot;
         private var hqB:DrawRobot;
-        private var nukeA:Boolean;
-        private var nukeB:Boolean;
 
         // stats
         private var aPoints:Number;
@@ -27,26 +21,14 @@
         private var aGatheredPoints:Number;
         private var bGatheredPoints:Number;
         private var roundNum:uint;
-        private var progressA:Array;
-        private var progressB:Array;
         private var unitCounts:Object;
 
         // immutables
         private var map:GameMap;
         private var origin:MapLocation;
 
-        public function DrawState(map:GameMap, nukeA:Boolean, nukeB:Boolean) {
-            neutralEncampments = new Object();
-            encampments = new Object();
+        public function DrawState(map:GameMap) {
             groundRobots = new Object();
-
-            mines = new Array();
-            for (var i:int = 0; i < map.getWidth(); i++) {
-                mines[i] = new Array();
-                for (var j:int = 0; j < map.getHeight(); j++) {
-                    mines[i][j] = null;
-                }
-            }
 
             aPoints = 0;
             bPoints = 0;
@@ -56,9 +38,6 @@
             bGatheredPoints = 0;
             roundNum = 1;
 
-            progressA = [ 0.0, 0.0, 0.0, 0.0, 0.0 ];
-            progressB = [ 0.0, 0.0, 0.0, 0.0, 0.0 ];
-
             unitCounts = new Object();
             unitCounts[Team.A] = new Object();
             unitCounts[Team.B] = new Object();
@@ -67,9 +46,6 @@
                 unitCounts[Team.B][type] = 0;
             }
 
-            this.nukeA = nukeA;
-            this.nukeB = nukeB;
-
             this.map = map;
             this.origin = map.getOrigin();
         }
@@ -77,18 +53,6 @@
         ///////////////////////////////////////////////////////
         ///////////////// PROPERTY GETTERS ////////////////////
         ///////////////////////////////////////////////////////
-
-        public function getMines():Array {
-            return mines;
-        }
-
-        public function getNeutralEncampments():Object {
-            return neutralEncampments;
-        }
-
-        public function getEncampments():Object {
-            return encampments
-        }
 
         public function getGroundRobots():Object {
             return groundRobots;
@@ -106,10 +70,6 @@
             return (team == Team.A) ? aFlux : bFlux;
         }
 
-        public function getResearchProgress(team:String):Array {
-            return team == Team.A ? progressA : progressB;
-        }
-
         public function getUnitCount(type:String, team:String):int {
             return unitCounts[team][type];
         }
@@ -121,24 +81,6 @@
         private function copyStateFrom(state:DrawState):void {
             var a:*;
 
-            mines = new Array();
-            for (var i:int = 0; i < map.getWidth(); i++) {
-                mines[i] = new Array();
-                for (var j:int = 0; j < map.getHeight(); j++) {
-                    mines[i][j] = state.mines[i][j];
-                }
-            }
-
-            neutralEncampments = new Object();
-            for (a in state.neutralEncampments) {
-                neutralEncampments[a] = state.neutralEncampments[a].clone();
-            }
-
-            encampments = new Object();
-            for (a in state.encampments) {
-                encampments[a] = state.encampments[a].clone();
-            }
-
             groundRobots = new Object();
             for (a in state.groundRobots) {
                 groundRobots[a] = state.groundRobots[a].clone();
@@ -146,9 +88,6 @@
 
             hqA = state.hqA ? state.hqA.clone() as DrawRobot : null;
             hqB = state.hqB ? state.hqB.clone() as DrawRobot : null;
-
-            progressA = state.progressA.concat();
-            progressB = state.progressB.concat();
 
             unitCounts = new Object();
             unitCounts[Team.A] = new Object();
@@ -162,7 +101,7 @@
         }
 
         public function clone():DrawState {
-            var state:DrawState = new DrawState(map, nukeA, nukeB);
+            var state:DrawState = new DrawState(map);
             state.copyStateFrom(this);
             return state;
         }
@@ -201,17 +140,6 @@
                 }
             }
 
-            for (a in encampments) {
-                o = encampments[a] as DrawRobot;
-                o.updateRound();
-                if (!o.isAlive()) {
-                    if (o.parent) {
-                        o.parent.removeChild(o);
-                    }
-                    delete encampments[a];
-                }
-            }
-
             if (hqA) {
                 hqA.updateRound();
                 if (!hqA.isAlive()) {
@@ -243,13 +171,11 @@
 
         private function getRobot(id:uint):DrawRobot {
             if (groundRobots[id]) return groundRobots[id] as DrawRobot;
-            if (encampments[id]) return encampments[id] as DrawRobot;
             return null;
         }
 
         private function removeRobot(id:uint):void {
             if (groundRobots[id]) delete groundRobots[id];
-            if (encampments[id]) delete encampments[id];
         }
 
         private function translateCoordinates(loc:MapLocation):MapLocation {
@@ -265,7 +191,7 @@
         }
 
         override public function visitBroadcastSignal(s:BroadcastSignal):* {
-            getRobot(s.getRobotID()).broadcast();
+            //getRobot(s.getRobotID()).broadcast();
         }
 
         override public function visitCaptureSignal(s:CaptureSignal):* {
@@ -275,26 +201,11 @@
 
         override public function visitDeathSignal(s:DeathSignal):* {
             var robot:DrawRobot = getRobot(s.getRobotID());
+            robot.destroyUnit();
 
             if (robot.getType() == RobotType.HQ) {
                 var hq:DrawRobot = robot.getTeam() == Team.A ? hqA : hqB;
-
-                var deathByNuke:Boolean = robot.getTeam() == Team.A ? nukeB : nukeA;
-                if (deathByNuke) {
-                    hq.nukeUnit();
-                    robot.nukeUnit();
-                } else {
-                    hq.destroyUnit();
-                    robot.destroyUnit();
-                }
-            } else {
-                robot.destroyUnit();
-            }
-
-            if (RobotType.isEncampment(robot.getType())) {
-                var encampment:DrawRobot = new DrawRobot(0, RobotType.ENCAMPMENT, Team.NEUTRAL);
-                encampment.setLocation(robot.getLocation());
-                neutralEncampments[robot.getLocation()] = encampment;
+                hq.destroyUnit();
             }
 
             unitCounts[robot.getTeam()][robot.getType()]--;
@@ -320,51 +231,13 @@
             bFlux = s.getFlux(Team.B);
         }
 
-        override public function visitHatSignal(s:HatSignal):* {
-            getRobot(s.getRobotID()).wearHat(s.getHat());
-        }
 
         override public function visitIndicatorStringSignal(s:IndicatorStringSignal):* {
             getRobot(s.getRobotID()).setIndicatorString(s.getIndicatorString(), s.getIndex());
         }
 
-        override public function visitMineSignal(s:MineSignal):* {
-            var loc:MapLocation = translateCoordinates(s.getLocation());
-            if (map.isOnMap(loc)) {
-                if (s.isBirth()) {
-                    if (!mines[loc.getX()][loc.getY()]) {
-                        mines[loc.getX()][loc.getY()] = s.getTeam();
-                    }
-                } else {
-                    mines[loc.getX()][loc.getY()] = null;
-                }
-            }
-        }
-
-        override public function visitMineLayerSignal(s:MineLayerSignal):* {
-            var robot:DrawRobot = getRobot(s.getRobotID());
-            if (s.isLaying()) {
-                robot.layMine();
-            } else {
-                var researchProgress:Array = robot.getTeam() == Team.A ? progressA : progressB;
-                var hasUpgrade:Boolean = researchProgress[ResearchType.getField(ResearchType.DEFUSION)] == 1.0;
-                robot.diffuseMine(hasUpgrade);
-            }
-        }
-
         override public function visitMovementSignal(s:MovementSignal):* {
             getRobot(s.getRobotID()).moveToLocation(s.getTargetLoc());
-        }
-
-        override public function visitNodeBirthSignal(s:NodeBirthSignal):* {
-            var encampment:DrawRobot = new DrawRobot(0, RobotType.ENCAMPMENT, Team.NEUTRAL);
-            encampment.setLocation(s.getLocation());
-            neutralEncampments[s.getLocation()] = encampment;
-        }
-
-        override public function visitResearchChangeSignal(s:ResearchChangeSignal):* {
-            progressA = s.getProgress(Team.A);
-            progressB = s.getProgress(Team.B);
         }
 
         override public function visitSpawnSignal(s:SpawnSignal):* {
@@ -376,19 +249,7 @@
                 if (s.getTeam() == Team.B) hqB = robot.clone() as DrawRobot;
             }
 
-            if (RobotType.isEncampment(s.getRobotType())) {
-                var o:DrawRobot = neutralEncampments[s.getLocation()];
-                if (o) {
-                    if (o.parent) {
-                        o.parent.removeChild(o);
-                    }
-                    delete neutralEncampments[s.getLocation()];
-                }
-                encampments[s.getRobotID()] = robot;
-            } else {
-                groundRobots[s.getRobotID()] = robot;
-            }
-
+            groundRobots[s.getRobotID()] = robot;
             unitCounts[s.getTeam()][s.getRobotType()]++;
         }
 

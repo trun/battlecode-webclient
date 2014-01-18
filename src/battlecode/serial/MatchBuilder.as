@@ -1,6 +1,7 @@
 package battlecode.serial {
     import battlecode.common.MapLocation;
     import battlecode.common.TerrainTile;
+    import battlecode.common.TerrainTile;
     import battlecode.world.GameMap;
     import battlecode.world.signals.Signal;
     import battlecode.world.signals.SignalFactory;
@@ -14,7 +15,6 @@ package battlecode.serial {
 
         private var teamA:String, teamB:String, winner:String;
         private var mapName:String;
-        private var nukeA:Boolean = false, nukeB:Boolean = false;
 
         public function MatchBuilder() {
             deltas = [];
@@ -30,12 +30,41 @@ package battlecode.serial {
             var mapOriginX:int = parseInt(mapXml.attribute("mapOriginX"));
             var mapOriginY:int = parseInt(mapXml.attribute("mapOriginY"));
 
+            // map terrain
+            var i:int, j:int;
+            var row:String;
+            var terrainStr:String = mapXml.child("mapTiles");
+            var terrainRows:Array = terrainStr.split("\n");
+            var terrainTypes:Array = new Array(mapHeight);
+            for (i = 0; i < mapHeight; i++) {
+                terrainTypes[i] = new Array(mapWidth);
+                row = ParseUtils.trim(terrainRows[i]);
+                if (row == "") {
+                    terrainRows.splice(i, 1);
+                    i--;
+                    continue;
+                }
+                for (j = 0; j < mapWidth; j++) {
+                    switch (row.charAt(j)) {
+                        case '!':
+                            terrainTypes[i][j] = TerrainTile.ROAD;
+                            break;
+                        case '#':
+                            terrainTypes[i][j] = TerrainTile.VOID;
+                            break;
+                        default:
+                            terrainTypes[i][j] = TerrainTile.LAND;
+                            break;
+                    }
+                }
+            }
+
             // map terrain tiles
             var terrainTiles:Array = new Array(mapHeight);
-            for (var i:int = 0; i < mapHeight; i++) {
+            for (i = 0; i < mapHeight; i++) {
                 terrainTiles[i] = new Array(mapWidth);
-                for (var j:int = 0; j < mapWidth; j++) {
-                    terrainTiles[i][j] = new TerrainTile(TerrainTile.LAND);
+                for (j = 0; j < mapWidth; j++) {
+                    terrainTiles[i][j] = new TerrainTile(terrainTypes[i][j]);
                 }
             }
 
@@ -80,7 +109,7 @@ package battlecode.serial {
         }
 
         public function build():Match {
-            return new Match(gameMap, deltas, stats, teamA, teamB, mapName, winner, maxRounds, nukeA, nukeB);
+            return new Match(gameMap, deltas, stats, teamA, teamB, mapName, winner, maxRounds);
         }
 
     }

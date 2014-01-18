@@ -29,63 +29,23 @@
         [Embed('/img/client/icons/arrow_in.png')]
         public static const EXIT_FULLSCREEN_ICON:Class;
 
-        // research icons
-        [Embed('/img/units/pickaxe.png')]
-        public static const RESEARCH_PIXAXE:Class;
-        [Embed('/img/units/defusion.png')]
-        public static const RESEARCH_DEFUSION:Class;
-        [Embed('/img/units/vision.png')]
-        public static const RESEARCH_VISION:Class;
-        [Embed('/img/units/fusion.png')]
-        public static const RESEARCH_FUSION:Class;
-        [Embed('/img/units/nuke.png')]
-        public static const RESEARCH_NUKE:Class;
-
         // unit avatars
-        [Embed('/img/units/hq0.png')]
-        public static const HQ_NEUTRAL:Class;
         [Embed('/img/units/hq1.png')]
         public static const HQ_A:Class;
         [Embed('/img/units/hq2.png')]
         public static const HQ_B:Class;
-        [Embed('/img/units/soldier0.png')]
-        public static const SOLDIER_NEUTRAL:Class;
         [Embed('/img/units/soldier1.png')]
         public static const SOLDIER_A:Class;
         [Embed('/img/units/soldier2.png')]
         public static const SOLDIER_B:Class;
-        [Embed('/img/units/medbay0.png')]
-        public static const MEDBAY_NEUTRAL:Class;
-        [Embed('/img/units/medbay1.png')]
-        public static const MEDBAY_A:Class;
-        [Embed('/img/units/medbay2.png')]
-        public static const MEDBAY_B:Class;
-        [Embed('/img/units/shields0.png')]
-        public static const SHIELDS_NEUTRAL:Class;
-        [Embed('/img/units/shields1.png')]
-        public static const SHIELDS_A:Class;
-        [Embed('/img/units/shields2.png')]
-        public static const SHIELDS_B:Class;
-        [Embed('/img/units/artillery0.png')]
-        public static const ARTILLERY_NEUTRAL:Class;
-        [Embed('/img/units/artillery1.png')]
-        public static const ARTILLERY_A:Class;
-        [Embed('/img/units/artillery2.png')]
-        public static const ARTILLERY_B:Class;
-        [Embed('/img/units/generator0.png')]
-        public static const GENERATOR_NEUTRAL:Class;
-        [Embed('/img/units/generator1.png')]
-        public static const GENERATOR_A:Class;
-        [Embed('/img/units/generator2.png')]
-        public static const GENERATOR_B:Class;
-        [Embed('/img/units/supplier0.png')]
-        public static const SUPPLIER_NEUTRAL:Class;
-        [Embed('/img/units/supplier1.png')]
-        public static const SUPPLIER_A:Class;
-        [Embed('/img/units/supplier2.png')]
-        public static const SUPPLIER_B:Class;
-        [Embed('/img/units/encampment0.png')]
-        public static const ENCAMPMENT_NEUTRAL:Class;
+        [Embed('/img/units/noisetower1.png')]
+        public static const NOISETOWER_A:Class;
+        [Embed('/img/units/noisetower2.png')]
+        public static const NOISETOWER_B:Class;
+        [Embed('/img/units/pastr1.png')]
+        public static const PASTR_A:Class;
+        [Embed('/img/units/pastr2.png')]
+        public static const PASTR_B:Class;
 
         // explosions images
         [Embed('/img/explode/explode64_f01.png')]
@@ -104,31 +64,6 @@
         public static const EXPLODE_7:Class;
         [Embed('/img/explode/explode64_f08.png')]
         public static const EXPLODE_8:Class;
-
-        [Embed('/img/explode/nuke256_f01.png')]
-        public static const NUKE_1:Class;
-        [Embed('/img/explode/nuke256_f02.png')]
-        public static const NUKE_2:Class;
-        [Embed('/img/explode/nuke256_f03.png')]
-        public static const NUKE_3:Class;
-        [Embed('/img/explode/nuke256_f04.png')]
-        public static const NUKE_4:Class;
-        [Embed('/img/explode/nuke256_f05.png')]
-        public static const NUKE_5:Class;
-        [Embed('/img/explode/nuke256_f06.png')]
-        public static const NUKE_6:Class;
-        [Embed('/img/explode/nuke256_f07.png')]
-        public static const NUKE_7:Class;
-        [Embed('/img/explode/nuke256_f08.png')]
-        public static const NUKE_8:Class;
-        [Embed('/img/explode/nuke256_f09.png')]
-        public static const NUKE_9:Class;
-        [Embed('/img/explode/nuke256_f10.png')]
-        public static const NUKE_10:Class;
-        [Embed('/img/explode/nuke256_f11.png')]
-        public static const NUKE_11:Class;
-        [Embed('/img/explode/nuke256_f12.png')]
-        public static const NUKE_12:Class;
 
         [Embed('/img/hats/batman.png')]
         public static const HAT_BATMAN:Class;

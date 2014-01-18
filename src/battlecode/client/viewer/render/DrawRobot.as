@@ -17,7 +17,6 @@
 
         private var broadcastAnimation:BroadcastAnimation;
         private var explosionAnimation:ExplosionAnimation;
-        private var nukeAnimation:NukeAnimation;
 
         private var overlayCanvas:UIComponent;
         private var imageCanvas:UIComponent;
@@ -93,9 +92,6 @@
 
             this.explosionAnimation = new ExplosionAnimation();
             this.addChild(explosionAnimation);
-
-            this.nukeAnimation = new NukeAnimation();
-            this.addChild(nukeAnimation);
         }
 
         public function clone():DrawObject {
@@ -115,13 +111,10 @@
 
             d.removeChild(d.broadcastAnimation);
             d.removeChild(d.explosionAnimation);
-            d.removeChild(d.nukeAnimation);
             d.broadcastAnimation = broadcastAnimation.clone() as BroadcastAnimation;
             d.explosionAnimation = explosionAnimation.clone() as ExplosionAnimation;
-            d.nukeAnimation = nukeAnimation.clone() as NukeAnimation;
             d.addChild(d.broadcastAnimation);
             d.addChild(d.explosionAnimation);
-            d.addChild(d.nukeAnimation);
 
             return d;
         }
@@ -193,10 +186,9 @@
         }
 
         public function attack(targetLocation:MapLocation):void {
-            if (type == RobotType.ARTILLERY) {
-                this.targetLocation = targetLocation;
-                this.addAction(new DrawAction(ActionType.ATTACKING, RobotType.attackDelay(type)));
-            }
+            // TODO?
+            this.targetLocation = targetLocation;
+            this.addAction(new DrawAction(ActionType.ATTACKING, RobotType.attackDelay(type)));
         }
 
         public function broadcast():void {
@@ -205,11 +197,6 @@
 
         public function destroyUnit():void {
             this.explosionAnimation.explode();
-            this.alive = false;
-        }
-
-        public function nukeUnit():void {
-            this.nukeAnimation.explode();
             this.alive = false;
         }
 
@@ -227,7 +214,7 @@
         }
 
         public function isAlive():Boolean {
-            return alive || explosionAnimation.isAlive() || nukeAnimation.isAlive();
+            return alive || explosionAnimation.isAlive();
         }
 
         public function updateRound():void {
@@ -244,14 +231,13 @@
             // update animations
             broadcastAnimation.updateRound();
             explosionAnimation.updateRound();
-            nukeAnimation.updateRound();
 
             // update tooltip
             this.toolTip = "Robot " + getRobotID() + " " + getType() + " Energon: " + energon + " Loc: " + getLocation().toString();
         }
 
         public function draw(force:Boolean = false):void {
-            if (explosionAnimation.isExploding() || nukeAnimation.isExploding()) {
+            if (explosionAnimation.isExploding()) {
                 this.imageCanvas.visible = false;
                 this.overlayCanvas.visible = false;
                 this.graphics.clear();
@@ -261,7 +247,11 @@
             }
 
             // draw direction
-            this.imageCanvas.rotation = directionToRotation(direction);
+            if (type != RobotType.SOLDIER) {
+                this.imageCanvas.rotation = directionToRotation(direction);
+            } else {
+                // TODO soldier sprite
+            }
 
             if (force) {
                 this.image.width = getImageSize(true);
@@ -317,9 +307,6 @@
 
         private function drawEnergonBar():void {
             if (!RenderConfiguration.showEnergon() && getType() != RobotType.HQ)
-                return;
-
-            if (getType() == RobotType.ENCAMPMENT)
                 return;
 
             var ratio:Number = energon / maxEnergon;
