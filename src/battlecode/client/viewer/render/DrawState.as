@@ -18,8 +18,6 @@
         private var bPoints:Number;
         private var aFlux:Number;
         private var bFlux:Number;
-        private var aGatheredPoints:Number;
-        private var bGatheredPoints:Number;
         private var roundNum:uint;
         private var unitCounts:Object;
 
@@ -34,8 +32,6 @@
             bPoints = 0;
             aFlux = 0;
             bFlux = 0;
-            aGatheredPoints = 0;
-            bGatheredPoints = 0;
             roundNum = 1;
 
             unitCounts = new Object();
@@ -121,8 +117,6 @@
         public function applyStats(stats:RoundStats):void {
             aPoints = stats.getPoints(Team.A);
             bPoints = stats.getPoints(Team.B);
-            aGatheredPoints = stats.getGatheredPoints(Team.A);
-            bGatheredPoints = stats.getGatheredPoints(Team.B);
         }
 
         public function updateRound():void {

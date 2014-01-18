@@ -30,9 +30,10 @@ package battlecode.serial {
             var mapOriginX:int = parseInt(mapXml.attribute("mapOriginX"));
             var mapOriginY:int = parseInt(mapXml.attribute("mapOriginY"));
 
-            // map terrain
             var i:int, j:int;
             var row:String;
+
+            // map terrain
             var terrainStr:String = mapXml.child("mapTiles");
             var terrainRows:Array = terrainStr.split("\n");
             var terrainTypes:Array = new Array(mapHeight);
@@ -101,11 +102,7 @@ package battlecode.serial {
             var points:Array = xml.attribute("points").toString().split(",");
             var pointsA:Number = parseFloat(points[0]);
             var pointsB:Number = parseFloat(points[1]);
-
-            var gatheredPoints:Array = xml.attribute("gatheredPoints").toString().split(",");
-            var gatheredPointsA:Number = parseFloat(gatheredPoints[0]);
-            var gatheredPointsB:Number = parseFloat(gatheredPoints[1]);
-            stats.push(new RoundStats(pointsA, pointsB, gatheredPointsA, gatheredPointsB));
+            stats.push(new RoundStats(pointsA, pointsB));
         }
 
         public function build():Match {
