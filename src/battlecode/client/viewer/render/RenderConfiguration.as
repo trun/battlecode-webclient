@@ -12,7 +12,6 @@
         private static var hats:Boolean = true;
         private static var explosions:Boolean = true;
         private static var ground:Boolean = true;
-        private static var encampments:Boolean = true;
         private static var tournament:Boolean = false;
 
         public function RenderConfiguration() {
@@ -58,10 +57,6 @@
             return ground;
         }
 
-        public static function showEncampments():Boolean {
-            return encampments;
-        }
-
         public static function showMines():Boolean {
             return mines;
         }
@@ -103,19 +98,7 @@
         }
 
         public static function toggleDrawHeight():void {
-            if (!encampments && !ground) {
-                ground = true;
-                encampments = true;
-            } else if (ground && !encampments) {
-                ground = false;
-                encampments = true;
-            } else if (encampments && !ground) {
-                ground = false;
-                encampments = false;
-            } else {
-                ground = true;
-                encampments = false;
-            }
+            // TODO
         }
 
     }

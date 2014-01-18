@@ -22,7 +22,6 @@
         private var mapCanvas:UIComponent;
         private var gridCanvas:UIComponent;
         private var mineCanvas:UIComponent;
-        private var encampmentCanvas:UIComponent;
         private var groundUnitCanvas:UIComponent;
 
         // optimizations for caching
@@ -39,7 +38,6 @@
             this.mapCanvas = new UIComponent();
             this.gridCanvas = new UIComponent();
             this.mineCanvas = new UIComponent();
-            this.encampmentCanvas = new UIComponent();
             this.groundUnitCanvas = new UIComponent();
 
             this.mapCanvas.cacheAsBitmap = true;
@@ -48,7 +46,6 @@
             this.addChild(mapCanvas);
             this.addChild(gridCanvas);
             this.addChild(mineCanvas);
-            this.addChild(encampmentCanvas);
             this.addChild(groundUnitCanvas);
         }
 
@@ -143,9 +140,6 @@
             var loc:MapLocation, i:uint, j:uint, robot:DrawRobot;
             var groundRobots:Object = controller.currentState.getGroundRobots();
 
-            while (encampmentCanvas.numChildren > 0)
-                encampmentCanvas.removeChildAt(0);
-
             while (groundUnitCanvas.numChildren > 0)
                 groundUnitCanvas.removeChildAt(0);
 
@@ -185,7 +179,6 @@
 
         private function onEnterFrame(e:Event):void {
             gridCanvas.visible = RenderConfiguration.showGridlines();
-            encampmentCanvas.visible = RenderConfiguration.showEncampments();
             groundUnitCanvas.visible = RenderConfiguration.showGround();
             mineCanvas.visible = RenderConfiguration.showMines();
         }
