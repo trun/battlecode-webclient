@@ -74,7 +74,7 @@
         }
 
         private function onRoundChange(e:MatchEvent):void {
-            pointLabel.text = String(controller.currentState.getFlux(team));
+            pointLabel.text = String(controller.currentState.getPoints(team));
 
             if (e.currentRound <= lastRound) {
                 hqBox.removeRobot();

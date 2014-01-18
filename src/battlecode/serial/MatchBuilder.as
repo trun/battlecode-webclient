@@ -1,7 +1,6 @@
 package battlecode.serial {
     import battlecode.common.MapLocation;
     import battlecode.common.TerrainTile;
-    import battlecode.common.TerrainTile;
     import battlecode.world.GameMap;
     import battlecode.world.signals.Signal;
     import battlecode.world.signals.SignalFactory;

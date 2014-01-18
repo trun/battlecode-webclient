@@ -136,6 +136,23 @@
             }
         }
 
+//        private function drawCows():void {
+//            var mines:Array = controller.currentState.get();
+//            var i:uint, j:uint, team:String;
+//
+//            this.mineCanvas.graphics.clear();
+//            for (i = 0; i < mines.length; i++) {
+//                for (j = 0; j < mines[i].length; j++) {
+//                    team = mines[i][j];
+//                    if (team != null) {
+//                        this.mineCanvas.graphics.beginFill(Team.mineColor(team), 1.0);
+//                        this.mineCanvas.graphics.drawRect((i + .1) * getGridSize(), (j + .1) * getGridSize(), getGridSize() * .8, getGridSize() * .8);
+//                        this.mineCanvas.graphics.endFill();
+//                    }
+//                }
+//            }
+//        }
+
         private function drawUnits():void {
             var loc:MapLocation, i:uint, j:uint, robot:DrawRobot;
             var groundRobots:Object = controller.currentState.getGroundRobots();

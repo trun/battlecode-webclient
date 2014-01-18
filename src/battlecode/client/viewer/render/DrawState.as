@@ -16,8 +16,6 @@
         // stats
         private var aPoints:Number;
         private var bPoints:Number;
-        private var aFlux:Number;
-        private var bFlux:Number;
         private var roundNum:uint;
         private var unitCounts:Object;
 
@@ -30,8 +28,6 @@
 
             aPoints = 0;
             bPoints = 0;
-            aFlux = 0;
-            bFlux = 0;
             roundNum = 1;
 
             unitCounts = new Object();
@@ -60,10 +56,6 @@
 
         public function getPoints(team:String):uint {
             return (team == Team.A) ? aPoints : bPoints;
-        }
-
-        public function getFlux(team:String):uint {
-            return (team == Team.A) ? aFlux : bFlux;
         }
 
         public function getUnitCount(type:String, team:String):int {
@@ -115,8 +107,7 @@
         }
 
         public function applyStats(stats:RoundStats):void {
-            aPoints = stats.getPoints(Team.A);
-            bPoints = stats.getPoints(Team.B);
+            // points are applied by the FluxChangeSignal this year
         }
 
         public function updateRound():void {
@@ -221,8 +212,8 @@
         }
 
         override public function visitFluxChangeSignal(s:FluxChangeSignal):* {
-            aFlux = s.getFlux(Team.A);
-            bFlux = s.getFlux(Team.B);
+            aPoints = s.getFlux(Team.A);
+            bPoints = s.getFlux(Team.B);
         }
 
 
@@ -245,6 +236,14 @@
 
             groundRobots[s.getRobotID()] = robot;
             unitCounts[s.getTeam()][s.getRobotType()]++;
+        }
+
+        override public function visitNeutralsDensitySignal(s:NeutralsDensitySignal):* {
+
+        }
+
+        override public function visitNeutralsTeamSignal(s:NeutralsTeamSignal):* {
+
         }
 
     }
