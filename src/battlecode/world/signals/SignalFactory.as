@@ -80,7 +80,7 @@
                 return parseInt(element);
             });
             energon = energon.map(function (element:*, index:int, arr:Array):Number {
-                return ParseUtils.parseNumber(element);
+                return parseFloat(element);
             });
 
             return new EnergonChangeSignal(robotIDs, energon);

@@ -12,14 +12,6 @@
             return new MapLocation(coordinates[0], coordinates[1]);
         }
 
-        public static function parseNumber(str:String):Number {
-            if (str.indexOf("E") != -1) {
-                var valAndExp:Array = str.split("E");
-                return parseFloat(valAndExp[0]) * Math.pow(10, valAndExp[1]);
-            }
-            return parseFloat(str);
-        }
-
         public static function parseBoolean(str:String):Boolean {
             return str == "true";
         }
