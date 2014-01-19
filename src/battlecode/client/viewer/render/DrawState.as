@@ -176,7 +176,7 @@
         }
 
         override public function visitBroadcastSignal(s:BroadcastSignal):* {
-            //getRobot(s.getRobotID()).broadcast();
+            getRobot(s.getRobotID()).broadcast();
         }
 
         override public function visitCaptureSignal(s:CaptureSignal):* {
