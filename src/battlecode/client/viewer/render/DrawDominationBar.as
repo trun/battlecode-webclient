@@ -9,15 +9,11 @@
 
     import mx.containers.Canvas;
     import mx.containers.HBox;
-    import mx.controls.Label;
     import mx.events.ResizeEvent;
 
     public class DrawDominationBar extends HBox {
         private var controller:MatchController;
         private var domBarCanvas:Canvas;
-        private var leftDomLabel:Label;
-        private var rightDomLabel:Label;
-        private var lastRound:uint = 0;
 
         public function DrawDominationBar(controller:MatchController) {
             super();
@@ -35,23 +31,7 @@
             domBarCanvas.verticalScrollPolicy = "off";
             domBarCanvas.addEventListener(ResizeEvent.RESIZE, onResize);
 
-            leftDomLabel = new Label();
-            leftDomLabel.setStyle("color", 0xFFFFFF);
-            leftDomLabel.setStyle("fontSize", 14);
-            leftDomLabel.setStyle("fontWeight", "bold");
-            leftDomLabel.setStyle("textAlign", "center");
-            leftDomLabel.setStyle("fontFamily", "Courier New");
-
-            rightDomLabel = new Label();
-            rightDomLabel.setStyle("color", 0xFFFFFF);
-            rightDomLabel.setStyle("fontSize", 14);
-            rightDomLabel.setStyle("fontWeight", "bold");
-            rightDomLabel.setStyle("textAlign", "center");
-            rightDomLabel.setStyle("fontFamily", "Courier New");
-
             addChild(domBarCanvas);
-            domBarCanvas.addChild(leftDomLabel);
-            domBarCanvas.addChild(rightDomLabel);
         }
 
         private function onResize(e:ResizeEvent):void {
@@ -87,25 +67,14 @@
 
             this.domBarCanvas.graphics.clear();
 
-            var minDomPts:int = 10000000;
-            var sideRatio:Number = minDomPts / 10000000;
-
-            leftDomLabel.text = "(+" + minDomPts.toString() + ")";
-            leftDomLabel.y = centerHeight - (leftDomLabel.height / 2) - 10;
-            leftDomLabel.x = centerWidth - barMaxWidth * sideRatio - leftDomLabel.width / 2;
-
-            rightDomLabel.text = "(+" + minDomPts.toString() + ")";
-            rightDomLabel.y = centerHeight - (rightDomLabel.height / 2) - 10;
-            rightDomLabel.x = centerWidth + barMaxWidth * sideRatio - rightDomLabel.width / 2;
-
             // side spikes
             this.domBarCanvas.graphics.lineStyle(2, 0xFF6666);
-            this.domBarCanvas.graphics.moveTo(centerWidth - barMaxWidth * sideRatio + 1, centerHeight + 10);
-            this.domBarCanvas.graphics.lineTo(centerWidth - barMaxWidth * sideRatio + 1, centerHeight + 2);
+            this.domBarCanvas.graphics.moveTo(centerWidth - barMaxWidth + 1, centerHeight + 10);
+            this.domBarCanvas.graphics.lineTo(centerWidth - barMaxWidth + 1, centerHeight + 2);
 
             this.domBarCanvas.graphics.lineStyle(2, 0x9999FF);
-            this.domBarCanvas.graphics.moveTo(centerWidth + barMaxWidth * sideRatio - 1, centerHeight + 10);
-            this.domBarCanvas.graphics.lineTo(centerWidth + barMaxWidth * sideRatio - 1, centerHeight + 2);
+            this.domBarCanvas.graphics.moveTo(centerWidth + barMaxWidth - 1, centerHeight + 10);
+            this.domBarCanvas.graphics.lineTo(centerWidth + barMaxWidth - 1, centerHeight + 2);
 
             // domination
             var topFill:uint = (aPoints > bPoints) ? 0xFFCCCC : 0xCCCCFF;
