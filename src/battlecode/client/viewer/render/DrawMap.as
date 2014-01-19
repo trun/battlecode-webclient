@@ -142,24 +142,14 @@
             var cowsTeams:Array = controller.currentState.getNeutralTeams();
             var i:uint, j:uint, team:String;
 
-            var maxDensity:Number = 1.0;
-            for (i = 0; i < cows.length; i++) {
-                for (j = 0; j < cows[i].length; j++) {
-                    maxDensity = Math.max(cows[i][j], maxDensity);
-                }
-            }
-
             this.neutralCanvas.graphics.clear();
             var g:Number = getGridSize();
             for (i = 0; i < cows.length; i++) {
                 for (j = 0; j < cows[i].length; j++) {
-                    var density:Number = cows[i][j] / maxDensity;
-                    if (density < .1) {
-                        continue; // thresh cows
-                    }
-                    var offset:Number = (1.0 - density) / 2;
-                    team = Team.valueOf(cowsTeams[i][j]);
-                    this.neutralCanvas.graphics.beginFill(Team.cowColor(team), 0.5);
+                    var density:Number = cows[i][j] / 8000.0;
+                    var color:Number = Team.cowColor(Team.valueOf(cowsTeams[i][j]));
+                    this.neutralCanvas.graphics.lineStyle(1, color, 0.8);
+                    this.neutralCanvas.graphics.beginFill(color, 0.4);
                     this.neutralCanvas.graphics.drawCircle((i + .5) * g, (j + .5) * g, g * density / 2);
                     this.neutralCanvas.graphics.endFill();
                 }
