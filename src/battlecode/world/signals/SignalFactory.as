@@ -106,7 +106,7 @@
             for each (var row:XML in signalXML.child("amounts").children()) {
                 amounts.push(row.text().split(",").map(function (element:*, index:int, arr:Array):uint {
                     return parseInt(element);
-                }))
+                }));
             }
             return new NeutralsDensitySignal(amounts);
         }
@@ -116,7 +116,7 @@
             for each (var row:XML in signalXML.child("teams").children()) {
                 teams.push(row.text().split(",").map(function (element:*, index:int, arr:Array):uint {
                     return parseInt(element);
-                }))
+                }));
             }
             return new NeutralsTeamSignal(teams);
         }

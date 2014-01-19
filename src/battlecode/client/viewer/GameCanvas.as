@@ -150,7 +150,7 @@
                     break;
                 case "M":
                 case "m":
-                    RenderConfiguration.toggleMines();
+                    RenderConfiguration.toggleCows();
                     break;
                 case "O":
                 case "o":

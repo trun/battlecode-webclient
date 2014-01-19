@@ -19,6 +19,10 @@
         private var roundNum:uint;
         private var unitCounts:Object;
 
+        // neutrals
+        private var neutralDensities:Array; // int[][]
+        private var neutralTeams:Array; // int[][]
+
         // immutables
         private var map:GameMap;
         private var origin:MapLocation;
@@ -40,6 +44,17 @@
 
             this.map = map;
             this.origin = map.getOrigin();
+
+            neutralDensities = [];
+            neutralTeams = [];
+            for (var i:int = 0; i < map.getWidth(); i++) {
+                neutralDensities.push(new Array(map.getHeight()));
+                neutralTeams.push(new Array(map.getHeight()));
+                for (var j:int = 0; j < map.getHeight(); j++) {
+                    neutralDensities[i][j] = 0;
+                    neutralTeams[i][j] = 0;
+                }
+            }
         }
 
         ///////////////////////////////////////////////////////
@@ -62,12 +77,20 @@
             return unitCounts[team][type];
         }
 
+        public function getNeutralDensities():Array {
+            return neutralDensities;
+        }
+
+        public function getNeutralTeams():Array {
+            return neutralTeams;
+        }
+
         ///////////////////////////////////////////////////////
         /////////////////// CORE FUNCTIONS ////////////////////
         ///////////////////////////////////////////////////////
 
         private function copyStateFrom(state:DrawState):void {
-            var a:*;
+            var a:*, i:int;
 
             groundRobots = new Object();
             for (a in state.groundRobots) {
@@ -83,6 +106,13 @@
             for (a in state.unitCounts[Team.A]) {
                 unitCounts[Team.A][a] = state.unitCounts[Team.A][a];
                 unitCounts[Team.B][a] = state.unitCounts[Team.B][a];
+            }
+
+            neutralDensities = [];
+            neutralTeams = [];
+            for (i = 0; i < state.neutralDensities.length; i++) {
+                neutralDensities.push(state.neutralDensities[i].concat());
+                neutralTeams.push(state.neutralTeams[i].concat());
             }
 
             roundNum = state.roundNum;
@@ -239,11 +269,11 @@
         }
 
         override public function visitNeutralsDensitySignal(s:NeutralsDensitySignal):* {
-
+            neutralDensities = s.getAmounts();
         }
 
         override public function visitNeutralsTeamSignal(s:NeutralsTeamSignal):* {
-
+            neutralTeams = s.getTeams();
         }
 
     }

@@ -21,7 +21,7 @@
         // various canvases for layering and quick toggling of features
         private var mapCanvas:UIComponent;
         private var gridCanvas:UIComponent;
-        private var mineCanvas:UIComponent;
+        private var neutralCanvas:UIComponent;
         private var groundUnitCanvas:UIComponent;
 
         // optimizations for caching
@@ -37,7 +37,7 @@
 
             this.mapCanvas = new UIComponent();
             this.gridCanvas = new UIComponent();
-            this.mineCanvas = new UIComponent();
+            this.neutralCanvas = new UIComponent();
             this.groundUnitCanvas = new UIComponent();
 
             this.mapCanvas.cacheAsBitmap = true;
@@ -45,7 +45,7 @@
 
             this.addChild(mapCanvas);
             this.addChild(gridCanvas);
-            this.addChild(mineCanvas);
+            this.addChild(neutralCanvas);
             this.addChild(groundUnitCanvas);
         }
 
@@ -77,6 +77,7 @@
             drawMap();
             drawGridlines();
             drawUnits();
+            drawCows();
 
             var o:DrawObject;
 
@@ -136,22 +137,34 @@
             }
         }
 
-//        private function drawCows():void {
-//            var mines:Array = controller.currentState.get();
-//            var i:uint, j:uint, team:String;
-//
-//            this.mineCanvas.graphics.clear();
-//            for (i = 0; i < mines.length; i++) {
-//                for (j = 0; j < mines[i].length; j++) {
-//                    team = mines[i][j];
-//                    if (team != null) {
-//                        this.mineCanvas.graphics.beginFill(Team.mineColor(team), 1.0);
-//                        this.mineCanvas.graphics.drawRect((i + .1) * getGridSize(), (j + .1) * getGridSize(), getGridSize() * .8, getGridSize() * .8);
-//                        this.mineCanvas.graphics.endFill();
-//                    }
-//                }
-//            }
-//        }
+        private function drawCows():void {
+            var cows:Array = controller.currentState.getNeutralDensities();
+            var cowsTeams:Array = controller.currentState.getNeutralTeams();
+            var i:uint, j:uint, team:String;
+
+            var maxDensity:Number = 1.0;
+            for (i = 0; i < cows.length; i++) {
+                for (j = 0; j < cows[i].length; j++) {
+                    maxDensity = Math.max(cows[i][j], maxDensity);
+                }
+            }
+
+            this.neutralCanvas.graphics.clear();
+            var g:Number = getGridSize();
+            for (i = 0; i < cows.length; i++) {
+                for (j = 0; j < cows[i].length; j++) {
+                    var density:Number = cows[i][j] / maxDensity;
+                    if (density < .1) {
+                        continue; // thresh cows
+                    }
+                    var offset:Number = (1.0 - density) / 2;
+                    team = Team.valueOf(cowsTeams[i][j]);
+                    this.neutralCanvas.graphics.beginFill(Team.cowColor(team), 0.5);
+                    this.neutralCanvas.graphics.drawCircle((i + .5) * g, (j + .5) * g, g * density / 2);
+                    this.neutralCanvas.graphics.endFill();
+                }
+            }
+        }
 
         private function drawUnits():void {
             var loc:MapLocation, i:uint, j:uint, robot:DrawRobot;
@@ -197,7 +210,7 @@
         private function onEnterFrame(e:Event):void {
             gridCanvas.visible = RenderConfiguration.showGridlines();
             groundUnitCanvas.visible = RenderConfiguration.showGround();
-            mineCanvas.visible = RenderConfiguration.showMines();
+            neutralCanvas.visible = RenderConfiguration.showCows();
         }
 
         private function onRoundChange(e:MatchEvent):void {
@@ -205,6 +218,7 @@
                 drawUnits();
             }
             updateUnits();
+            drawCows();
 
             lastRound = e.currentRound;
 

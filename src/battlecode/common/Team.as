@@ -11,12 +11,16 @@
         public function Team() {
         }
 
-        public static function mineColor(team:String):uint {
+        public static function cowColor(team:String):uint {
             switch (team) {
                 case A:
-                    return 0xFF6666;
+                    return 0x990000;
                 case B:
-                    return 0x6666FF;
+                    return 0x000099;
+                case NONE:
+                    return 0x009900;
+                case BOTH:
+                    return 0x009900;
                 default:
                     return 0x999999;
             }
