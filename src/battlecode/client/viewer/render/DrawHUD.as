@@ -12,6 +12,7 @@
     import mx.containers.VBox;
     import mx.controls.Label;
     import mx.events.ResizeEvent;
+    import mx.formatters.NumberFormatter;
 
     public class DrawHUD extends VBox {
         private var controller:MatchController;
@@ -24,6 +25,8 @@
         private var winMarkerCanvas:Canvas;
 
         private var lastRound:uint = 0;
+
+        private var formatter:NumberFormatter;
 
         public function DrawHUD(controller:MatchController, team:String) {
             this.controller = controller;
@@ -65,16 +68,20 @@
                 addChild(unitBox);
             }
 
+            formatter = new NumberFormatter();
+            formatter.rounding = "down";
+            formatter.precision = 2;
+
             addChild(winMarkerCanvas);
 
             repositionWinMarkers();
             resizeHQBox();
-            drawResearchBoxes();
             drawUnitCounts();
         }
 
         private function onRoundChange(e:MatchEvent):void {
-            pointLabel.text = String(controller.currentState.getPoints(team));
+            var points:Number = controller.currentState.getPoints(team);
+            pointLabel.text = formatter.format(points / 1000000) + "GG";
 
             if (e.currentRound <= lastRound) {
                 hqBox.removeRobot();
@@ -99,10 +106,9 @@
         }
 
         private function onMatchChange(e:MatchEvent):void {
-            pointLabel.text = "0";
+            pointLabel.text = "0GG";
             hqBox.removeRobot();
             drawWinMarkers();
-            drawResearchBoxes();
         }
 
         private function resizeHQBox():void {
@@ -110,12 +116,6 @@
             hqBox.resize(boxSize);
             hqBox.x = (180 - boxSize) / 2;
             hqBox.y = 50;
-        }
-
-        private function drawResearchBoxes():void {
-            var i:uint = 0;
-            var bottomUnitBox:DrawHUDUnit = unitBoxes[unitBoxes.length - 1];
-            var top:Number = bottomUnitBox.y + bottomUnitBox.height + 10;
         }
 
         private function drawUnitCounts():void {
@@ -157,7 +157,6 @@
         private function onResize(e:ResizeEvent):void {
             repositionWinMarkers();
             resizeHQBox();
-            drawResearchBoxes();
             drawUnitCounts();
         }
 
