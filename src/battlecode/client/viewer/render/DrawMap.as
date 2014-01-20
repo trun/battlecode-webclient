@@ -150,7 +150,7 @@
                     var color:Number = Team.cowColor(Team.valueOf(cowsTeams[i][j]));
                     this.neutralCanvas.graphics.lineStyle(1, color, 0.8);
                     this.neutralCanvas.graphics.beginFill(color, 0.4);
-                    this.neutralCanvas.graphics.drawCircle((i + .5) * g, (j + .5) * g, g * density / 2);
+                    this.neutralCanvas.graphics.drawCircle((i + .5) * g, (j + .5) * g, g * Math.sqrt(density) / 2);
                     this.neutralCanvas.graphics.endFill();
                 }
             }
