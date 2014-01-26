@@ -2,19 +2,19 @@
 
     public class MapLocation {
 
-        private var x:uint;
-        private var y:uint;
+        private var x:int;
+        private var y:int;
 
-        public function MapLocation(x:uint, y:uint) {
+        public function MapLocation(x:int, y:int) {
             this.x = x;
             this.y = y;
         }
 
-        public function getX():uint {
+        public function getX():int {
             return x;
         }
 
-        public function getY():uint {
+        public function getY():int {
             return y;
         }
 

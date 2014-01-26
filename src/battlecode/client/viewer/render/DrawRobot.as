@@ -186,7 +186,6 @@
         }
 
         public function attack(targetLocation:MapLocation):void {
-            // TODO?
             this.targetLocation = targetLocation;
             this.addAction(new DrawAction(ActionType.ATTACKING, RobotType.attackDelay(type)));
         }

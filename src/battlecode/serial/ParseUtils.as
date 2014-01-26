@@ -9,7 +9,7 @@
 
         public static function parseLocation(str:String):MapLocation {
             var coordinates:Array = str.split(",");
-            return new MapLocation(coordinates[0], coordinates[1]);
+            return new MapLocation(parseInt(coordinates[0]), parseInt(coordinates[1]));
         }
 
         public static function parseBoolean(str:String):Boolean {
