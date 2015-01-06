@@ -22,7 +22,7 @@
         public static const TANK:String = "TANK";
         public static const COMMANDER:String = "COMMANDER";
         public static const LAUNCHER:String = "LAUNCHER";
-        public static const MISSLE:String = "MISSLE";
+        public static const MISSILE:String = "MISSILE";
 
         public function RobotType() {
         }
@@ -48,7 +48,7 @@
                 TANK,
                 COMMANDER,
                 LAUNCHER,
-                MISSLE
+                MISSILE
             ];
         }
 
@@ -77,7 +77,7 @@
                 TANK,
                 COMMANDER,
                 LAUNCHER,
-                MISSLE
+                MISSILE
             ];
         }
 
@@ -89,9 +89,38 @@
         public static function maxEnergon(type:String):Number {
             switch (type) {
                 case HQ:
-                    return int.MAX_VALUE;
+                    return 2000;
+                case TOWER:
+                    return 1000;
+                case SUPPLYDEPOT:
+                case TECHNOLOGYINSTITUTE:
+                case BARRACKS:
+                case HELIPAD:
+                case TRAININGFIELD:
+                case TANKFACTORY:
+                case HANDWASHSTATION:
+                case AEROSPACELAB:
+                    return 100;
+                case BEAVER:
+                    return 30;
+                case MINER:
+                    return 50;
+                case COMPUTER:
+                    return 1;
                 case SOLDIER:
-                    return 100.0;
+                    return 40;
+                case BASHER:
+                    return 50;
+                case DRONE:
+                    return 70;
+                case TANK:
+                    return 160;
+                case COMMANDER:
+                    return 120;
+                case LAUNCHER:
+                    return 400;
+                case MISSILE:
+                    return 3;
             }
             throw new ArgumentError("Unknown type: " + type);
         }
