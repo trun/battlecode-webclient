@@ -125,14 +125,58 @@
         }
 
         public static function movementDelay(type:String):uint {
+            switch (type) {
+                case BEAVER:
+                    return 2;
+                case MINER:
+                    return 2;
+                case COMPUTER:
+                    return 8;
+                case SOLDIER:
+                    return 2;
+                case BASHER:
+                    return 2;
+                case DRONE:
+                    return 1;
+                case TANK:
+                    return 2;
+                case COMMANDER:
+                    return 2;
+                case LAUNCHER:
+                    return 4;
+                case MISSILE:
+                    return 1;
+            }
             return 1;
         }
 
         public static function movementDelayDiagonal(type:String):uint {
-            return 1;
+            return movementDelay(type) * Math.SQRT2;
         }
 
         public static function attackDelay(type:String):uint {
+            switch (type) {
+                case BEAVER:
+                    return 2;
+                case MINER:
+                    return 2;
+                case COMPUTER:
+                    return 0;
+                case SOLDIER:
+                    return 2;
+                case BASHER:
+                    return 1;
+                case DRONE:
+                    return 3;
+                case TANK:
+                    return 3;
+                case COMMANDER:
+                    return 1;
+                case LAUNCHER:
+                    return 0;
+                case MISSILE:
+                    return 0;
+            }
             return 0;
         }
     }

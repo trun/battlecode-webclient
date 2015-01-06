@@ -511,11 +511,13 @@
         }
 
         private function calculateDrawX(rounds:uint):Number {
-            return 0;
+            if (RenderConfiguration.showDiscrete()) return 0;
+            return -1 * getImageSize() * directionOffsetX(direction) * (rounds / movementDelay);
         }
 
         private function calculateDrawY(rounds:uint):Number {
-            return 0;
+            if (RenderConfiguration.showDiscrete()) return 0;
+            return -1 * getImageSize() * directionOffsetY(direction) * (rounds / movementDelay);
         }
 
 
