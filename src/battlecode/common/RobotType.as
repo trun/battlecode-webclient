@@ -85,7 +85,6 @@
             return []; // TODO air types
         }
 
-        // TODO fix values
         public static function maxEnergon(type:String):Number {
             switch (type) {
                 case HQ:
