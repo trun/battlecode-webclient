@@ -108,12 +108,6 @@
                         this.mapCanvas.graphics.beginFill(colorTransform.color, 1.0);
                         this.mapCanvas.graphics.drawRect(j * getGridSize(), i * getGridSize(), getGridSize(), getGridSize());
                         this.mapCanvas.graphics.endFill();
-                    } else if (tile.getType() == TerrainTile.ROAD) {
-                        scalar = 0xFF * 0.7;
-                        colorTransform = new ColorTransform(0, 0, 0, 1, scalar, scalar, scalar, 0);
-                        this.mapCanvas.graphics.beginFill(colorTransform.color, 1.0);
-                        this.mapCanvas.graphics.drawRect(j * getGridSize(), i * getGridSize(), getGridSize(), getGridSize());
-                        this.mapCanvas.graphics.endFill();
                     } else {
                         colorTransform = new ColorTransform(0, 0, 0, 1, 0x00, 0x00, 0x99, 0);
                         this.mapCanvas.graphics.beginFill(colorTransform.color, 1.0);
