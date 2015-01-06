@@ -246,11 +246,7 @@
             }
 
             // draw direction
-            if (type != RobotType.SOLDIER) {
-                this.imageCanvas.rotation = directionToRotation(direction);
-            } else {
-                // TODO soldier sprite
-            }
+            this.imageCanvas.rotation = directionToRotation(direction);
 
             if (force) {
                 this.image.width = getImageSize(true);
