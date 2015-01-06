@@ -7,6 +7,7 @@
         private var gameMap:GameMap;
         private var rounds:uint;
         private var maxRounds:uint;
+        private var maxInitialOre:uint;
         private var winner:String;
         private var deltas:Array; // RoundDelta[]
         private var stats:Array; // RoundStats[]
@@ -14,7 +15,7 @@
         private var teamA:String, teamB:String;
         private var mapName:String;
 
-        public function Match(gameMap:GameMap, deltas:Array, stats:Array, teamA:String, teamB:String, mapName:String, winner:String, maxRounds:uint) {
+        public function Match(gameMap:GameMap, deltas:Array, stats:Array, teamA:String, teamB:String, mapName:String, winner:String, maxRounds:uint, maxInitialOre:uint) {
             this.gameMap = gameMap;
             this.deltas = deltas;
             this.stats = stats;
@@ -24,6 +25,7 @@
             this.winner = winner;
             this.rounds = deltas.length;
             this.maxRounds = maxRounds;
+            this.maxInitialOre = maxInitialOre;
         }
 
         public function getMap():GameMap {
@@ -36,6 +38,10 @@
 
         public function getMaxRounds():uint {
             return maxRounds;
+        }
+
+        public function getMaxInitialOre():uint {
+            return maxInitialOre;
         }
 
         public function getWinner():String {

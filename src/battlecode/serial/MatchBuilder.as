@@ -9,6 +9,7 @@ package battlecode.serial {
         private var matchNum:int = 0;
         private var gameMap:GameMap;
         private var maxRounds:uint;
+        private var maxInitialOre:uint;
         private var deltas:Array; // RoundDelta[]
         private var stats:Array; // RoundStats[]
 
@@ -46,9 +47,6 @@ package battlecode.serial {
                 }
                 for (j = 0; j < mapWidth; j++) {
                     switch (row.charAt(j)) {
-                        case '!':
-                            terrainTypes[i][j] = TerrainTile.ROAD;
-                            break;
                         case '#':
                             terrainTypes[i][j] = TerrainTile.VOID;
                             break;
@@ -68,15 +66,25 @@ package battlecode.serial {
                 }
             }
 
+            // map ore tiles TODO - parse mapInitialOre
+            var oreAmounts:Array = new Array(mapHeight);
+            for (i = 0; i < mapHeight; i++) {
+                oreAmounts[i] = new Array(mapWidth);
+                for (j = 0; j < mapWidth; j++) {
+                    oreAmounts[i][j] = 0;
+                }
+            }
+
             gameMap = new GameMap(mapWidth, mapHeight, new MapLocation(mapOriginX, mapOriginY), terrainTiles);
 
             maxRounds = parseInt(mapXml.attribute("maxRounds"));
+            maxInitialOre = parseInt(mapXml.attribute("maxInitialOre"));
         }
 
         public function setExtensibleMetadata(xml:XML):void {
             teamA = xml.attribute("team-a").toString();
             teamB = xml.attribute("team-b").toString();
-            mapName = xml.attribute("maps").toString().split(",")[matchNum]; // TODO
+            mapName = xml.attribute("maps").toString().split(",")[matchNum];
         }
 
         public function setGameStats(xml:XML):void {
@@ -105,7 +113,7 @@ package battlecode.serial {
         }
 
         public function build():Match {
-            return new Match(gameMap, deltas, stats, teamA, teamB, mapName, winner, maxRounds);
+            return new Match(gameMap, deltas, stats, teamA, teamB, mapName, winner, maxRounds, maxInitialOre);
         }
 
     }

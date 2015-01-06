@@ -5,7 +5,6 @@
 
         public static const LAND:String = "LAND";
         public static const VOID:String = "VOID";
-        public static const ROAD:String = "ROAD";
 
         public function TerrainTile(type:String) {
             this.type = type;

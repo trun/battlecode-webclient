@@ -29,23 +29,93 @@
         [Embed('/img/client/icons/arrow_in.png')]
         public static const EXIT_FULLSCREEN_ICON:Class;
 
-        // unit avatars
+        // building avatars
         [Embed('/img/units/hq1.png')]
         public static const HQ_A:Class;
         [Embed('/img/units/hq2.png')]
         public static const HQ_B:Class;
+        [Embed('/img/units/tower1.png')]
+        public static const TOWER_A:Class;
+        [Embed('/img/units/tower2.png')]
+        public static const TOWER_B:Class;
+        [Embed('/img/units/supplydepot1.png')]
+        public static const SUPPLYDEPOT_A:Class;
+        [Embed('/img/units/supplydepot2.png')]
+        public static const SUPPLYDEPOT_B:Class;
+        [Embed('/img/units/technologyinstitute1.png')]
+        public static const TECHNOLOGYINSTITUTE_A:Class;
+        [Embed('/img/units/technologyinstitute2.png')]
+        public static const TECHNOLOGYINSTITUTE_B:Class;
+        [Embed('/img/units/barracks1.png')]
+        public static const BARRACKS_A:Class;
+        [Embed('/img/units/barracks2.png')]
+        public static const BARRACKS_B:Class;
+        [Embed('/img/units/helipad1.png')]
+        public static const HELIPAD_A:Class;
+        [Embed('/img/units/helipad2.png')]
+        public static const HELIPAD_B:Class;
+        [Embed('/img/units/trainingfield1.png')]
+        public static const TRAININGFIELD_A:Class;
+        [Embed('/img/units/trainingfield2.png')]
+        public static const TRAININGFIELD_B:Class;
+        [Embed('/img/units/tankfactory1.png')]
+        public static const TANKFACTORY_A:Class;
+        [Embed('/img/units/tankfactory2.png')]
+        public static const TANKFACTORY_B:Class;
+        [Embed('/img/units/minerfactory1.png')]
+        public static const MINERFACTORY_A:Class;
+        [Embed('/img/units/minerfactory2.png')]
+        public static const MINERFACTORY_B:Class;
+        [Embed('/img/units/handwashstation1.png')]
+        public static const HANDWASHSTATION_A:Class;
+        [Embed('/img/units/handwashstation2.png')]
+        public static const HANDWASHSTATION_B:Class;
+        [Embed('/img/units/aerospacelab1.png')]
+        public static const AEROSPACELAB_A:Class;
+        [Embed('/img/units/aerospacelab2.png')]
+        public static const AEROSPACELAB_B:Class;
+        
+        // unit avatars
+        [Embed('/img/units/beaver1.png')]
+        public static const BEAVER_A:Class;
+        [Embed('/img/units/beaver2.png')]
+        public static const BEAVER_B:Class;
+        [Embed('/img/units/computer1.png')]
+        public static const COMPUTER_A:Class;
+        [Embed('/img/units/computer2.png')]
+        public static const COMPUTER_B:Class;
         [Embed('/img/units/soldier1.png')]
         public static const SOLDIER_A:Class;
         [Embed('/img/units/soldier2.png')]
         public static const SOLDIER_B:Class;
-        [Embed('/img/units/noisetower1.png')]
-        public static const NOISETOWER_A:Class;
-        [Embed('/img/units/noisetower2.png')]
-        public static const NOISETOWER_B:Class;
-        [Embed('/img/units/pastr1.png')]
-        public static const PASTR_A:Class;
-        [Embed('/img/units/pastr2.png')]
-        public static const PASTR_B:Class;
+        [Embed('/img/units/basher1.png')]
+        public static const BASHER_A:Class;
+        [Embed('/img/units/basher2.png')]
+        public static const BASHER_B:Class;
+        [Embed('/img/units/miner1.png')]
+        public static const MINER_A:Class;
+        [Embed('/img/units/miner2.png')]
+        public static const MINER_B:Class;
+        [Embed('/img/units/drone1.png')]
+        public static const DRONE_A:Class;
+        [Embed('/img/units/drone2.png')]
+        public static const DRONE_B:Class;
+        [Embed('/img/units/tank1.png')]
+        public static const TANK_A:Class;
+        [Embed('/img/units/tank2.png')]
+        public static const TANK_B:Class;
+        [Embed('/img/units/commander1.png')]
+        public static const COMMANDER_A:Class;
+        [Embed('/img/units/commander2.png')]
+        public static const COMMANDER_B:Class;
+        [Embed('/img/units/launcher1.png')]
+        public static const LAUNCHER_A:Class;
+        [Embed('/img/units/launcher2.png')]
+        public static const LAUNCHER_B:Class;
+        [Embed('/img/units/missile1.png')]
+        public static const MISSILE_A:Class;
+        [Embed('/img/units/missile2.png')]
+        public static const MISSILE_B:Class;
 
         // explosions images
         [Embed('/img/explode/explode64_f01.png')]
