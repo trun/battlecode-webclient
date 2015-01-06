@@ -432,6 +432,8 @@
             switch (type) {
                 case RobotType.HQ:
                     return 2.0;
+                case RobotType.TOWER:
+                    return 1.5;
                 default:
                     return 1.0;
             }
