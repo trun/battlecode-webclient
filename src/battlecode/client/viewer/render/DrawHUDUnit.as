@@ -22,6 +22,7 @@ package battlecode.client.viewer.render {
             image.height = 25;
             image.x = 5;
             image.y = 0;
+            image.toolTip = type;
 
             addChild(image);
 
