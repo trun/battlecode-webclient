@@ -9,6 +9,10 @@
             return null;
         }
 
+        public function visitBashSignal(s:BashSignal):* {
+            return null;
+        }
+
         public function visitBroadcastSignal(s:BroadcastSignal):* {
             return null;
         }

@@ -15,7 +15,7 @@
                 case "sig.AttackSignal":
                     return createAttackSignal(signalXML);
                 case "sig.BashSignal":
-                    return null; // TODO
+                    return createBashSignal(signalXML);
                 case "sig.BroadcastSignal":
                     return createBroadcastSignal(signalXML);
                 case "sig.BytecodesUsedSignal":
@@ -45,6 +45,12 @@
             var loc:MapLocation = ParseUtils.parseLocation(signalXML.attribute("targetLoc"));
             var attackType:String = AttackType.fromType(parseInt(signalXML.attribute("attackType")));
             return new AttackSignal(robotID, loc, attackType);
+        }
+
+        public static function createBashSignal(signalXML:XML):BashSignal {
+            var robotID:uint = parseInt(signalXML.attribute("robotID"));
+            var loc:MapLocation = ParseUtils.parseLocation(signalXML.attribute("targetLoc"));
+            return new BashSignal(robotID, loc);
         }
 
         public static function createBroadcastSignal(signalXML:XML):BroadcastSignal {

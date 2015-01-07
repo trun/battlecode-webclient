@@ -205,6 +205,10 @@
             getRobot(s.getRobotID()).attack(s.getTargetLoc());
         }
 
+        override public function visitBashSignal(s:BashSignal):* {
+            getRobot(s.getRobotID()).bash(s.getTargetLoc());
+        }
+
         override public function visitBroadcastSignal(s:BroadcastSignal):* {
             getRobot(s.getRobotID()).broadcast();
         }

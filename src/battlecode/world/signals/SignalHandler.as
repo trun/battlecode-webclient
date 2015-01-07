@@ -4,6 +4,8 @@
 
         function visitAttackSignal(s:AttackSignal):*;
 
+        function visitBashSignal(s:BashSignal):*;
+
         function visitBroadcastSignal(s:BroadcastSignal):*;
 
         function visitCaptureSignal(s:CaptureSignal):*;
