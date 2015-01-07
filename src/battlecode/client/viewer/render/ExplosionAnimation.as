@@ -1,14 +1,18 @@
 ﻿package battlecode.client.viewer.render {
-    import mx.controls.Image;
+import battlecode.common.RobotType;
+
+import mx.controls.Image;
     import mx.core.UIComponent;
 
     public class ExplosionAnimation extends UIComponent implements DrawObject {
         private var image:Image;
+        private var robotType:String;
         private var round:int = 0;
         private var exploding:Boolean = false;
 
-        public function ExplosionAnimation() {
+        public function ExplosionAnimation(robotType:String) {
             this.image = new Image();
+            this.robotType = robotType;
             this.addChild(image);
         }
 
@@ -22,16 +26,19 @@
                 return;
             }
 
+            // TODO big missile explosion animations?
+            var w:Number = RenderConfiguration.getGridSize(); // * (robotType == RobotType.MISSILE ? 3 : 1);
+
             var imageSource:Class = getExplosionImage();
             this.image.source = new imageSource();
-            this.image.width = RenderConfiguration.getGridSize();
-            this.image.height = RenderConfiguration.getGridSize();
-            this.image.x = -RenderConfiguration.getGridSize() / 2;
-            this.image.y = -RenderConfiguration.getGridSize() / 2;
+            this.image.width = w;
+            this.image.height = w;
+            this.image.x = -w / 2;
+            this.image.y = -w / 2;
         }
 
         public function clone():DrawObject {
-            var anim:ExplosionAnimation = new ExplosionAnimation();
+            var anim:ExplosionAnimation = new ExplosionAnimation(robotType);
             anim.round = round;
             anim.exploding = exploding;
             return anim;

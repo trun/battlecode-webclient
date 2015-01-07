@@ -91,7 +91,7 @@
             this.broadcastAnimation = new BroadcastAnimation(0, team);
             this.addChild(broadcastAnimation);
 
-            this.explosionAnimation = new ExplosionAnimation();
+            this.explosionAnimation = new ExplosionAnimation(type);
             this.addChild(explosionAnimation);
 
             this.bashAnimation = new BashAnimation(false, team);
