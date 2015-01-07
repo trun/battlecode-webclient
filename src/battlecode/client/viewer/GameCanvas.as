@@ -30,7 +30,6 @@
         private var watchers:Vector.<ChangeWatcher>;
 
         private var vbox:VBox; // container for map
-        private var drawDominationBar:DrawDominationBar;
         private var sideBoxA:VBox;
         private var sideBoxB:VBox;
         private var drawMap:DrawMap;
@@ -42,7 +41,6 @@
             this.percentHeight = 100;
 
             this.vbox = new VBox();
-            this.drawDominationBar = new DrawDominationBar(controller);
             this.drawMap = new DrawMap(controller);
             this.sideBoxA = new DrawHUD(controller, Team.A);
             this.sideBoxB = new DrawHUD(controller, Team.B);
@@ -69,7 +67,6 @@
             this.addChild(sideBoxA);
             this.addChild(vbox);
             this.addChild(sideBoxB);
-            vbox.addChild(drawDominationBar);
             vbox.addChild(drawMap);
 
             this.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationComplete);
@@ -79,7 +76,7 @@
             if (width == 0 || height == 0) return;
 
             var containerWidth:Number = vbox.width;
-            var containerHeight:Number = vbox.height - drawDominationBar.height;
+            var containerHeight:Number = vbox.height;
 
             var mapWidth:uint = drawMap.getMapWidth();
             var mapHeight:uint = drawMap.getMapHeight();
@@ -88,12 +85,7 @@
             RenderConfiguration.setScalingFactor(scalingFactor);
             drawMap.redrawAll();
             drawMap.x = (containerWidth - (mapWidth * scalingFactor)) / 2;
-            drawMap.y = (containerHeight - (mapHeight * scalingFactor)) / 2 + drawDominationBar.height;
-
-            drawDominationBar.x = 0;
-            drawDominationBar.y = 0;
-            drawDominationBar.width = vbox.width;
-            drawDominationBar.redrawAll();
+            drawMap.y = 0;
         }
 
         private function onCreationComplete(e:Event):void {
@@ -102,8 +94,6 @@
             this.watchers.push(ChangeWatcher.watch(this, "height", onSizeChange));
             this.watchers.push(ChangeWatcher.watch(vbox, "width", onSizeChange));
             this.watchers.push(ChangeWatcher.watch(vbox, "height", onSizeChange));
-            this.watchers.push(ChangeWatcher.watch(drawDominationBar, "width", onSizeChange));
-            this.watchers.push(ChangeWatcher.watch(drawDominationBar, "height", onSizeChange));
 
             centerMap();
 
