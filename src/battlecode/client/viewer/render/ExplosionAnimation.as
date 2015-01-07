@@ -1,7 +1,7 @@
 ﻿package battlecode.client.viewer.render {
-import battlecode.common.RobotType;
-
-import mx.controls.Image;
+    import battlecode.common.RobotType;
+    
+    import mx.controls.Image;
     import mx.core.UIComponent;
 
     public class ExplosionAnimation extends UIComponent implements DrawObject {
