@@ -12,6 +12,8 @@
         private var groundRobots:Object;
         private var hqA:DrawRobot;
         private var hqB:DrawRobot;
+        private var towersA:Object; // id -> DrawRobot
+        private var towersB:Object; // id -> DrawRobot
 
         // stats
         private var aPoints:Number;
@@ -27,18 +29,20 @@
         private var origin:MapLocation;
 
         public function DrawState(map:GameMap) {
-            groundRobots = new Object();
+            groundRobots = {};
+            towersA = {};
+            towersB = {};
 
             aPoints = 0;
             bPoints = 0;
             roundNum = 1;
 
-            unitCounts = new Object();
-            unitCounts[Team.A] = new Object();
-            unitCounts[Team.B] = new Object();
-            for each (var type:String in RobotType.values()) {
-                unitCounts[Team.A][type] = 0;
-                unitCounts[Team.B][type] = 0;
+            unitCounts = {};
+            unitCounts[Team.A] = {};
+            unitCounts[Team.B] = {};
+            for each (var robotType:String in RobotType.values()) {
+                unitCounts[Team.A][robotType] = 0;
+                unitCounts[Team.B][robotType] = 0;
             }
 
             this.map = map;
@@ -65,6 +69,10 @@
             return team == Team.A ? hqA : hqB;
         }
 
+        public function getTowers(team:String):Object {
+            return team == Team.A ? towersA : towersB;
+        }
+
         public function getPoints(team:String):uint {
             return (team == Team.A) ? aPoints : bPoints;
         }
@@ -84,13 +92,23 @@
         private function copyStateFrom(state:DrawState):void {
             var a:*, i:int;
 
-            groundRobots = new Object();
+            groundRobots = {};
             for (a in state.groundRobots) {
                 groundRobots[a] = state.groundRobots[a].clone();
             }
 
             hqA = state.hqA ? state.hqA.clone() as DrawRobot : null;
             hqB = state.hqB ? state.hqB.clone() as DrawRobot : null;
+
+            towersA = {};
+            for (a in state.towersA) {
+                towersA[a] = state.towersA[a].clone();
+            }
+
+            towersB = {};
+            for (a in state.towersB) {
+                towersB[a] = state.towersB[a].clone();
+            }
 
             unitCounts = {};
             unitCounts[Team.A] = {};
@@ -143,6 +161,16 @@
                     }
                     delete groundRobots[a];
                 }
+            }
+
+            for (a in towersA) {
+                o = towersA[a] as DrawRobot;
+                o.updateRound();
+            }
+
+            for (a in towersB) {
+                o = towersB[a] as DrawRobot;
+                o.updateRound();
             }
 
             if (hqA) {
@@ -212,6 +240,11 @@
                 hq.destroyUnit();
             }
 
+            if (robot.getType() == RobotType.TOWER) {
+                var tower:DrawRobot = robot.getTeam() == Team.A ? towersA[robot.getRobotID()] : towersB[robot.getRobotID()];
+                tower.destroyUnit();
+            }
+
             unitCounts[robot.getTeam()][robot.getType()]--;
         }
 
@@ -226,6 +259,11 @@
                 if (robot.getType() == RobotType.HQ) {
                     var hq:DrawRobot = robot.getTeam() == Team.A ? hqA : hqB;
                     hq.setEnergon(healths[i]);
+                }
+
+                if (robot.getType() == RobotType.TOWER) {
+                    var tower:DrawRobot = robot.getTeam() == Team.A ? towersA[robot.getRobotID()] : towersB[robot.getRobotID()];
+                    tower.setEnergon(healths[i]);
                 }
             }
         }
@@ -251,6 +289,11 @@
             if (s.getRobotType() == RobotType.HQ) {
                 if (s.getTeam() == Team.A) hqA = robot.clone() as DrawRobot;
                 if (s.getTeam() == Team.B) hqB = robot.clone() as DrawRobot;
+            }
+
+            if (s.getRobotType() == RobotType.TOWER) {
+                if (s.getTeam() == Team.A) towersA[s.getRobotID()] = robot.clone();
+                if (s.getTeam() == Team.B) towersB[s.getRobotID()] = robot.clone();
             }
 
             groundRobots[s.getRobotID()] = robot;

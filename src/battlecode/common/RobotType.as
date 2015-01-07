@@ -39,8 +39,8 @@
                 TRAININGFIELD,
                 TANKFACTORY,
                 MINERFACTORY,
-                HANDWASHSTATION,
                 AEROSPACELAB,
+                HANDWASHSTATION,
                 BEAVER,
                 COMPUTER,
                 SOLDIER,
@@ -56,7 +56,6 @@
 
         public static function buildings():Array {
             return [
-                TOWER,
                 SUPPLYDEPOT,
                 TECHNOLOGYINSTITUTE,
                 BARRACKS,
@@ -64,8 +63,8 @@
                 TRAININGFIELD,
                 TANKFACTORY,
                 MINERFACTORY,
-                HANDWASHSTATION,
-                AEROSPACELAB
+                AEROSPACELAB,
+                HANDWASHSTATION
             ];
         }
 

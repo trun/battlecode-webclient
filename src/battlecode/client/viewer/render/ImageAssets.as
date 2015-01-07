@@ -34,6 +34,8 @@
         public static const HQ_A:Class;
         [Embed('/img/units/hq2.png')]
         public static const HQ_B:Class;
+        [Embed('/img/units/tower_dead.png')]
+        public static const TOWER_NEUTRAL:Class;
         [Embed('/img/units/tower1.png')]
         public static const TOWER_A:Class;
         [Embed('/img/units/tower2.png')]

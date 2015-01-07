@@ -173,6 +173,7 @@
 
         public function setOverrideSize(overrideSize:Number):void {
             this.overrideSize = overrideSize;
+            this.explosionAnimation.setOverrideSize(overrideSize);
             this.draw(true);
         }
 

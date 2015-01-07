@@ -9,6 +9,7 @@
         private var robotType:String;
         private var round:int = 0;
         private var exploding:Boolean = false;
+        private var overrideSize:Number;
 
         public function ExplosionAnimation(robotType:String) {
             this.image = new Image();
@@ -27,7 +28,12 @@
             }
 
             // TODO big missile explosion animations?
-            var w:Number = RenderConfiguration.getGridSize(); // * (robotType == RobotType.MISSILE ? 3 : 1);
+            var w:Number;
+            if (this.overrideSize) {
+                w = overrideSize;
+            } else {
+                w = RenderConfiguration.getGridSize(); // * (robotType == RobotType.MISSILE ? 3 : 1);
+            }
 
             var imageSource:Class = getExplosionImage();
             this.image.source = new imageSource();
@@ -35,6 +41,14 @@
             this.image.height = w;
             this.image.x = -w / 2;
             this.image.y = -w / 2;
+        }
+
+        public function getOverrideSize():Number {
+            return overrideSize;
+        }
+
+        public function setOverrideSize(size:Number):void {
+            this.overrideSize = size;
         }
 
         public function clone():DrawObject {
@@ -63,6 +77,8 @@
         private function getExplosionImage():Class {
             if (round < 8) {
                 return ImageAssets["EXPLODE_" + (round + 1)];
+            } else if (robotType == RobotType.TOWER) {
+                return ImageAssets.TOWER_NEUTRAL;
             } else {
                 return ImageAssets.EXPLODE_8;
             }
