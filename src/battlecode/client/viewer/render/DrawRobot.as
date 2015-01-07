@@ -54,7 +54,7 @@
             this.type = type;
             this.team = team;
             this.maxEnergon = RobotType.maxEnergon(type);
-            this.movementDelay = 0;
+            this.movementDelay = 1;
             this.hats = new Array();
             this.hatImages = new Array();
 
