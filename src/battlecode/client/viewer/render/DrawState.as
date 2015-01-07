@@ -226,18 +226,16 @@
             unitCounts[robot.getTeam()][robot.getType()]--;
         }
 
-        override public function visitEnergonChangeSignal(s:EnergonChangeSignal):* {
-            var robotIDs:Array = s.getRobotIDs();
-            var energon:Array = s.getEnergon();
+        override public function visitRobotInfoSignal(s:RobotInfoSignal):* {
+            var robotID:uint = s.getRobotID();
+            var health:Number = s.getHealth();
 
-            for (var i:uint; i < robotIDs.length; i++) {
-                var robot:DrawRobot = getRobot(robotIDs[i]);
-                robot.setEnergon(energon[i]);
+            var robot:DrawRobot = getRobot(robotID);
+            robot.setEnergon(health);
 
-                if (robot.getType() == RobotType.HQ) {
-                    var hq:DrawRobot = robot.getTeam() == Team.A ? hqA : hqB;
-                    hq.setEnergon(energon[i]);
-                }
+            if (robot.getType() == RobotType.HQ) {
+                var hq:DrawRobot = robot.getTeam() == Team.A ? hqA : hqB;
+                hq.setEnergon(health);
             }
         }
 
@@ -245,7 +243,6 @@
             aPoints = s.getFlux(Team.A);
             bPoints = s.getFlux(Team.B);
         }
-
 
         override public function visitIndicatorStringSignal(s:IndicatorStringSignal):* {
             getRobot(s.getRobotID()).setIndicatorString(s.getIndicatorString(), s.getIndex());

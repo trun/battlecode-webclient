@@ -10,7 +10,7 @@
 
         function visitDeathSignal(s:DeathSignal):*;
 
-        function visitEnergonChangeSignal(s:EnergonChangeSignal):*;
+        function visitRobotInfoSignal(s:RobotInfoSignal):*;
 
         function visitFluxChangeSignal(s:FluxChangeSignal):*;
 

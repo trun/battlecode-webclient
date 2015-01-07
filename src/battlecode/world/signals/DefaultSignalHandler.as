@@ -21,7 +21,7 @@
             return null;
         }
 
-        public function visitEnergonChangeSignal(s:EnergonChangeSignal):* {
+        public function visitRobotInfoSignal(s:RobotInfoSignal):* {
             return null;
         }
 

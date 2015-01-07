@@ -31,7 +31,7 @@
                 case "sig.MovementSignal":
                     return createMovementSignal(signalXML);
                 case "sig.RobotInfoSignal":
-                    return null; // TODO
+                    return createRobotInfoSignal(signalXML);
                 case "sig.SpawnSignal":
                     return createSpawnSignal(signalXML);
                 case "sig.TeamOreSgianl":
@@ -57,31 +57,18 @@
             return new DeathSignal(robotID);
         }
 
-        public static function createEnergonChangeSignal(signalXML:XML):EnergonChangeSignal {
-            var robotIDs:Array = signalXML.attribute("robotIDs").toString().split(",");
-            var energon:Array = signalXML.attribute("energon").toString().split(",");
-
-            if (robotIDs.length == 0 || robotIDs[0].length == 0) {
-                return null;
-            }
-
-            robotIDs = robotIDs.map(function (element:*, index:int, arr:Array):uint {
-                return parseInt(element);
-            });
-            energon = energon.map(function (element:*, index:int, arr:Array):Number {
-                return parseFloat(element);
-            });
-
-            return new EnergonChangeSignal(robotIDs, energon);
-        }
-
-
         public static function createMovementSignal(signalXML:XML):MovementSignal {
             var robotID:uint = parseInt(signalXML.attribute("robotID"));
             var loc:MapLocation = ParseUtils.parseLocation(signalXML.attribute("newLoc"));
             var type:String = signalXML.child("mt").text();
             var delay:uint = parseInt(signalXML.attribute("delay"));
             return new MovementSignal(robotID, loc, type, delay);
+        }
+
+        public static function createRobotInfoSignal(signalXML:XML):RobotInfoSignal {
+            var robotID:uint = parseInt(signalXML.attribute("robotID"));
+            var health:Number = parseFloat(signalXML.attribute("health"));
+            return new RobotInfoSignal(robotID, health);
         }
 
         public static function createIndicatorStringSignal(signalXML:XML):IndicatorStringSignal {
