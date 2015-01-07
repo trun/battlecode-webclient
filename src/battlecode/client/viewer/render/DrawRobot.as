@@ -304,7 +304,7 @@
         ///////////////////////////////////////////////////////
 
         private function drawEnergonBar():void {
-            if (!RenderConfiguration.showEnergon() && getType() != RobotType.HQ)
+            if (!RenderConfiguration.showEnergon() && !(getType() == RobotType.HQ || getType() == RobotType.TOWER))
                 return;
 
             var ratio:Number = energon / maxEnergon;
