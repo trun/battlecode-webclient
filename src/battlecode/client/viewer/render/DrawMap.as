@@ -195,7 +195,7 @@
         private function onEnterFrame(e:Event):void {
             gridCanvas.visible = RenderConfiguration.showGridlines();
             groundUnitCanvas.visible = RenderConfiguration.showGround();
-            oreCanvas.visible = RenderConfiguration.showCows();
+            oreCanvas.visible = RenderConfiguration.showOre();
         }
 
         private function onRoundChange(e:MatchEvent):void {

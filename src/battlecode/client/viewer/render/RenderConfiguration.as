@@ -8,7 +8,7 @@
         private static var discrete:Boolean = false;
         private static var energon:Boolean = true;
         private static var gridlines:Boolean = false;
-        private static var cows:Boolean = true;
+        private static var ore:Boolean = true;
         private static var hats:Boolean = true;
         private static var explosions:Boolean = true;
         private static var ground:Boolean = true;
@@ -57,8 +57,8 @@
             return ground;
         }
 
-        public static function showCows():Boolean {
-            return cows;
+        public static function showOre():Boolean {
+            return ore;
         }
 
         public static function showHats():Boolean {
@@ -90,7 +90,7 @@
         }
 
         public static function toggleOre():void {
-            cows = !cows;
+            ore = !ore;
         }
 
         public static function toggleHats():void {
