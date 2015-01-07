@@ -11,7 +11,8 @@
     import mx.containers.Canvas;
     import mx.containers.VBox;
     import mx.controls.Label;
-    import mx.events.ResizeEvent;
+import mx.controls.Spacer;
+import mx.events.ResizeEvent;
     import mx.formatters.NumberFormatter;
 
     public class DrawHUD extends VBox {
@@ -20,7 +21,9 @@
 
         private var pointLabel:Label;
         private var hqBox:DrawHUDHQ;
-        private var researchBoxes:Array;
+        private var buildingLabel:Label;
+        private var buildingBoxes:Array;
+        private var unitLabel:Label;
         private var unitBoxes:Array;
         private var winMarkerCanvas:Canvas;
 
@@ -61,6 +64,33 @@
             hqBox = new DrawHUDHQ();
             addChild(hqBox);
 
+            buildingLabel = new Label();
+            buildingLabel.width = width;
+            buildingLabel.height = 30;
+            buildingLabel.setStyle("color", 0xFFFFFF);
+            buildingLabel.setStyle("fontSize", 18);
+            buildingLabel.setStyle("textAlign", "center");
+            buildingLabel.setStyle("fontFamily", "Courier New");
+            buildingLabel.text = "Buildings";
+            addChild(buildingLabel);
+
+            unitLabel = new Label();
+            unitLabel.width = width;
+            unitLabel.height = 30;
+            unitLabel.setStyle("color", 0xFFFFFF);
+            unitLabel.setStyle("fontSize", 18);
+            unitLabel.setStyle("textAlign", "center");
+            unitLabel.setStyle("fontFamily", "Courier New");
+            unitLabel.text = "Units";
+            addChild(unitLabel);
+
+            buildingBoxes = new Array();
+            for each (var building:String in RobotType.buildings()) {
+                var buildingBox:DrawHUDUnit = new DrawHUDUnit(building, team);
+                buildingBoxes.push(buildingBox);
+                addChild(buildingBox);
+            }
+
             unitBoxes = new Array();
             for each (var unit:String in RobotType.ground()) {
                 var unitBox:DrawHUDUnit = new DrawHUDUnit(unit, team);
@@ -76,6 +106,7 @@
 
             repositionWinMarkers();
             resizeHQBox();
+            drawBuildingCounts();
             drawUnitCounts();
         }
 
@@ -94,6 +125,11 @@
                 hqBox.setRobot(hq);
                 hq.draw();
             }
+
+            for each (var buildingBox:DrawHUDUnit in buildingBoxes) {
+                buildingBox.setCount(controller.currentState.getUnitCount(buildingBox.getType(), team));
+            }
+            drawBuildingCounts();
 
             for each (var unitBox:DrawHUDUnit in unitBoxes) {
                 unitBox.setCount(controller.currentState.getUnitCount(unitBox.getType(), team));
@@ -114,15 +150,30 @@
         private function resizeHQBox():void {
             var boxSize:Number = Math.min(100, (height - 70 - pointLabel.height - winMarkerCanvas.height) - 20);
             hqBox.resize(boxSize);
-            hqBox.x = (180 - boxSize) / 2;
+            hqBox.x = (width - boxSize) / 2;
             hqBox.y = 50;
         }
 
-        private function drawUnitCounts():void {
+        private function drawBuildingCounts():void {
             var top:Number = hqBox.height + hqBox.y + 10;
+            buildingLabel.y = top + 10;
+            top = buildingLabel.height + buildingLabel.y + 5;
+            var i:uint = 0;
+            for each (var buildingBox:DrawHUDUnit in buildingBoxes) {
+                buildingBox.x = (width - buildingBox.width * 3) / 2 + (i % 3) * buildingBox.width;
+                buildingBox.y = ((buildingBox.height + 10) * Math.floor(i / 3)) + top;
+                i++;
+            }
+        }
+
+        private function drawUnitCounts():void {
+            var topBuildingBox:DrawHUDUnit = buildingBoxes[buildingBoxes.length-1];
+            var top:Number = topBuildingBox.height + topBuildingBox.y + 10;
+            unitLabel.y = top + 10;
+            top = unitLabel.height + unitLabel.y + 5;
             var i:uint = 0;
             for each (var unitBox:DrawHUDUnit in unitBoxes) {
-                unitBox.x = (180 - unitBox.width * 3) / 2 + (i % 3) * unitBox.width;
+                unitBox.x = (width - unitBox.width * 3) / 2 + (i % 3) * unitBox.width;
                 unitBox.y = ((unitBox.height + 10) * Math.floor(i / 3)) + top;
                 i++;
             }
@@ -157,6 +208,7 @@
         private function onResize(e:ResizeEvent):void {
             repositionWinMarkers();
             resizeHQBox();
+            drawBuildingCounts();
             drawUnitCounts();
         }
 

@@ -54,7 +54,6 @@
 
         public static function buildings():Array {
             return [
-                HQ,
                 TOWER,
                 SUPPLYDEPOT,
                 TECHNOLOGYINSTITUTE,
