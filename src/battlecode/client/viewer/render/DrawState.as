@@ -19,8 +19,8 @@
         private var roundNum:uint;
         private var unitCounts:Object;
 
-        // neutrals
-        private var neutralDensities:Array; // int[][]
+        // ore
+        private var ore:Array; // Number[][]
         private var neutralTeams:Array; // int[][]
 
         // immutables
@@ -45,14 +45,12 @@
             this.map = map;
             this.origin = map.getOrigin();
 
-            neutralDensities = [];
-            neutralTeams = [];
+            var initialOre:Array = map.getInitialOre();
+            ore = [];
             for (var i:int = 0; i < map.getWidth(); i++) {
-                neutralDensities.push(new Array(map.getHeight()));
-                neutralTeams.push(new Array(map.getHeight()));
+                ore.push(new Array(map.getHeight()));
                 for (var j:int = 0; j < map.getHeight(); j++) {
-                    neutralDensities[i][j] = 0;
-                    neutralTeams[i][j] = 0;
+                    ore[i][j] = initialOre[i][j];
                 }
             }
         }
@@ -77,12 +75,8 @@
             return unitCounts[team][type];
         }
 
-        public function getNeutralDensities():Array {
-            return neutralDensities;
-        }
-
-        public function getNeutralTeams():Array {
-            return neutralTeams;
+        public function getOre():Array {
+            return ore;
         }
 
         ///////////////////////////////////////////////////////
@@ -108,11 +102,9 @@
                 unitCounts[Team.B][a] = state.unitCounts[Team.B][a];
             }
 
-            neutralDensities = [];
-            neutralTeams = [];
-            for (i = 0; i < state.neutralDensities.length; i++) {
-                neutralDensities.push(state.neutralDensities[i].concat());
-                neutralTeams.push(state.neutralTeams[i].concat());
+            ore = [];
+            for (i = 0; i < state.ore.length; i++) {
+                ore.push(state.ore[i].concat());
             }
 
             roundNum = state.roundNum;

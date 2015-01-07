@@ -160,7 +160,7 @@
                     break;
                 case "M":
                 case "m":
-                    RenderConfiguration.toggleCows();
+                    RenderConfiguration.toggleOre();
                     break;
                 case "O":
                 case "o":

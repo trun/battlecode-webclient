@@ -5,12 +5,14 @@
         private var width:uint, height:uint;
         private var origin:MapLocation;
         private var terrainTiles:Array; //TerrainTile[][]
+        private var initialOre:Array; // Number[][]
 
-        public function GameMap(width:uint, height:uint, origin:MapLocation, terrainTiles:Array) {
+        public function GameMap(width:uint, height:uint, origin:MapLocation, terrainTiles:Array, initialOre:Array) {
             this.width = width;
             this.height = height;
             this.origin = origin;
             this.terrainTiles = terrainTiles;
+            this.initialOre = initialOre;
         }
 
         public function getWidth():uint {
@@ -27,6 +29,10 @@
 
         public function getTerrainTiles():Array {
             return terrainTiles;
+        }
+
+        public function getInitialOre():Array {
+            return initialOre;
         }
 
         public function isOnMap(loc:MapLocation):Boolean {

@@ -21,7 +21,7 @@
         // various canvases for layering and quick toggling of features
         private var mapCanvas:UIComponent;
         private var gridCanvas:UIComponent;
-        private var neutralCanvas:UIComponent;
+        private var oreCanvas:UIComponent;
         private var groundUnitCanvas:UIComponent;
 
         // optimizations for caching
@@ -37,15 +37,16 @@
 
             this.mapCanvas = new UIComponent();
             this.gridCanvas = new UIComponent();
-            this.neutralCanvas = new UIComponent();
+            this.oreCanvas = new UIComponent();
             this.groundUnitCanvas = new UIComponent();
 
             this.mapCanvas.cacheAsBitmap = true;
             this.gridCanvas.cacheAsBitmap = true;
+            this.oreCanvas.cacheAsBitmap = true;
 
             this.addChild(mapCanvas);
             this.addChild(gridCanvas);
-            this.addChild(neutralCanvas);
+            this.addChild(oreCanvas);
             this.addChild(groundUnitCanvas);
         }
 
@@ -77,7 +78,7 @@
             drawMap();
             drawGridlines();
             drawUnits();
-            drawCows();
+            drawOre();
 
             var o:DrawObject;
 
@@ -131,21 +132,21 @@
             }
         }
 
-        private function drawCows():void {
-            var cows:Array = controller.currentState.getNeutralDensities();
-            var cowsTeams:Array = controller.currentState.getNeutralTeams();
+        private function drawOre():void {
+            var ore:Array = controller.currentState.getOre();
             var i:uint, j:uint, team:String;
 
-            this.neutralCanvas.graphics.clear();
+            this.oreCanvas.graphics.clear();
             var g:Number = getGridSize();
-            for (i = 0; i < cows.length; i++) {
-                for (j = 0; j < cows[i].length; j++) {
-                    var density:Number = cows[i][j] / 8000.0;
-                    var color:Number = Team.cowColor(Team.valueOf(cowsTeams[i][j]));
-                    this.neutralCanvas.graphics.lineStyle(1, color, 0.8);
-                    this.neutralCanvas.graphics.beginFill(color, 0.4);
-                    this.neutralCanvas.graphics.drawCircle((i + .5) * g, (j + .5) * g, g * Math.sqrt(density) / 2);
-                    this.neutralCanvas.graphics.endFill();
+            for (i = 0; i < ore.length; i++) {
+                for (j = 0; j < ore[i].length; j++) {
+                    var density:Number = Math.min(1, ore[i][j] / 100);
+                    var w:Number = density * g;
+                    this.oreCanvas.graphics.lineStyle();
+                    this.oreCanvas.graphics.beginFill(0xB19CD9, 0.5);
+                    this.oreCanvas.graphics.drawRect(i * g + (g - w) / 2, j * g + (g - w) / 2, w, w);
+                    //this.oreCanvas.graphics.drawCircle((i + .5) * g, (j + .5) * g, w / 2);
+                    this.oreCanvas.graphics.endFill();
                 }
             }
         }
@@ -194,7 +195,7 @@
         private function onEnterFrame(e:Event):void {
             gridCanvas.visible = RenderConfiguration.showGridlines();
             groundUnitCanvas.visible = RenderConfiguration.showGround();
-            neutralCanvas.visible = RenderConfiguration.showCows();
+            oreCanvas.visible = RenderConfiguration.showCows();
         }
 
         private function onRoundChange(e:MatchEvent):void {
@@ -202,7 +203,7 @@
                 drawUnits();
             }
             updateUnits();
-            drawCows();
+            drawOre();
 
             lastRound = e.currentRound;
 

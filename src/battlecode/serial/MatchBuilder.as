@@ -5,7 +5,9 @@ package battlecode.serial {
     import battlecode.world.signals.Signal;
     import battlecode.world.signals.SignalFactory;
 
-    public class MatchBuilder {
+import flash.xml.XMLNode;
+
+public class MatchBuilder {
         private var matchNum:int = 0;
         private var gameMap:GameMap;
         private var maxRounds:uint;
@@ -66,16 +68,17 @@ package battlecode.serial {
                 }
             }
 
-            // map ore tiles TODO - parse mapInitialOre
-            var oreAmounts:Array = new Array(mapHeight);
-            for (i = 0; i < mapHeight; i++) {
-                oreAmounts[i] = new Array(mapWidth);
-                for (j = 0; j < mapWidth; j++) {
-                    oreAmounts[i][j] = 0;
-                }
+            var oreAmounts:Array = [];
+            var oreXml:XMLList = mapXml.child("mapInitialOre");
+            for each (var oreRow:XML in oreXml.children()) {
+                var values:Array = oreRow.text().toString().split(",");
+                values = values.map(function (element:*, index:int, arr:Array):uint {
+                    return parseFloat(element);
+                });
+                oreAmounts.push(values);
             }
 
-            gameMap = new GameMap(mapWidth, mapHeight, new MapLocation(mapOriginX, mapOriginY), terrainTiles);
+            gameMap = new GameMap(mapWidth, mapHeight, new MapLocation(mapOriginX, mapOriginY), terrainTiles, oreAmounts);
 
             maxRounds = parseInt(mapXml.attribute("maxRounds"));
             maxInitialOre = parseInt(mapXml.attribute("maxInitialOre"));

@@ -89,7 +89,7 @@
             explosions = !explosions;
         }
 
-        public static function toggleCows():void {
+        public static function toggleOre():void {
             cows = !cows;
         }
 
