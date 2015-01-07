@@ -68,14 +68,23 @@ public class MatchBuilder {
                 }
             }
 
-            var oreAmounts:Array = [];
+            var oreAmounts:Array = new Array(mapHeight);
+            for (i = 0; i < mapHeight; i++) {
+                oreAmounts[i] = new Array(mapWidth);
+            }
+
+            // NOTE: the mapInitialOre matrix is rotated
             var oreXml:XMLList = mapXml.child("mapInitialOre");
+            j = 0;
             for each (var oreRow:XML in oreXml.children()) {
                 var values:Array = oreRow.text().toString().split(",");
                 values = values.map(function (element:*, index:int, arr:Array):uint {
                     return parseFloat(element);
                 });
-                oreAmounts.push(values);
+                for (i = 0; i < mapHeight; i++) {
+                    oreAmounts[i][j] = values[i];
+                }
+                j++;
             }
 
             gameMap = new GameMap(mapWidth, mapHeight, new MapLocation(mapOriginX, mapOriginY), terrainTiles, oreAmounts);

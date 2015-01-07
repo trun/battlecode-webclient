@@ -42,11 +42,10 @@
 
             this.mapCanvas.cacheAsBitmap = true;
             this.gridCanvas.cacheAsBitmap = true;
-            this.oreCanvas.cacheAsBitmap = true;
 
             this.addChild(mapCanvas);
-            this.addChild(gridCanvas);
             this.addChild(oreCanvas);
+            this.addChild(gridCanvas);
             this.addChild(groundUnitCanvas);
         }
 
@@ -96,10 +95,13 @@
             var map:GameMap = controller.match.getMap();
             var terrain:Array = map.getTerrainTiles();
             var colorTransform:ColorTransform, scalar:uint;
+            var g:Number = getGridSize();
 
             origin = map.getOrigin();
 
             this.mapCanvas.graphics.clear();
+
+            // draw terrain
             for (i = 0; i < map.getHeight(); i++) {
                 for (j = 0; j < map.getWidth(); j++) {
                     tile = terrain[i][j] as TerrainTile;
@@ -107,13 +109,40 @@
                         scalar = 0xFF * 0.9;
                         colorTransform = new ColorTransform(0, 0, 0, 1, scalar, scalar, scalar, 0);
                         this.mapCanvas.graphics.beginFill(colorTransform.color, 1.0);
-                        this.mapCanvas.graphics.drawRect(j * getGridSize(), i * getGridSize(), getGridSize(), getGridSize());
+                        this.mapCanvas.graphics.drawRect(j * g, i * g, g, g);
                         this.mapCanvas.graphics.endFill();
                     } else {
                         colorTransform = new ColorTransform(0, 0, 0, 1, 0x00, 0x00, 0x99, 0);
                         this.mapCanvas.graphics.beginFill(colorTransform.color, 1.0);
-                        this.mapCanvas.graphics.drawRect(j * getGridSize(), i * getGridSize(), getGridSize(), getGridSize());
+                        this.mapCanvas.graphics.drawRect(j * g, i * g, g, g);
                         this.mapCanvas.graphics.endFill();
+                    }
+                }
+            }
+
+            // draw void outlines
+            for (i = 0; i < map.getHeight(); i++) {
+                for (j = 0; j < map.getWidth(); j++) {
+                    tile = terrain[i][j] as TerrainTile;
+                    if (tile.getType() == TerrainTile.VOID) {
+                        this.mapCanvas.graphics.lineStyle(2, 0xFFFFFF);
+                        if (i > 0 && terrain[i-1][j].getType() == TerrainTile.LAND) {
+                            this.mapCanvas.graphics.moveTo(j * g, i * g);
+                            this.mapCanvas.graphics.lineTo((j + 1) * g, i * g);
+                        }
+                        if (j > 0 && terrain[i][j-1].getType() == TerrainTile.LAND) {
+                            this.mapCanvas.graphics.moveTo(j * g, i * g);
+                            this.mapCanvas.graphics.lineTo(j * g, (i + 1) * g);
+                        }
+                        if (i < getMapHeight() - 1 && terrain[i+1][j].getType() == TerrainTile.LAND) {
+                            this.mapCanvas.graphics.moveTo(j * g, (i + 1) * g);
+                            this.mapCanvas.graphics.lineTo((j + 1) * g, (i + 1) * g);
+                        }
+                        if (j < getMapWidth() - 1 && terrain[i][j+1].getType() == TerrainTile.LAND) {
+                            this.mapCanvas.graphics.moveTo((j + 1) * g, i * g);
+                            this.mapCanvas.graphics.lineTo((j + 1) * g, (i + 1) * g);
+                        }
+                        this.mapCanvas.graphics.lineStyle();
                     }
                 }
             }
@@ -133,19 +162,47 @@
         }
 
         private function drawOre():void {
-            var ore:Array = controller.currentState.getOre();
-            var i:uint, j:uint, team:String;
+            var initialOre:Array = controller.match.getMap().getInitialOre();
+            var terrain:Array = controller.match.getMap().getTerrainTiles();
+            var oreMined:Array = controller.currentState.getOreMined();
+            var i:uint, j:uint;
 
             this.oreCanvas.graphics.clear();
+            this.oreCanvas.graphics.lineStyle();
             var g:Number = getGridSize();
-            for (i = 0; i < ore.length; i++) {
-                for (j = 0; j < ore[i].length; j++) {
-                    var density:Number = Math.min(1, ore[i][j] / 100);
-                    var w:Number = density * g;
-                    this.oreCanvas.graphics.lineStyle();
-                    this.oreCanvas.graphics.beginFill(0xB19CD9, 0.5);
-                    this.oreCanvas.graphics.drawRect(j * g + (g - w) / 2, i * g + (g - w) / 2, w, w);
-                    //this.oreCanvas.graphics.drawCircle((j + .5) * g, (i + .5) * g, w / 2);
+            for (i = 0; i < oreMined.length; i++) {
+                for (j = 0; j < oreMined[i].length; j++) {
+                    var tile:TerrainTile = terrain[i][j] as TerrainTile;
+                    if (tile.getType() == TerrainTile.VOID) {
+                        continue;
+                    }
+                    var density:Number = Math.min(1, (initialOre[i][j] - oreMined[i][j]) / controller.match.getMaxInitialOre());
+                    if (density <= 0) {
+                        continue;
+                    }
+                    // green
+                    //var scalarR:uint = (1 - density) * 0x99 + 0x33;
+                    //var scalarG:uint = 0xFF - (1 - density) * 0x33;
+                    //var scalarB:uint = (1 - density) * 0xCC;
+
+                    // orange
+                    //var scalarR:uint = 0xFF - (1 - density) * 0x33;
+                    //var scalarG:uint = (1 - density) * 0x33 + 0x99;
+                    //var scalarB:uint = (1 - density) * 0x99 + 0x33;
+
+                    // purple
+                    //var scalarR:uint = (1 - density) * 0x66 + 0x66;
+                    //var scalarG:uint = (1 - density) * 0x33;
+                    //var scalarB:uint = (1 - density) * 0x33 + 0x99;
+
+                    // grey
+                    var scalarR:uint = (1 - density) * 0x66 + 0x66;
+                    var scalarG:uint = (1 - density) * 0x66 + 0x66;
+                    var scalarB:uint = (1 - density) * 0x66 + 0x66;
+
+                    var colorTransform:ColorTransform = new ColorTransform(0, 0, 0, 1, scalarR, scalarG, scalarB, 0);
+                    this.oreCanvas.graphics.beginFill(colorTransform.color, 1.0);
+                    this.oreCanvas.graphics.drawRect(j * getGridSize(), i * getGridSize(), getGridSize(), getGridSize());
                     this.oreCanvas.graphics.endFill();
                 }
             }

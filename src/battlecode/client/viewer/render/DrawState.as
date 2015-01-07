@@ -20,8 +20,7 @@
         private var unitCounts:Object;
 
         // ore
-        private var ore:Array; // Number[][]
-        private var neutralTeams:Array; // int[][]
+        private var oreMined:Array; // Number[][]
 
         // immutables
         private var map:GameMap;
@@ -45,12 +44,11 @@
             this.map = map;
             this.origin = map.getOrigin();
 
-            var initialOre:Array = map.getInitialOre();
-            ore = [];
+            oreMined = [];
             for (var i:int = 0; i < map.getHeight(); i++) {
-                ore.push(new Array(map.getWidth()));
+                oreMined.push(new Array(map.getWidth()));
                 for (var j:int = 0; j < map.getWidth(); j++) {
-                    ore[i][j] = initialOre[i][j];
+                    oreMined[i][j] = 0;
                 }
             }
         }
@@ -75,8 +73,8 @@
             return unitCounts[team][type];
         }
 
-        public function getOre():Array {
-            return ore;
+        public function getOreMined():Array {
+            return oreMined;
         }
 
         ///////////////////////////////////////////////////////
@@ -97,14 +95,14 @@
             unitCounts = {};
             unitCounts[Team.A] = {};
             unitCounts[Team.B] = {};
-            for (var robotType in RobotType.values()) {
+            for (var robotType:String in RobotType.values()) {
                 unitCounts[Team.A][robotType] = state.unitCounts[Team.A][robotType];
                 unitCounts[Team.B][robotType] = state.unitCounts[Team.B][robotType];
             }
 
-            ore = [];
-            for (i = 0; i < state.ore.length; i++) {
-                ore.push(state.ore[i].concat());
+            oreMined = [];
+            for (i = 0; i < state.oreMined.length; i++) {
+                oreMined.push(state.oreMined[i].concat());
             }
 
             roundNum = state.roundNum;
@@ -238,7 +236,7 @@
 
         override public function visitLocationOreChangeSignal(s:LocationOreChangeSignal):* {
             var loc:MapLocation = translateCoordinates(s.getLocation());
-            ore[loc.getY()][loc.getX()] = s.getOre();
+            oreMined[loc.getY()][loc.getX()] = s.getOre();
         }
 
         override public function visitMovementSignal(s:MovementSignal):* {
