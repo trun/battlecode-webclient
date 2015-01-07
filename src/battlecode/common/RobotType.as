@@ -10,6 +10,7 @@
         public static const HELIPAD:String = "HELIPAD";
         public static const TRAININGFIELD:String = "TRAININGFIELD";
         public static const TANKFACTORY:String = "TANKFACTORY";
+        public static const MINERFACTORY:String = "MINERFACTORY";
         public static const HANDWASHSTATION:String = "HANDWASHSTATION";
         public static const AEROSPACELAB:String = "AEROSPACELAB";
 
@@ -37,6 +38,7 @@
                 HELIPAD,
                 TRAININGFIELD,
                 TANKFACTORY,
+                MINERFACTORY,
                 HANDWASHSTATION,
                 AEROSPACELAB,
                 BEAVER,
@@ -61,6 +63,7 @@
                 HELIPAD,
                 TRAININGFIELD,
                 TANKFACTORY,
+                MINERFACTORY,
                 HANDWASHSTATION,
                 AEROSPACELAB
             ];
@@ -96,6 +99,7 @@
                 case HELIPAD:
                 case TRAININGFIELD:
                 case TANKFACTORY:
+                case MINERFACTORY:
                 case HANDWASHSTATION:
                 case AEROSPACELAB:
                     return 100;

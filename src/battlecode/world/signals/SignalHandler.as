@@ -10,7 +10,7 @@
 
         function visitDeathSignal(s:DeathSignal):*;
 
-        function visitRobotInfoSignal(s:RobotInfoSignal):*;
+        function visitHealthChangeSignal(s:HealthChangeSignal):*;
 
         function visitIndicatorStringSignal(s:IndicatorStringSignal):*;
 

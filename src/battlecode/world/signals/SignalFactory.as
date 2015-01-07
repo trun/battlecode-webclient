@@ -28,8 +28,8 @@
                     return null; // TODO
                 case "sig.MovementSignal":
                     return createMovementSignal(signalXML);
-                case "sig.RobotInfoSignal":
-                    return createRobotInfoSignal(signalXML);
+                case "sig.HealthChangeSignal":
+                    return createHealthChangeSignal(signalXML);
                 case "sig.SpawnSignal":
                     return createSpawnSignal(signalXML);
                 case "sig.TeamOreSignal":
@@ -69,10 +69,18 @@
             return new MovementSignal(robotID, loc, type, delay);
         }
 
-        public static function createRobotInfoSignal(signalXML:XML):RobotInfoSignal {
-            var robotID:uint = parseInt(signalXML.attribute("robotID"));
-            var health:Number = parseFloat(signalXML.attribute("health"));
-            return new RobotInfoSignal(robotID, health);
+        public static function createHealthChangeSignal(signalXML:XML):HealthChangeSignal {
+            var robotIDs:Array = signalXML.attribute("robotIDs").split(",");
+            robotIDs = robotIDs.map(function (element:*, index:int, arr:Array):uint {
+                return parseInt(element);
+            });
+
+            var healths:Array = signalXML.attribute("health").split(",");
+            healths = healths.map(function (element:*, index:int, arr:Array):uint {
+                return parseFloat(element);
+            });
+
+            return new HealthChangeSignal(robotIDs, healths);
         }
 
         public static function createIndicatorStringSignal(signalXML:XML):IndicatorStringSignal {

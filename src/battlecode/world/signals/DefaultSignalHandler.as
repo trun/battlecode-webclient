@@ -21,7 +21,7 @@
             return null;
         }
 
-        public function visitRobotInfoSignal(s:RobotInfoSignal):* {
+        public function visitHealthChangeSignal(s:HealthChangeSignal):* {
             return null;
         }
 

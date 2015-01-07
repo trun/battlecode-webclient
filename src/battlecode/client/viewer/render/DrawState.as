@@ -225,16 +225,18 @@
             unitCounts[robot.getTeam()][robot.getType()]--;
         }
 
-        override public function visitRobotInfoSignal(s:RobotInfoSignal):* {
-            var robotID:uint = s.getRobotID();
-            var health:Number = s.getHealth();
+        override public function visitHealthChangeSignal(s:HealthChangeSignal):* {
+            var robotIDs:Array = s.getRobotIDs();
+            var healths:Array = s.getHealths();
 
-            var robot:DrawRobot = getRobot(robotID);
-            robot.setEnergon(health);
+            for (var i:uint; i < robotIDs.length; i++) {
+                var robot:DrawRobot = getRobot(robotIDs[i]);
+                robot.setEnergon(healths[i]);
 
-            if (robot.getType() == RobotType.HQ) {
-                var hq:DrawRobot = robot.getTeam() == Team.A ? hqA : hqB;
-                hq.setEnergon(health);
+                if (robot.getType() == RobotType.HQ) {
+                    var hq:DrawRobot = robot.getTeam() == Team.A ? hqA : hqB;
+                    hq.setEnergon(healths[i]);
+                }
             }
         }
 
