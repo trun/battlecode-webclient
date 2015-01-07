@@ -91,7 +91,8 @@
             var loc:MapLocation = ParseUtils.parseLocation(signalXML.attribute("loc"));
             var type:String = signalXML.attribute("type").toString();
             var team:String = signalXML.attribute("team").toString();
-            return new SpawnSignal(robotID, parentID, loc, type, team);
+            var delay:uint = parseInt(signalXML.attribute("delay"));
+            return new SpawnSignal(robotID, parentID, loc, type, team, delay);
         }
 
         public static function createTeamOreSignal(signalXML:XML):TeamOreSignal {

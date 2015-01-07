@@ -17,10 +17,6 @@
             return null;
         }
 
-        public function visitCaptureSignal(s:CaptureSignal):* {
-            return null;
-        }
-
         public function visitDeathSignal(s:DeathSignal):* {
             return null;
         }
@@ -29,23 +25,11 @@
             return null;
         }
 
-        public function visitFluxChangeSignal(s:FluxChangeSignal):* {
-            return null;
-        }
-
         public function visitIndicatorStringSignal(s:IndicatorStringSignal):* {
             return null;
         }
 
         public function visitMovementSignal(s:MovementSignal):* {
-            return null;
-        }
-
-        public function visitNeutralsDensitySignal(s:NeutralsDensitySignal):* {
-            return null;
-        }
-
-        public function visitNeutralsTeamSignal(s:NeutralsTeamSignal):* {
             return null;
         }
 

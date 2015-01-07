@@ -176,22 +176,6 @@
             this.draw(true);
         }
 
-        public function capture():void {
-            this.addAction(new DrawAction(ActionType.CAPTURING, GameConstants.CAPTURE_DELAY));
-        }
-
-        public function layMine():void {
-            this.addAction(new DrawAction(ActionType.MINING, GameConstants.MINE_LAY_DELAY));
-        }
-
-        public function stopLayingMine():void {
-            this.addAction(new DrawAction(ActionType.MINING_STOPPING, GameConstants.MINE_LAY_STOP_DELAY));
-        }
-
-        public function diffuseMine(hasUpgrade:Boolean):void {
-            this.addAction(new DrawAction(ActionType.DEFUSING, hasUpgrade ? GameConstants.MINE_DIFFUSE_UPGRADE_DELAY: GameConstants.MINE_DIFFUSE_DELAY))
-        }
-
         public function attack(targetLocation:MapLocation):void {
             this.targetLocation = targetLocation;
             this.addAction(new DrawAction(ActionType.ATTACKING, RobotType.attackDelay(type)));
@@ -201,6 +185,12 @@
             this.targetLocation = targetLocation;
             this.addAction(new DrawAction(ActionType.BASHING, RobotType.attackDelay(type)));
             this.bashAnimation.bash();
+        }
+
+        public function spawn(delay:uint):void {
+            if (delay > 0) {
+                this.addAction(new DrawAction(ActionType.SPAWNING, delay));
+            }
         }
 
         public function broadcast():void {
@@ -293,10 +283,7 @@
                     case ActionType.MOVING:
                         drawMovement();
                         break;
-                    case ActionType.CAPTURING:
-                    case ActionType.MINING:
-                    case ActionType.MINING_STOPPING:
-                    case ActionType.DEFUSING:
+                    case ActionType.SPAWNING:
                         drawActionBar(o);
                         break;
                 }
@@ -320,9 +307,18 @@
                 return;
 
             var ratio:Number = energon / maxEnergon;
-            var size:Number = getImageSize(true);
-            this.graphics.lineStyle();
-            this.graphics.beginFill(0x00FF00, 0.8);
+            var color:uint;
+            if (ratio > .5) {
+                color = 0x00FF00;
+            } else if (ratio > .25) {
+                color = 0xFFFF00;
+            } else {
+                color = 0xFF0000;
+            }
+
+            var size:Number = getImageSize(true) * .9;
+            this.graphics.lineStyle(.5, 0xFFFFFF);
+            this.graphics.beginFill(color, 0.8);
             this.graphics.drawRect(-size / 2, size / 2, ratio * size, 5 * getImageScale());
             this.graphics.endFill();
             this.graphics.beginFill(0x000000, 0.8);
@@ -334,16 +330,7 @@
             var yOffset:Number = RenderConfiguration.showEnergon() ? 5 * getImageScale() : 0;
             var color:uint;
             switch (action.getType()) {
-                case ActionType.CAPTURING:
-                    color = 0x4C4CFF;
-                    break;
-                case ActionType.MINING:
-                    color = 0xFF00CC;
-                    break;
-                case ActionType.MINING_STOPPING:
-                    color = 0xFF0000;
-                    break;
-                case ActionType.DEFUSING:
+                case ActionType.SPAWNING:
                     color = 0x00FFFF;
                     break;
                 default:
@@ -351,17 +338,9 @@
                     break;
             }
 
-            var ratio:Number;
-            switch (action.getType()) {
-                case ActionType.MINING_STOPPING:
-                    ratio = action.getRounds() / action.getMaxRounds();
-                    break;
-                default:
-                    ratio = (action.getMaxRounds() - action.getRounds()) / action.getMaxRounds();
-                    break;
-            }
-            var size:Number = getImageSize(true);
-            this.graphics.lineStyle();
+            var ratio:Number = (action.getMaxRounds() - action.getRounds()) / action.getMaxRounds();
+            var size:Number = getImageSize(true) * .9;
+            this.graphics.lineStyle(.5, 0xFFFFFF);
             this.graphics.beginFill(color, 0.8);
             this.graphics.drawRect(-size / 2, size / 2 + yOffset, ratio * size, 5 * getImageScale());
             this.graphics.endFill();

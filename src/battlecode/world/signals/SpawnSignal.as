@@ -7,13 +7,15 @@
         private var loc:MapLocation;
         private var type:String;
         private var team:String;
+        private var delay:uint;
 
-        public function SpawnSignal(robotID:uint, parentID:uint, loc:MapLocation, type:String, team:String) {
+        public function SpawnSignal(robotID:uint, parentID:uint, loc:MapLocation, type:String, team:String, delay:uint) {
             this.robotID = robotID;
             this.parentID = parentID;
             this.loc = loc;
             this.type = type;
             this.team = team;
+            this.delay = delay;
         }
 
         public function getRobotID():uint {
@@ -34,6 +36,10 @@
 
         public function getTeam():String {
             return team;
+        }
+
+        public function getDelay():uint {
+            return delay;
         }
 
         public function accept(handler:SignalHandler):* {

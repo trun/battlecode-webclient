@@ -213,11 +213,6 @@
             getRobot(s.getRobotID()).broadcast();
         }
 
-        override public function visitCaptureSignal(s:CaptureSignal):* {
-            var robot:DrawRobot = getRobot(s.getParentID());
-            robot.capture();
-        }
-
         override public function visitDeathSignal(s:DeathSignal):* {
             var robot:DrawRobot = getRobot(s.getRobotID());
             robot.destroyUnit();
@@ -243,11 +238,6 @@
             }
         }
 
-        override public function visitFluxChangeSignal(s:FluxChangeSignal):* {
-            aPoints = s.getFlux(Team.A);
-            bPoints = s.getFlux(Team.B);
-        }
-
         override public function visitIndicatorStringSignal(s:IndicatorStringSignal):* {
             getRobot(s.getRobotID()).setIndicatorString(s.getIndicatorString(), s.getIndex());
         }
@@ -259,6 +249,7 @@
         override public function visitSpawnSignal(s:SpawnSignal):* {
             var robot:DrawRobot = new DrawRobot(s.getRobotID(), s.getRobotType(), s.getTeam());
             robot.setLocation(s.getLocation());
+            robot.spawn(s.getDelay());
 
             if (s.getRobotType() == RobotType.HQ) {
                 if (s.getTeam() == Team.A) hqA = robot.clone() as DrawRobot;
