@@ -47,9 +47,9 @@
 
             var initialOre:Array = map.getInitialOre();
             ore = [];
-            for (var i:int = 0; i < map.getWidth(); i++) {
-                ore.push(new Array(map.getHeight()));
-                for (var j:int = 0; j < map.getHeight(); j++) {
+            for (var i:int = 0; i < map.getHeight(); i++) {
+                ore.push(new Array(map.getWidth()));
+                for (var j:int = 0; j < map.getWidth(); j++) {
                     ore[i][j] = initialOre[i][j];
                 }
             }
@@ -94,12 +94,12 @@
             hqA = state.hqA ? state.hqA.clone() as DrawRobot : null;
             hqB = state.hqB ? state.hqB.clone() as DrawRobot : null;
 
-            unitCounts = new Object();
-            unitCounts[Team.A] = new Object();
-            unitCounts[Team.B] = new Object();
-            for (a in state.unitCounts[Team.A]) {
-                unitCounts[Team.A][a] = state.unitCounts[Team.A][a];
-                unitCounts[Team.B][a] = state.unitCounts[Team.B][a];
+            unitCounts = {};
+            unitCounts[Team.A] = {};
+            unitCounts[Team.B] = {};
+            for (var robotType in RobotType.values()) {
+                unitCounts[Team.A][robotType] = state.unitCounts[Team.A][robotType];
+                unitCounts[Team.B][robotType] = state.unitCounts[Team.B][robotType];
             }
 
             ore = [];
@@ -234,6 +234,11 @@
 
         override public function visitIndicatorStringSignal(s:IndicatorStringSignal):* {
             getRobot(s.getRobotID()).setIndicatorString(s.getIndicatorString(), s.getIndex());
+        }
+
+        override public function visitLocationOreChangeSignal(s:LocationOreChangeSignal):* {
+            var loc:MapLocation = translateCoordinates(s.getLocation());
+            ore[loc.getY()][loc.getX()] = s.getOre();
         }
 
         override public function visitMovementSignal(s:MovementSignal):* {

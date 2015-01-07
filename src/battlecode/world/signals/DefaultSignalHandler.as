@@ -29,6 +29,10 @@
             return null;
         }
 
+        public function visitLocationOreChangeSignal(s:LocationOreChangeSignal):* {
+            return null;
+        }
+
         public function visitMovementSignal(s:MovementSignal):* {
             return null;
         }

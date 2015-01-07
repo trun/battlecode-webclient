@@ -144,8 +144,8 @@
                     var w:Number = density * g;
                     this.oreCanvas.graphics.lineStyle();
                     this.oreCanvas.graphics.beginFill(0xB19CD9, 0.5);
-                    this.oreCanvas.graphics.drawRect(i * g + (g - w) / 2, j * g + (g - w) / 2, w, w);
-                    //this.oreCanvas.graphics.drawCircle((i + .5) * g, (j + .5) * g, w / 2);
+                    this.oreCanvas.graphics.drawRect(j * g + (g - w) / 2, i * g + (g - w) / 2, w, w);
+                    //this.oreCanvas.graphics.drawCircle((j + .5) * g, (i + .5) * g, w / 2);
                     this.oreCanvas.graphics.endFill();
                 }
             }

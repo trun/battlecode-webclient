@@ -23,7 +23,7 @@
                 case "sig.IndicatorStringSignal":
                     return createIndicatorStringSignal(signalXML);
                 case "sig.LocationOreChangeSignal":
-                    return null; // TODO
+                    return createLocationOreChangeSignal(signalXML);
                 case "sig.MineSignal":
                     return null; // TODO
                 case "sig.MovementSignal":
@@ -91,6 +91,12 @@
             var index:uint = parseInt(signalXML.attribute("stringIndex"));
             var str:String = ParseUtils.unencode(signalXML.attribute("newString"));
             return new IndicatorStringSignal(robotID, index, str);
+        }
+
+        public static function createLocationOreChangeSignal(signalXML:XML):LocationOreChangeSignal {
+            var loc:MapLocation = ParseUtils.parseLocation(signalXML.attribute("loc"));
+            var ore:Number = parseFloat(signalXML.attribute("ore"));
+            return new LocationOreChangeSignal(loc, ore);
         }
 
         public static function createSpawnSignal(signalXML:XML):SpawnSignal {

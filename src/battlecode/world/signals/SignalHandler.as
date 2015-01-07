@@ -14,6 +14,8 @@
 
         function visitIndicatorStringSignal(s:IndicatorStringSignal):*;
 
+        function visitLocationOreChangeSignal(s:LocationOreChangeSignal):*;
+
         function visitMovementSignal(s:MovementSignal):*;
 
         function visitTeamOreSignal(s:TeamOreSignal):*;
