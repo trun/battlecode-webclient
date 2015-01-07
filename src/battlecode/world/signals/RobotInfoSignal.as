@@ -1,7 +1,4 @@
 ﻿package battlecode.world.signals {
-    import battlecode.common.AttackType;
-    import battlecode.common.MapLocation;
-
     public class RobotInfoSignal implements Signal {
         private var robotID:uint;
         private var health:Number;
@@ -24,5 +21,4 @@
         }
 
     }
-
 }
