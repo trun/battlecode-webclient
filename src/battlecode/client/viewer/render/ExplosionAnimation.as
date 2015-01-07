@@ -61,25 +61,10 @@ import mx.controls.Image;
         }
 
         private function getExplosionImage():Class {
-            switch (round) {
-                case 0:
-                    return ImageAssets.EXPLODE_1;
-                case 1:
-                    return ImageAssets.EXPLODE_2;
-                case 2:
-                    return ImageAssets.EXPLODE_3;
-                case 3:
-                    return ImageAssets.EXPLODE_4;
-                case 4:
-                    return ImageAssets.EXPLODE_5;
-                case 5:
-                    return ImageAssets.EXPLODE_6;
-                case 6:
-                    return ImageAssets.EXPLODE_7;
-                case 7:
-                    return ImageAssets.EXPLODE_8;
-                default:
-                    return ImageAssets.EXPLODE_8;
+            if (round < 8) {
+                return ImageAssets["EXPLODE_" + (round + 1)];
+            } else {
+                return ImageAssets.EXPLODE_8;
             }
         }
 
