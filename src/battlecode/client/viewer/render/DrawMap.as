@@ -134,11 +134,11 @@
                             this.mapCanvas.graphics.moveTo(j * g, i * g);
                             this.mapCanvas.graphics.lineTo(j * g, (i + 1) * g);
                         }
-                        if (i < getMapHeight() - 1 && terrain[i+1][j].getType() == TerrainTile.LAND) {
+                        if (i < map.getHeight() - 1 && terrain[i+1][j].getType() == TerrainTile.LAND) {
                             this.mapCanvas.graphics.moveTo(j * g, (i + 1) * g);
                             this.mapCanvas.graphics.lineTo((j + 1) * g, (i + 1) * g);
                         }
-                        if (j < getMapWidth() - 1 && terrain[i][j+1].getType() == TerrainTile.LAND) {
+                        if (j < map.getWidth() - 1 && terrain[i][j+1].getType() == TerrainTile.LAND) {
                             this.mapCanvas.graphics.moveTo((j + 1) * g, i * g);
                             this.mapCanvas.graphics.lineTo((j + 1) * g, (i + 1) * g);
                         }
