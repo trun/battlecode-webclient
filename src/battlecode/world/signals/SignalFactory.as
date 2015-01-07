@@ -18,8 +18,6 @@
                     return createBashSignal(signalXML);
                 case "sig.BroadcastSignal":
                     return createBroadcastSignal(signalXML);
-                case "sig.BytecodesUsedSignal":
-                    return null; // TODO
                 case "sig.DeathSignal":
                     return createDeathSignal(signalXML);
                 case "sig.IndicatorStringSignal":
@@ -34,8 +32,8 @@
                     return createRobotInfoSignal(signalXML);
                 case "sig.SpawnSignal":
                     return createSpawnSignal(signalXML);
-                case "sig.TeamOreSgianl":
-                    return null; // TODO
+                case "sig.TeamOreSignal":
+                    return createTeamOreSignal(signalXML);
             }
             return null;
         }
@@ -94,6 +92,14 @@
             var type:String = signalXML.attribute("type").toString();
             var team:String = signalXML.attribute("team").toString();
             return new SpawnSignal(robotID, parentID, loc, type, team);
+        }
+
+        public static function createTeamOreSignal(signalXML:XML):TeamOreSignal {
+            var ore:Array = signalXML.attribute("ore").split(",");
+            ore = ore.map(function (element:*, index:int, arr:Array):uint {
+                return parseFloat(element);
+            });
+            return new TeamOreSignal(ore[0], ore[1]);
         }
     }
 

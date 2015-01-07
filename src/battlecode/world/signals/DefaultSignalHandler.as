@@ -49,7 +49,7 @@
             return null;
         }
 
-        public function visitShieldChangeSignal(s:ShieldChangeSignal):* {
+        public function visitTeamOreSignal(s:TeamOreSignal):* {
             return null;
         }
 

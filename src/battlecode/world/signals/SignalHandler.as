@@ -24,7 +24,7 @@
 
         function visitNeutralsTeamSignal(s:NeutralsTeamSignal):*;
 
-        function visitShieldChangeSignal(s:ShieldChangeSignal):*;
+        function visitTeamOreSignal(s:TeamOreSignal):*;
 
         function visitSpawnSignal(s:SpawnSignal):*;
 

@@ -100,7 +100,7 @@ import mx.events.ResizeEvent;
 
             formatter = new NumberFormatter();
             formatter.rounding = "down";
-            formatter.precision = 2;
+            formatter.precision = 0;
 
             addChild(winMarkerCanvas);
 
@@ -112,7 +112,7 @@ import mx.events.ResizeEvent;
 
         private function onRoundChange(e:MatchEvent):void {
             var points:Number = controller.currentState.getPoints(team);
-            pointLabel.text = formatter.format(points / 1000000) + "GG";
+            pointLabel.text = formatter.format(points);
 
             if (e.currentRound <= lastRound) {
                 hqBox.removeRobot();
@@ -142,7 +142,7 @@ import mx.events.ResizeEvent;
         }
 
         private function onMatchChange(e:MatchEvent):void {
-            pointLabel.text = "0GG";
+            pointLabel.text = "0";
             hqBox.removeRobot();
             drawWinMarkers();
         }

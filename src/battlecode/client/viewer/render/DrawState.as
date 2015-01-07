@@ -137,7 +137,7 @@
         }
 
         public function applyStats(stats:RoundStats):void {
-            // points are applied by the FluxChangeSignal this year
+            // points are applied by the TeamOreSignal this year
         }
 
         public function updateRound():void {
@@ -269,12 +269,9 @@
             unitCounts[s.getTeam()][s.getRobotType()]++;
         }
 
-        override public function visitNeutralsDensitySignal(s:NeutralsDensitySignal):* {
-            neutralDensities = s.getAmounts();
-        }
-
-        override public function visitNeutralsTeamSignal(s:NeutralsTeamSignal):* {
-            neutralTeams = s.getTeams();
+        override public function visitTeamOreSignal(s:TeamOreSignal):* {
+            aPoints = s.getOre(Team.A);
+            bPoints = s.getOre(Team.B);
         }
 
     }
