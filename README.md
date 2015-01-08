@@ -1,4 +1,4 @@
-Copyright (c) 2010-2013 Trevor Rundell. MIT Licensed.
+Copyright (c) 2010-2015 Trevor Rundell. MIT Licensed.
 
 # Requirements
 
