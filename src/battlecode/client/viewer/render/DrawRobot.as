@@ -318,13 +318,16 @@
             }
 
             var size:Number = getImageSize(true) * .9;
-            this.graphics.lineStyle(.5, 0xFFFFFF);
+            this.graphics.lineStyle();
             this.graphics.beginFill(color, 0.8);
             this.graphics.drawRect(-size / 2, size / 2, ratio * size, 5 * getImageScale());
             this.graphics.endFill();
             this.graphics.beginFill(0x000000, 0.8);
             this.graphics.drawRect(-size / 2 + ratio * size, size / 2, (1 - ratio) * size, 5 * getImageScale());
             this.graphics.endFill();
+            this.graphics.lineStyle(.5, 0xFFFFFF);
+            this.graphics.drawRect(-size / 2, size / 2, size, 5 * getImageScale());
+
         }
 
         private function drawActionBar(action:DrawAction):void {
@@ -341,13 +344,15 @@
 
             var ratio:Number = (action.getMaxRounds() - action.getRounds()) / action.getMaxRounds();
             var size:Number = getImageSize(true) * .9;
-            this.graphics.lineStyle(.5, 0xFFFFFF);
+            this.graphics.lineStyle();
             this.graphics.beginFill(color, 0.8);
             this.graphics.drawRect(-size / 2, size / 2 + yOffset, ratio * size, 5 * getImageScale());
             this.graphics.endFill();
             this.graphics.beginFill(0x000000, 0.8);
             this.graphics.drawRect(-size / 2 + ratio * size, size / 2  + yOffset, (1 - ratio) * size, 5 * getImageScale());
             this.graphics.endFill();
+            this.graphics.lineStyle(.5, 0xFFFFFF);
+            this.graphics.drawRect(-size / 2, size / 2, size, 5 * getImageScale());
         }
 
         private function drawAttack():void {
