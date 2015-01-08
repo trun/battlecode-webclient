@@ -70,15 +70,29 @@
 
         public static function ground():Array {
             return [
-                BEAVER,
-                COMPUTER,
                 SOLDIER,
                 BASHER,
-                MINER,
-                TANK,
                 COMMANDER,
+                TANK,
                 LAUNCHER,
-                MISSILE
+                BEAVER,
+                MINER,
+                COMPUTER
+            ];
+        }
+
+        public static function units():Array {
+            return [
+                SOLDIER,
+                BASHER,
+                COMMANDER,
+                TANK,
+                LAUNCHER,
+                MISSILE,
+                BEAVER,
+                MINER,
+                COMPUTER,
+                DRONE
             ];
         }
 

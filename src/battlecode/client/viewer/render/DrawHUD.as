@@ -96,7 +96,7 @@ import mx.events.ResizeEvent;
             }
 
             unitBoxes = new Array();
-            for each (var unit:String in RobotType.ground()) {
+            for each (var unit:String in RobotType.units()) {
                 var unitBox:DrawHUDUnit = new DrawHUDUnit(unit, team);
                 unitBoxes.push(unitBox);
                 addChild(unitBox);
