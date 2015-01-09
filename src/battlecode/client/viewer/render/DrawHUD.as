@@ -114,8 +114,8 @@ import mx.events.ResizeEvent;
             repositionWinMarkers();
             resizeHQBox();
             drawTowerBoxes();
-            drawBuildingCounts();
             drawUnitCounts();
+            drawBuildingCounts();
         }
 
         private function onRoundChange(e:MatchEvent):void {
@@ -148,15 +148,16 @@ import mx.events.ResizeEvent;
             maxTowers = Math.max(maxTowers, towerCount);
             drawTowerBoxes();
 
-            for each (var buildingBox:DrawHUDUnit in buildingBoxes) {
-                buildingBox.setCount(controller.currentState.getUnitCount(buildingBox.getType(), team));
-            }
-            drawBuildingCounts();
-
             for each (var unitBox:DrawHUDUnit in unitBoxes) {
                 unitBox.setCount(controller.currentState.getUnitCount(unitBox.getType(), team));
             }
+
+            for each (var buildingBox:DrawHUDUnit in buildingBoxes) {
+                buildingBox.setCount(controller.currentState.getUnitCount(buildingBox.getType(), team));
+            }
+
             drawUnitCounts();
+            drawBuildingCounts();
 
             if (controller.currentRound == controller.match.getRounds()) {
                 drawWinMarkers();
@@ -198,34 +199,9 @@ import mx.events.ResizeEvent;
             }
         }
 
-        private function drawBuildingCounts():void {
+        private function drawUnitCounts():void {
             var towerBoxTop:Number = Math.ceil(maxTowers / 3.0) * (DrawHUDTower.HEIGHT + 10);
             var top:Number = hqBox.height + hqBox.y + towerBoxTop + 10;
-            buildingLabel.y = top + 10;
-            top = buildingLabel.height + buildingLabel.y + 5;
-            var i:uint = 0;
-            for each (var buildingBox:DrawHUDUnit in buildingBoxes) {
-                buildingBox.x = (width - buildingBox.width * 3) / 2 + (i % 3) * buildingBox.width;
-                buildingBox.y = ((buildingBox.height + 10) * Math.floor(i / 3)) + top;
-                if (buildingBox.getCount() > 0) {
-                    buildingBox.visible = true;
-                    i++;
-                } else {
-                    buildingBox.visible = false;
-                }
-            }
-        }
-
-        private function drawUnitCounts():void {
-            var topBuildingBox:DrawHUDUnit = buildingBoxes[buildingBoxes.length-1];
-            for (var j:int = buildingBoxes.length - 1; j >= 0; j--) {
-                topBuildingBox = buildingBoxes[j];
-                if (topBuildingBox.visible) {
-                    break;
-                }
-            }
-
-            var top:Number = topBuildingBox.height + topBuildingBox.y + 10;
             unitLabel.y = top + 10;
             top = unitLabel.height + unitLabel.y + 5;
             var i:uint = 0;
@@ -237,6 +213,31 @@ import mx.events.ResizeEvent;
                     i++;
                 } else {
                     unitBox.visible = false;
+                }
+            }
+        }
+
+        private function drawBuildingCounts():void {
+            var topUnitBox:DrawHUDUnit = unitBoxes[unitBoxes.length-1];
+            for (var j:int = unitBoxes.length - 1; j >= 0; j--) {
+                topUnitBox = unitBoxes[j];
+                if (topUnitBox.visible) {
+                    break;
+                }
+            }
+
+            var top:Number = topUnitBox.height + topUnitBox.y + 10;
+            buildingLabel.y = top + 10;
+            top = buildingLabel.height + buildingLabel.y + 5;
+            var i:uint = 0;
+            for each (var buildingBox:DrawHUDUnit in buildingBoxes) {
+                buildingBox.x = (width - buildingBox.width * 3) / 2 + (i % 3) * buildingBox.width;
+                buildingBox.y = ((buildingBox.height + 10) * Math.floor(i / 3)) + top;
+                if (buildingBox.getCount() > 0) {
+                    buildingBox.visible = true;
+                    i++;
+                } else {
+                    buildingBox.visible = false;
                 }
             }
         }
@@ -271,8 +272,8 @@ import mx.events.ResizeEvent;
             repositionWinMarkers();
             resizeHQBox();
             drawTowerBoxes();
-            drawBuildingCounts();
             drawUnitCounts();
+            drawBuildingCounts();
         }
 
     }
