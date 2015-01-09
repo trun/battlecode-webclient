@@ -48,6 +48,9 @@ package battlecode.client.viewer.render {
             countLabel.text = count.toString();
         }
 
+        public function getCount():int {
+            return parseInt(countLabel.text);
+        }
         public function getType():String {
             return type;
         }

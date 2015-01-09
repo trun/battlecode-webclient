@@ -207,12 +207,24 @@ import mx.events.ResizeEvent;
             for each (var buildingBox:DrawHUDUnit in buildingBoxes) {
                 buildingBox.x = (width - buildingBox.width * 3) / 2 + (i % 3) * buildingBox.width;
                 buildingBox.y = ((buildingBox.height + 10) * Math.floor(i / 3)) + top;
-                i++;
+                if (buildingBox.getCount() > 0) {
+                    buildingBox.visible = true;
+                    i++;
+                } else {
+                    buildingBox.visible = false;
+                }
             }
         }
 
         private function drawUnitCounts():void {
             var topBuildingBox:DrawHUDUnit = buildingBoxes[buildingBoxes.length-1];
+            for (var j:int = buildingBoxes.length - 1; j >= 0; j--) {
+                topBuildingBox = buildingBoxes[j];
+                if (topBuildingBox.visible) {
+                    break;
+                }
+            }
+
             var top:Number = topBuildingBox.height + topBuildingBox.y + 10;
             unitLabel.y = top + 10;
             top = unitLabel.height + unitLabel.y + 5;
@@ -220,7 +232,12 @@ import mx.events.ResizeEvent;
             for each (var unitBox:DrawHUDUnit in unitBoxes) {
                 unitBox.x = (width - unitBox.width * 3) / 2 + (i % 3) * unitBox.width;
                 unitBox.y = ((unitBox.height + 10) * Math.floor(i / 3)) + top;
-                i++;
+                if (unitBox.getCount() > 0) {
+                    unitBox.visible = true;
+                    i++;
+                } else {
+                    unitBox.visible = false;
+                }
             }
         }
 
