@@ -45,6 +45,9 @@ import mx.events.ResizeEvent;
             percentHeight = 100;
             autoLayout = false;
 
+            horizontalScrollPolicy = "off";
+            verticalScrollPolicy = "off";
+
             pointLabel = new Label();
             pointLabel.width = width;
             pointLabel.height = 30;
