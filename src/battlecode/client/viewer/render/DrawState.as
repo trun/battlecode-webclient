@@ -10,6 +10,7 @@
     public class DrawState extends DefaultSignalHandler {
         // state
         private var groundRobots:Object;
+        private var airRobots:Object;
         private var hqA:DrawRobot;
         private var hqB:DrawRobot;
         private var towersA:Object; // id -> DrawRobot
@@ -30,6 +31,7 @@
 
         public function DrawState(map:GameMap) {
             groundRobots = {};
+            airRobots = {};
             towersA = {};
             towersB = {};
 
@@ -65,6 +67,10 @@
             return groundRobots;
         }
 
+        public function getAirRobots():Object {
+            return airRobots;
+        }
+
         public function getHQ(team:String):DrawRobot {
             return team == Team.A ? hqA : hqB;
         }
@@ -95,6 +101,11 @@
             groundRobots = {};
             for (a in state.groundRobots) {
                 groundRobots[a] = state.groundRobots[a].clone();
+            }
+
+            airRobots = {};
+            for (a in state.airRobots) {
+                airRobots[a] = state.airRobots[a].clone();
             }
 
             hqA = state.hqA ? state.hqA.clone() as DrawRobot : null;
@@ -163,6 +174,17 @@
                 }
             }
 
+            for (a in airRobots) {
+                o = airRobots[a] as DrawRobot;
+                o.updateRound();
+                if (!o.isAlive()) {
+                    if (o.parent) {
+                        o.parent.removeChild(o);
+                    }
+                    delete airRobots[a];
+                }
+            }
+
             for (a in towersA) {
                 o = towersA[a] as DrawRobot;
                 o.updateRound();
@@ -204,11 +226,13 @@
 
         private function getRobot(id:uint):DrawRobot {
             if (groundRobots[id]) return groundRobots[id] as DrawRobot;
+            if (airRobots[id]) return airRobots[id] as DrawRobot;
             return null;
         }
 
         private function removeRobot(id:uint):void {
             if (groundRobots[id]) delete groundRobots[id];
+            if (airRobots[id]) delete airRobots[id];
         }
 
         private function translateCoordinates(loc:MapLocation):MapLocation {
@@ -296,7 +320,11 @@
                 if (s.getTeam() == Team.B) towersB[s.getRobotID()] = robot.clone();
             }
 
-            groundRobots[s.getRobotID()] = robot;
+            if (RobotType.isAir(s.getRobotType())) {
+                airRobots[s.getRobotID()] = robot;
+            } else {
+                groundRobots[s.getRobotID()] = robot;
+            }
             unitCounts[s.getTeam()][s.getRobotType()]++;
         }
 

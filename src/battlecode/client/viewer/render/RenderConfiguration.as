@@ -12,6 +12,7 @@
         private static var hats:Boolean = true;
         private static var explosions:Boolean = true;
         private static var ground:Boolean = true;
+        private static var air:Boolean = true;
         private static var tournament:Boolean = false;
 
         public function RenderConfiguration() {
@@ -57,6 +58,10 @@
             return ground;
         }
 
+        public static function showAir():Boolean {
+            return air;
+        }
+
         public static function showOre():Boolean {
             return ore;
         }
@@ -98,7 +103,19 @@
         }
 
         public static function toggleDrawHeight():void {
-            // TODO
+            if (!air && !ground) {
+                ground = true;
+                air = true;
+            } else if(ground && !air) {
+                ground = false;
+                air = true;
+            } else if(air && !ground) {
+                ground = false;
+                air = false;
+            } else {
+                ground = true;
+                air = false;
+            }
         }
 
     }

@@ -68,19 +68,6 @@
             ];
         }
 
-        public static function ground():Array {
-            return [
-                SOLDIER,
-                BASHER,
-                COMMANDER,
-                TANK,
-                LAUNCHER,
-                BEAVER,
-                MINER,
-                COMPUTER
-            ];
-        }
-
         public static function units():Array {
             return [
                 SOLDIER,
@@ -96,8 +83,24 @@
             ];
         }
 
+        public static function ground():Array {
+            return [
+                SOLDIER,
+                BASHER,
+                COMMANDER,
+                TANK,
+                LAUNCHER,
+                BEAVER,
+                MINER,
+                COMPUTER
+            ];
+        }
+
         public static function air():Array {
-            return []; // TODO air types
+            return [
+                MISSILE,
+                DRONE
+            ]
         }
 
         public static function maxEnergon(type:String):Number {
@@ -194,6 +197,16 @@
                     return 0;
             }
             return 0;
+        }
+
+        public static function isAir(type:String):Boolean {
+            switch (type) {
+                case DRONE:
+                case MISSILE:
+                    return true;
+                default:
+                    return false;
+            }
         }
     }
 }

@@ -23,6 +23,7 @@
         private var gridCanvas:UIComponent;
         private var oreCanvas:UIComponent;
         private var groundUnitCanvas:UIComponent;
+        private var airUnitCanvas:UIComponent;
 
         // optimizations for caching
         private var lastRound:uint = 0;
@@ -39,6 +40,7 @@
             this.gridCanvas = new UIComponent();
             this.oreCanvas = new UIComponent();
             this.groundUnitCanvas = new UIComponent();
+            this.airUnitCanvas = new UIComponent();
 
             this.mapCanvas.cacheAsBitmap = true;
             this.gridCanvas.cacheAsBitmap = true;
@@ -47,6 +49,7 @@
             this.addChild(oreCanvas);
             this.addChild(gridCanvas);
             this.addChild(groundUnitCanvas);
+            this.addChild(airUnitCanvas);
         }
 
         ///////////////////////////////////////////////////////
@@ -211,9 +214,13 @@
         private function drawUnits():void {
             var loc:MapLocation, i:uint, j:uint, robot:DrawRobot;
             var groundRobots:Object = controller.currentState.getGroundRobots();
+            var airRobots:Object = controller.currentState.getAirRobots();
 
             while (groundUnitCanvas.numChildren > 0)
                 groundUnitCanvas.removeChildAt(0);
+
+            while (airUnitCanvas.numChildren > 0)
+                airUnitCanvas.removeChildAt(0);
 
             for each (robot in groundRobots) {
                 loc = robot.getLocation();
@@ -225,11 +232,23 @@
                 groundUnitCanvas.addChild(robot);
                 robot.draw();
             }
+
+            for each (robot in airRobots) {
+                loc = robot.getLocation();
+                j = (loc.getX() - origin.getX());
+                i = (loc.getY() - origin.getY());
+                robot.x = j * getGridSize() + getGridSize() / 2;
+                robot.y = i * getGridSize() + getGridSize() / 2;
+                robot.addEventListener(MouseEvent.CLICK, onRobotSelect, false, 0, true);
+                airUnitCanvas.addChild(robot);
+                robot.draw();
+            }
         }
 
         private function updateUnits():void {
             var loc:MapLocation, i:uint, j:uint, robot:DrawRobot;
             var groundRobots:Object = controller.currentState.getGroundRobots();
+            var airRobots:Object = controller.currentState.getAirRobots();
 
             for each (robot in groundRobots) {
                 loc = robot.getLocation();
@@ -243,6 +262,19 @@
                 }
                 robot.draw();
             }
+
+            for each (robot in airRobots) {
+                loc = robot.getLocation();
+                j = (loc.getX() - origin.getX());
+                i = (loc.getY() - origin.getY());
+                robot.x = j * getGridSize() + getGridSize() / 2;
+                robot.y = i * getGridSize() + getGridSize() / 2;
+                if (!robot.parent && robot.isAlive()) {
+                    robot.addEventListener(MouseEvent.CLICK, onRobotSelect, false, 0, true);
+                    airUnitCanvas.addChild(robot);
+                }
+                robot.draw();
+            }
         }
 
         ///////////////////////////////////////////////////////
@@ -252,6 +284,7 @@
         private function onEnterFrame(e:Event):void {
             gridCanvas.visible = RenderConfiguration.showGridlines();
             groundUnitCanvas.visible = RenderConfiguration.showGround();
+            airUnitCanvas.visible = RenderConfiguration.showAir();
             oreCanvas.visible = RenderConfiguration.showOre();
         }
 
