@@ -1,7 +1,6 @@
 ﻿package battlecode.client.viewer.render {
     import battlecode.common.ActionType;
     import battlecode.common.Direction;
-    import battlecode.common.GameConstants;
     import battlecode.common.MapLocation;
     import battlecode.common.RobotType;
     import battlecode.common.Team;
@@ -17,7 +16,6 @@
 
         private var broadcastAnimation:BroadcastAnimation;
         private var explosionAnimation:ExplosionAnimation;
-        private var bashAnimation:BashAnimation;
 
         private var overlayCanvas:UIComponent;
         private var imageCanvas:UIComponent;
@@ -93,9 +91,6 @@
 
             this.explosionAnimation = new ExplosionAnimation(type);
             this.addChild(explosionAnimation);
-
-            this.bashAnimation = new BashAnimation(false, team);
-            this.addChild(bashAnimation);
         }
 
         public function clone():DrawObject {
@@ -115,13 +110,10 @@
 
             d.removeChild(d.broadcastAnimation);
             d.removeChild(d.explosionAnimation);
-            d.removeChild(d.bashAnimation);
             d.broadcastAnimation = broadcastAnimation.clone() as BroadcastAnimation;
             d.explosionAnimation = explosionAnimation.clone() as ExplosionAnimation;
-            d.bashAnimation = bashAnimation.clone() as BashAnimation;
             d.addChild(d.broadcastAnimation);
             d.addChild(d.explosionAnimation);
-            d.addChild(d.bashAnimation);
 
             return d;
         }
@@ -182,12 +174,6 @@
             this.addAction(new DrawAction(ActionType.ATTACKING, RobotType.attackDelay(type)));
         }
 
-        public function bash(targetLocation:MapLocation):void {
-            this.targetLocation = targetLocation;
-            this.addAction(new DrawAction(ActionType.BASHING, RobotType.attackDelay(type)));
-            this.bashAnimation.bash();
-        }
-
         public function spawn(delay:uint):void {
             if (delay > 0) {
                 this.addAction(new DrawAction(ActionType.SPAWNING, delay));
@@ -234,7 +220,6 @@
             // update animations
             broadcastAnimation.updateRound();
             explosionAnimation.updateRound();
-            bashAnimation.updateRound();
 
             // update tooltip
             this.toolTip = "Robot " + getRobotID() + " " + getType() + " Energon: " + energon + " Loc: " + getLocation().toString();
@@ -251,7 +236,7 @@
             }
 
             // draw direction
-            this.imageCanvas.rotation = directionToRotation(direction);
+            //this.imageCanvas.rotation = directionToRotation(direction);
 
             if (force) {
                 this.image.width = getImageSize(true);
@@ -296,7 +281,6 @@
 
             // draw animations
             broadcastAnimation.draw(force);
-            bashAnimation.draw(force);
         }
 
         ///////////////////////////////////////////////////////
@@ -304,7 +288,7 @@
         ///////////////////////////////////////////////////////
 
         private function drawEnergonBar():void {
-            if (!RenderConfiguration.showEnergon() && !(getType() == RobotType.HQ || getType() == RobotType.TOWER))
+            if (!RenderConfiguration.showEnergon() && getType() != RobotType.ARCHON)
                 return;
 
             var ratio:Number = energon / maxEnergon;
@@ -359,7 +343,7 @@
             var targetOffsetX:Number = (targetLocation.getX() - location.getX()) * getImageSize();
             var targetOffsetY:Number = (targetLocation.getY() - location.getY()) * getImageSize();
 
-            this.graphics.lineStyle(2, team == Team.A ? 0xFF0000 : 0x0000FF);
+            this.graphics.lineStyle(2, getAttackColor());
             this.graphics.moveTo(0, 0);
             this.graphics.lineTo(targetOffsetX - drawX, targetOffsetY - drawY);
             this.graphics.drawCircle(targetOffsetX - drawX, targetOffsetY - drawY, getImageSize() / 2 * .6);
@@ -428,12 +412,19 @@
             return RenderConfiguration.getScalingFactor();
         }
 
+        private function getAttackColor():uint {
+            switch (team) {
+                case Team.A: return 0xFF0000;
+                case Team.B: return 0x0000FF;
+                case Team.ZOMBIE: return 0x33CC33;
+            }
+            return 0x000000;
+        }
+
         private function getUnitScale(type:String):Number {
             switch (type) {
-                case RobotType.HQ:
-                    return 2.0;
-                case RobotType.TOWER:
-                    return 1.5;
+                case RobotType.ZOMBIEDEN:
+                    return 0.75;
                 default:
                     return 1.0;
             }
@@ -513,12 +504,16 @@
         }
 
         private function calculateDrawX(rounds:uint):Number {
-            if (RenderConfiguration.showDiscrete()) return 0;
+            if (RenderConfiguration.showDiscrete()) {
+                return 0;
+            }
             return -1 * getImageSize() * directionOffsetX(direction) * (rounds / movementDelay);
         }
 
         private function calculateDrawY(rounds:uint):Number {
-            if (RenderConfiguration.showDiscrete()) return 0;
+            if (RenderConfiguration.showDiscrete()) {
+                return 0;
+            }
             return -1 * getImageSize() * directionOffsetY(direction) * (rounds / movementDelay);
         }
 

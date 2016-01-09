@@ -5,25 +5,15 @@
         public static const A:String = "A";
         public static const B:String = "B";
         public static const NEUTRAL:String = "NEUTRAL";
+        public static const ZOMBIE:String = "ZOMBIE";
         public static const NONE:String = "NONE";
         public static const BOTH:String = "BOTH";
 
         public function Team() {
         }
 
-        public static function cowColor(team:String):uint {
-            switch (team) {
-                case A:
-                    return 0x990000;
-                case B:
-                    return 0x000099;
-                case NONE:
-                    return 0x009900;
-                case BOTH:
-                    return 0x009900;
-                default:
-                    return 0x999999;
-            }
+        public static function isPlayer(team:String):Boolean {
+            return team == A || team == B;
         }
 
         public static function opposite(team:String):String {

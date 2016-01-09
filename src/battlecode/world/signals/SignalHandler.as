@@ -4,8 +4,6 @@
 
         function visitAttackSignal(s:AttackSignal):*;
 
-        function visitBashSignal(s:BashSignal):*;
-
         function visitBroadcastSignal(s:BroadcastSignal):*;
 
         function visitDeathSignal(s:DeathSignal):*;
@@ -14,13 +12,15 @@
 
         function visitIndicatorStringSignal(s:IndicatorStringSignal):*;
 
-        function visitLocationOreChangeSignal(s:LocationOreChangeSignal):*;
+        function visitRubbleChangeSignal(s:RubbleChangeSignal):*;
+
+        function visitPartsChangeSignal(s:PartsChangeSignal):*;
 
         function visitMovementSignal(s:MovementSignal):*;
 
-        function visitTeamOreSignal(s:TeamOreSignal):*;
-
         function visitSpawnSignal(s:SpawnSignal):*;
+
+        function visitTeamResourceSignal(s:TeamResourceSignal):*;
 
     }
 

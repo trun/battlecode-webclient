@@ -1,5 +1,4 @@
 ﻿package battlecode.client.viewer {
-    import battlecode.client.viewer.render.DrawDominationBar;
     import battlecode.client.viewer.render.DrawHUD;
     import battlecode.client.viewer.render.DrawMap;
     import battlecode.client.viewer.render.RenderConfiguration;

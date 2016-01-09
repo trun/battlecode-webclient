@@ -14,26 +14,24 @@
             switch (signalName) {
                 case "sig.AttackSignal":
                     return createAttackSignal(signalXML);
-                case "sig.BashSignal":
-                    return createBashSignal(signalXML);
                 case "sig.BroadcastSignal":
                     return createBroadcastSignal(signalXML);
                 case "sig.DeathSignal":
                     return createDeathSignal(signalXML);
                 case "sig.IndicatorStringSignal":
                     return createIndicatorStringSignal(signalXML);
-                case "sig.LocationOreChangeSignal":
-                    return createLocationOreChangeSignal(signalXML);
-                case "sig.MineSignal":
-                    return null; // TODO
+                case "sig.RubbleChangeSignal":
+                    return createRubbleChangeSignal(signalXML);
+                case "sig.PartsChangeSignal":
+                    return createPartsChangeSignal(signalXML);
                 case "sig.MovementSignal":
                     return createMovementSignal(signalXML);
                 case "sig.HealthChangeSignal":
                     return createHealthChangeSignal(signalXML);
                 case "sig.SpawnSignal":
                     return createSpawnSignal(signalXML);
-                case "sig.TeamOreSignal":
-                    return createTeamOreSignal(signalXML);
+                case "sig.TeamResourceSignal":
+                    return createTeamResourceSignal(signalXML);
             }
             return null;
         }
@@ -43,12 +41,6 @@
             var loc:MapLocation = ParseUtils.parseLocation(signalXML.attribute("targetLoc"));
             var attackType:String = AttackType.fromType(parseInt(signalXML.attribute("attackType")));
             return new AttackSignal(robotID, loc, attackType);
-        }
-
-        public static function createBashSignal(signalXML:XML):BashSignal {
-            var robotID:uint = parseInt(signalXML.attribute("robotID"));
-            var loc:MapLocation = ParseUtils.parseLocation(signalXML.attribute("targetLoc"));
-            return new BashSignal(robotID, loc);
         }
 
         public static function createBroadcastSignal(signalXML:XML):BroadcastSignal {
@@ -93,10 +85,16 @@
             return new IndicatorStringSignal(robotID, index, str);
         }
 
-        public static function createLocationOreChangeSignal(signalXML:XML):LocationOreChangeSignal {
+        public static function createRubbleChangeSignal(signalXML:XML):RubbleChangeSignal {
             var loc:MapLocation = ParseUtils.parseLocation(signalXML.attribute("loc"));
-            var ore:Number = parseFloat(signalXML.attribute("ore"));
-            return new LocationOreChangeSignal(loc, ore);
+            var amount:Number = parseFloat(signalXML.attribute("amount"));
+            return new RubbleChangeSignal(loc, amount);
+        }
+
+        public static function createPartsChangeSignal(signalXML:XML):PartsChangeSignal {
+            var loc:MapLocation = ParseUtils.parseLocation(signalXML.attribute("loc"));
+            var amount:Number = parseFloat(signalXML.attribute("amount"));
+            return new PartsChangeSignal(loc, amount);
         }
 
         public static function createSpawnSignal(signalXML:XML):SpawnSignal {
@@ -109,12 +107,10 @@
             return new SpawnSignal(robotID, parentID, loc, type, team, delay);
         }
 
-        public static function createTeamOreSignal(signalXML:XML):TeamOreSignal {
-            var ore:Array = signalXML.attribute("ore").split(",");
-            ore = ore.map(function (element:*, index:int, arr:Array):uint {
-                return parseFloat(element);
-            });
-            return new TeamOreSignal(ore[0], ore[1]);
+        public static function createTeamResourceSignal(signalXML:XML):TeamResourceSignal {
+            var team:String = signalXML.attribute("team").toString();
+            var resource:Number = parseFloat(signalXML.attribute("resource"));
+            return new TeamResourceSignal(team, resource);
         }
     }
 

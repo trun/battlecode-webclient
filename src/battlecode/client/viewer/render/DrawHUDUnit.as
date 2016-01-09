@@ -51,6 +51,7 @@ package battlecode.client.viewer.render {
         public function getCount():int {
             return parseInt(countLabel.text);
         }
+
         public function getType():String {
             return type;
         }

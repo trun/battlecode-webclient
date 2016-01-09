@@ -1,6 +1,4 @@
 ﻿package battlecode.client.viewer.render {
-    import battlecode.common.RobotType;
-    
     import mx.controls.Image;
     import mx.core.UIComponent;
 
@@ -27,12 +25,11 @@
                 return;
             }
 
-            // TODO big missile explosion animations?
             var w:Number;
             if (this.overrideSize) {
                 w = overrideSize;
             } else {
-                w = RenderConfiguration.getGridSize(); // * (robotType == RobotType.MISSILE ? 3 : 1);
+                w = RenderConfiguration.getGridSize();
             }
 
             var imageSource:Class = getExplosionImage();
@@ -77,8 +74,9 @@
         private function getExplosionImage():Class {
             if (round < 8) {
                 return ImageAssets["EXPLODE_" + (round + 1)];
-            } else if (robotType == RobotType.TOWER) {
-                return ImageAssets.TOWER_NEUTRAL;
+            } else if (overrideSize) {
+                // TODO a less ghetto way of indicating this exists in the HUD
+                return ImageAssets.ARCHON_NEUTRAL;
             } else {
                 return ImageAssets.EXPLODE_8;
             }
