@@ -161,9 +161,14 @@ import mx.events.ResizeEvent;
             top = unitLabel.height + unitLabel.y + 5;
             var i:uint = 0;
             for each (var unitBox:DrawHUDUnit in unitBoxes) {
-                unitBox.x = (width - unitBox.width * 3) / 2 + (i % 3) * unitBox.width;
-                unitBox.y = ((unitBox.height + 10) * Math.floor(i / 3)) + top;
-                i++;
+                if (unitBox.getCount() > 0) {
+                    unitBox.x = (width - unitBox.width * 3) / 2 + (i % 3) * unitBox.width;
+                    unitBox.y = ((unitBox.height + 10) * Math.floor(i / 3)) + top;
+                    unitBox.visible = true;
+                    i++;
+                } else {
+                    unitBox.visible = false;
+                }
             }
         }
 
