@@ -1,7 +1,6 @@
 ﻿package battlecode.client.viewer.render {
     import battlecode.common.ActionType;
     import battlecode.common.Direction;
-    import battlecode.common.GameConstants;
     import battlecode.common.MapLocation;
     import battlecode.common.RobotType;
     import battlecode.common.Team;
@@ -17,7 +16,6 @@
 
         private var broadcastAnimation:BroadcastAnimation;
         private var explosionAnimation:ExplosionAnimation;
-        private var bashAnimation:BashAnimation;
 
         private var overlayCanvas:UIComponent;
         private var imageCanvas:UIComponent;
@@ -93,9 +91,6 @@
 
             this.explosionAnimation = new ExplosionAnimation(type);
             this.addChild(explosionAnimation);
-
-            this.bashAnimation = new BashAnimation(false, team);
-            this.addChild(bashAnimation);
         }
 
         public function clone():DrawObject {
@@ -115,13 +110,10 @@
 
             d.removeChild(d.broadcastAnimation);
             d.removeChild(d.explosionAnimation);
-            d.removeChild(d.bashAnimation);
             d.broadcastAnimation = broadcastAnimation.clone() as BroadcastAnimation;
             d.explosionAnimation = explosionAnimation.clone() as ExplosionAnimation;
-            d.bashAnimation = bashAnimation.clone() as BashAnimation;
             d.addChild(d.broadcastAnimation);
             d.addChild(d.explosionAnimation);
-            d.addChild(d.bashAnimation);
 
             return d;
         }
@@ -182,12 +174,6 @@
             this.addAction(new DrawAction(ActionType.ATTACKING, RobotType.attackDelay(type)));
         }
 
-        public function bash(targetLocation:MapLocation):void {
-            this.targetLocation = targetLocation;
-            this.addAction(new DrawAction(ActionType.BASHING, RobotType.attackDelay(type)));
-            this.bashAnimation.bash();
-        }
-
         public function spawn(delay:uint):void {
             if (delay > 0) {
                 this.addAction(new DrawAction(ActionType.SPAWNING, delay));
@@ -234,7 +220,6 @@
             // update animations
             broadcastAnimation.updateRound();
             explosionAnimation.updateRound();
-            bashAnimation.updateRound();
 
             // update tooltip
             this.toolTip = "Robot " + getRobotID() + " " + getType() + " Energon: " + energon + " Loc: " + getLocation().toString();
@@ -296,7 +281,6 @@
 
             // draw animations
             broadcastAnimation.draw(force);
-            bashAnimation.draw(force);
         }
 
         ///////////////////////////////////////////////////////
@@ -439,6 +423,8 @@
 
         private function getUnitScale(type:String):Number {
             switch (type) {
+                case RobotType.ZOMBIEDEN:
+                    return 0.75;
                 default:
                     return 1.0;
             }
@@ -518,12 +504,16 @@
         }
 
         private function calculateDrawX(rounds:uint):Number {
-            if (RenderConfiguration.showDiscrete()) return 0;
+            if (RenderConfiguration.showDiscrete()) {
+                return 0;
+            }
             return -1 * getImageSize() * directionOffsetX(direction) * (rounds / movementDelay);
         }
 
         private function calculateDrawY(rounds:uint):Number {
-            if (RenderConfiguration.showDiscrete()) return 0;
+            if (RenderConfiguration.showDiscrete()) {
+                return 0;
+            }
             return -1 * getImageSize() * directionOffsetY(direction) * (rounds / movementDelay);
         }
 

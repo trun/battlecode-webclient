@@ -14,8 +14,6 @@
             switch (signalName) {
                 case "sig.AttackSignal":
                     return createAttackSignal(signalXML);
-                case "sig.BashSignal":
-                    return createBashSignal(signalXML);
                 case "sig.BroadcastSignal":
                     return createBroadcastSignal(signalXML);
                 case "sig.DeathSignal":
@@ -32,8 +30,8 @@
                     return createHealthChangeSignal(signalXML);
                 case "sig.SpawnSignal":
                     return createSpawnSignal(signalXML);
-                case "sig.TeamOreSignal":
-                    return createTeamOreSignal(signalXML);
+                case "sig.TeamResourceSignal":
+                    return createTeamResourceSignal(signalXML);
             }
             return null;
         }
@@ -43,12 +41,6 @@
             var loc:MapLocation = ParseUtils.parseLocation(signalXML.attribute("targetLoc"));
             var attackType:String = AttackType.fromType(parseInt(signalXML.attribute("attackType")));
             return new AttackSignal(robotID, loc, attackType);
-        }
-
-        public static function createBashSignal(signalXML:XML):BashSignal {
-            var robotID:uint = parseInt(signalXML.attribute("robotID"));
-            var loc:MapLocation = ParseUtils.parseLocation(signalXML.attribute("targetLoc"));
-            return new BashSignal(robotID, loc);
         }
 
         public static function createBroadcastSignal(signalXML:XML):BroadcastSignal {
@@ -115,12 +107,10 @@
             return new SpawnSignal(robotID, parentID, loc, type, team, delay);
         }
 
-        public static function createTeamOreSignal(signalXML:XML):TeamOreSignal {
-            var ore:Array = signalXML.attribute("ore").split(",");
-            ore = ore.map(function (element:*, index:int, arr:Array):uint {
-                return parseFloat(element);
-            });
-            return new TeamOreSignal(ore[0], ore[1]);
+        public static function createTeamResourceSignal(signalXML:XML):TeamResourceSignal {
+            var team:String = signalXML.attribute("team").toString();
+            var resource:Number = parseFloat(signalXML.attribute("resource"));
+            return new TeamResourceSignal(team, resource);
         }
     }
 

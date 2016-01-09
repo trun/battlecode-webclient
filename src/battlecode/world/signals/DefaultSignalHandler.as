@@ -9,10 +9,6 @@
             return null;
         }
 
-        public function visitBashSignal(s:BashSignal):* {
-            return null;
-        }
-
         public function visitBroadcastSignal(s:BroadcastSignal):* {
             return null;
         }
@@ -41,11 +37,11 @@
             return null;
         }
 
-        public function visitTeamOreSignal(s:TeamOreSignal):* {
+        public function visitSpawnSignal(s:SpawnSignal):* {
             return null;
         }
 
-        public function visitSpawnSignal(s:SpawnSignal):* {
+        public function visitTeamResourceSignal(s:TeamResourceSignal):* {
             return null;
         }
     }

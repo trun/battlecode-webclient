@@ -240,10 +240,6 @@
             getRobot(s.getRobotID()).attack(s.getTargetLoc());
         }
 
-        override public function visitBashSignal(s:BashSignal):* {
-            getRobot(s.getRobotID()).bash(s.getTargetLoc());
-        }
-
         override public function visitBroadcastSignal(s:BroadcastSignal):* {
             getRobot(s.getRobotID()).broadcast();
         }
@@ -324,9 +320,12 @@
             }
         }
 
-        override public function visitTeamOreSignal(s:TeamOreSignal):* {
-            aPoints = s.getOre(Team.A);
-            bPoints = s.getOre(Team.B);
+        override public function visitTeamResourceSignal(s:TeamResourceSignal):* {
+            if (s.getTeam() == Team.A) {
+                aPoints = s.getResource();
+            } else if (s.getTeam() == Team.B) {
+                bPoints = s.getResource();
+            }
         }
     }
 
