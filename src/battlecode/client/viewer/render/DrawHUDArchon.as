@@ -2,13 +2,13 @@
     import mx.containers.Canvas;
     import mx.controls.Image;
 
-    public class DrawHUDTower extends Canvas {
+    public class DrawHUDArchon extends Canvas {
         public static const HEIGHT:Number = 35;
 
         private var image:Image;
         private var robot:DrawRobot;
 
-        public function DrawHUDTower() {
+        public function DrawHUDArchon() {
             width = 35;
             height = HEIGHT;
 

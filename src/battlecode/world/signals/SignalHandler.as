@@ -14,7 +14,7 @@
 
         function visitIndicatorStringSignal(s:IndicatorStringSignal):*;
 
-        function visitLocationOreChangeSignal(s:LocationOreChangeSignal):*;
+        function visitRubbleChangeSignal(s:RubbleChangeSignal):*;
 
         function visitMovementSignal(s:MovementSignal):*;
 

@@ -27,70 +27,61 @@ public class MatchBuilder {
             matchNum = parseInt(xml.attribute("matchNumber"));
 
             var mapXml:XMLList = xml.child("map");
-            var mapWidth:int = parseInt(mapXml.attribute("mapWidth"));
-            var mapHeight:int = parseInt(mapXml.attribute("mapHeight"));
-            var mapOriginX:int = parseInt(mapXml.attribute("mapOriginX"));
-            var mapOriginY:int = parseInt(mapXml.attribute("mapOriginY"));
+            var mapWidth:int = parseInt(mapXml.attribute("width"));
+            var mapHeight:int = parseInt(mapXml.attribute("height"));
+            var mapOrigin:MapLocation = ParseUtils.parseLocation(mapXml.attribute("origin"));
 
             var i:int, j:int;
             var row:String;
 
-            // map terrain
-            var terrainStr:String = mapXml.child("mapTiles");
-            var terrainRows:Array = terrainStr.split("\n");
-            var terrainTypes:Array = new Array(mapHeight);
-            for (i = 0; i < mapHeight; i++) {
-                terrainTypes[i] = new Array(mapWidth);
-                row = ParseUtils.trim(terrainRows[i]);
-                if (row == "") {
-                    terrainRows.splice(i, 1);
-                    i--;
-                    continue;
-                }
-                for (j = 0; j < mapWidth; j++) {
-                    switch (row.charAt(j)) {
-                        case '#':
-                            terrainTypes[i][j] = TerrainTile.VOID;
-                            break;
-                        default:
-                            terrainTypes[i][j] = TerrainTile.LAND;
-                            break;
-                    }
-                }
-            }
-
-            // map terrain tiles
+            // map terrain tiles -- 2016 all tiles are LAND
             var terrainTiles:Array = new Array(mapHeight);
             for (i = 0; i < mapHeight; i++) {
                 terrainTiles[i] = new Array(mapWidth);
                 for (j = 0; j < mapWidth; j++) {
-                    terrainTiles[i][j] = new TerrainTile(terrainTypes[i][j]);
+                    terrainTiles[i][j] = new TerrainTile(TerrainTile.LAND);
                 }
             }
 
-            var oreAmounts:Array = new Array(mapHeight);
+            var rubbleAmounts:Array = new Array(mapHeight);
             for (i = 0; i < mapHeight; i++) {
-                oreAmounts[i] = new Array(mapWidth);
+                rubbleAmounts[i] = new Array(mapWidth);
             }
 
-            // NOTE: the mapInitialOre matrix is rotated
-            var oreXml:XMLList = mapXml.child("mapInitialOre");
-            j = 0;
-            for each (var oreRow:XML in oreXml.children()) {
-                var values:Array = oreRow.text().toString().split(",");
-                values = values.map(function (element:*, index:int, arr:Array):uint {
+            var rubbleXml:XMLList = mapXml.child("initialRubble");
+            i = 0;
+            for each (var rubbleRow:XML in rubbleXml.children()) {
+                var rubbleValues:Array = rubbleRow.text().toString().split(",");
+                rubbleValues = rubbleValues.map(function (element:*, index:int, arr:Array):uint {
                     return parseFloat(element);
                 });
-                for (i = 0; i < mapHeight; i++) {
-                    oreAmounts[i][j] = values[i];
+                for (j = 0; j < mapWidth; j++) {
+                    rubbleAmounts[i][j] = rubbleValues[j];
                 }
-                j++;
+                i++;
             }
 
-            gameMap = new GameMap(mapWidth, mapHeight, new MapLocation(mapOriginX, mapOriginY), terrainTiles, oreAmounts);
+            var partsAmounts:Array = new Array(mapHeight);
+            for (i = 0; i < mapHeight; i++) {
+                partsAmounts[i] = new Array(mapWidth);
+            }
 
-            maxRounds = parseInt(mapXml.attribute("maxRounds"));
-            maxInitialOre = parseInt(mapXml.attribute("maxInitialOre"));
+            var partsXml:XMLList = mapXml.child("initialParts");
+            i = 0;
+            for each (var partsRow:XML in partsXml.children()) {
+                var partsValues:Array = partsRow.text().toString().split(",");
+                partsValues = partsValues.map(function (element:*, index:int, arr:Array):uint {
+                    return parseFloat(element);
+                });
+                for (j = 0; j < mapWidth; j++) {
+                    partsAmounts[i][j] = partsValues[j];
+                }
+                i++;
+            }
+
+            gameMap = new GameMap(mapWidth, mapHeight, mapOrigin, terrainTiles, rubbleAmounts, partsAmounts);
+
+            maxRounds = parseInt(mapXml.attribute("rounds"));
         }
 
         public function setExtensibleMetadata(xml:XML):void {

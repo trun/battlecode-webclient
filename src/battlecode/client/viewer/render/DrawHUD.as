@@ -21,7 +21,7 @@ import mx.events.ResizeEvent;
 
         private var pointLabel:Label;
         private var hqBox:DrawHUDHQ;
-        private var towerBoxes:Object; // id -> DrawHUDTower
+        private var archonBoxes:Object; // id -> DrawHUDArchon
         private var buildingLabel:Label;
         private var buildingBoxes:Array;
         private var unitLabel:Label;
@@ -89,14 +89,14 @@ import mx.events.ResizeEvent;
             unitLabel.text = "Units";
             addChild(unitLabel);
 
-            towerBoxes = {};
+            archonBoxes = {};
 
-            buildingBoxes = new Array();
-            for each (var building:String in RobotType.buildings()) {
-                var buildingBox:DrawHUDUnit = new DrawHUDUnit(building, team);
-                buildingBoxes.push(buildingBox);
-                addChild(buildingBox);
-            }
+//            buildingBoxes = new Array();
+//            for each (var building:String in RobotType.buildings()) {
+//                var buildingBox:DrawHUDUnit = new DrawHUDUnit(building, team);
+//                buildingBoxes.push(buildingBox);
+//                addChild(buildingBox);
+//            }
 
             unitBoxes = new Array();
             for each (var unit:String in RobotType.units()) {
@@ -128,20 +128,14 @@ import mx.events.ResizeEvent;
             }
             lastRound = e.currentRound;
 
-            var hq:DrawRobot = controller.currentState.getHQ(team);
-            if (hq && hq.isAlive()) {
-                hqBox.setRobot(hq);
-                hq.draw();
-            }
-
-            var towers:Object = controller.currentState.getTowers(team);
+            var towers:Object = controller.currentState.getArchons(team);
             var towerCount:uint = 0;
             for each (var tower:DrawRobot in towers) {
-                if (!towerBoxes[tower.getRobotID()]) {
-                    towerBoxes[tower.getRobotID()] = new DrawHUDTower();
-                    addChild(towerBoxes[tower.getRobotID()]);
+                if (!archonBoxes[tower.getRobotID()]) {
+                    archonBoxes[tower.getRobotID()] = new DrawHUDArchon();
+                    addChild(archonBoxes[tower.getRobotID()]);
                 }
-                towerBoxes[tower.getRobotID()].setRobot(tower);
+                archonBoxes[tower.getRobotID()].setRobot(tower);
                 tower.draw();
                 towerCount++;
             }
@@ -169,13 +163,13 @@ import mx.events.ResizeEvent;
             hqBox.removeRobot();
 
             // clear tower boxes
-            for (var a:String in towerBoxes) {
-                towerBoxes[a].removeRobot();
-                if (towerBoxes[a].parent == this) {
-                    removeChild(towerBoxes[a]);
+            for (var a:String in archonBoxes) {
+                archonBoxes[a].removeRobot();
+                if (archonBoxes[a].parent == this) {
+                    removeChild(archonBoxes[a]);
                 }
             }
-            towerBoxes = {};
+            archonBoxes = {};
             maxTowers = 0;
 
             drawWinMarkers();
@@ -191,8 +185,8 @@ import mx.events.ResizeEvent;
         private function drawTowerBoxes():void {
             var top:Number = hqBox.height + hqBox.y + 10;
             var i:uint = 0;
-            for (var a:String in towerBoxes) {
-                var towerBox:DrawHUDTower = towerBoxes[a];
+            for (var a:String in archonBoxes) {
+                var towerBox:DrawHUDArchon = archonBoxes[a];
                 towerBox.x = (width - towerBox.width * 3) / 2 + (i % 3) * towerBox.width;
                 towerBox.y = ((towerBox.height + 10) * Math.floor(i / 3)) + top;
                 i++;
@@ -200,7 +194,7 @@ import mx.events.ResizeEvent;
         }
 
         private function drawUnitCounts():void {
-            var towerBoxTop:Number = Math.ceil(maxTowers / 3.0) * (DrawHUDTower.HEIGHT + 10);
+            var towerBoxTop:Number = Math.ceil(maxTowers / 3.0) * (DrawHUDArchon.HEIGHT + 10);
             var top:Number = hqBox.height + hqBox.y + towerBoxTop + 10;
             unitLabel.y = top + 10;
             top = unitLabel.height + unitLabel.y + 5;

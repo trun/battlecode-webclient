@@ -29,7 +29,7 @@
             return null;
         }
 
-        public function visitLocationOreChangeSignal(s:LocationOreChangeSignal):* {
+        public function visitRubbleChangeSignal(s:RubbleChangeSignal):* {
             return null;
         }
 

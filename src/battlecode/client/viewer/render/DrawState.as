@@ -10,11 +10,8 @@
     public class DrawState extends DefaultSignalHandler {
         // state
         private var groundRobots:Object;
-        private var airRobots:Object;
-        private var hqA:DrawRobot;
-        private var hqB:DrawRobot;
-        private var towersA:Object; // id -> DrawRobot
-        private var towersB:Object; // id -> DrawRobot
+        private var archonsA:Object; // id -> DrawRobot
+        private var archonsB:Object; // id -> DrawRobot
 
         // stats
         private var aPoints:Number;
@@ -22,8 +19,8 @@
         private var roundNum:uint;
         private var unitCounts:Object;
 
-        // ore
-        private var oreMined:Array; // Number[][]
+        // rubble
+        private var rubble:Array; // Number[][]
 
         // immutables
         private var map:GameMap;
@@ -31,9 +28,8 @@
 
         public function DrawState(map:GameMap) {
             groundRobots = {};
-            airRobots = {};
-            towersA = {};
-            towersB = {};
+            archonsA = {};
+            archonsB = {};
 
             aPoints = 0;
             bPoints = 0;
@@ -50,11 +46,12 @@
             this.map = map;
             this.origin = map.getOrigin();
 
-            oreMined = [];
+            var initialRubble:Array = map.getInitialRubble();
+            rubble = [];
             for (var i:int = 0; i < map.getHeight(); i++) {
-                oreMined.push(new Array(map.getWidth()));
+                rubble.push(new Array(map.getWidth()));
                 for (var j:int = 0; j < map.getWidth(); j++) {
-                    oreMined[i][j] = 0;
+                    rubble[i][j] = initialRubble[i][j];
                 }
             }
         }
@@ -67,16 +64,8 @@
             return groundRobots;
         }
 
-        public function getAirRobots():Object {
-            return airRobots;
-        }
-
-        public function getHQ(team:String):DrawRobot {
-            return team == Team.A ? hqA : hqB;
-        }
-
-        public function getTowers(team:String):Object {
-            return team == Team.A ? towersA : towersB;
+        public function getArchons(team:String):Object {
+            return team == Team.A ? archonsA : archonsB;
         }
 
         public function getPoints(team:String):uint {
@@ -87,8 +76,8 @@
             return unitCounts[team][type];
         }
 
-        public function getOreMined():Array {
-            return oreMined;
+        public function getRubble():Array {
+            return rubble;
         }
 
         ///////////////////////////////////////////////////////
@@ -103,22 +92,14 @@
                 groundRobots[a] = state.groundRobots[a].clone();
             }
 
-            airRobots = {};
-            for (a in state.airRobots) {
-                airRobots[a] = state.airRobots[a].clone();
+            archonsA = {};
+            for (a in state.archonsA) {
+                archonsA[a] = state.archonsA[a].clone();
             }
 
-            hqA = state.hqA ? state.hqA.clone() as DrawRobot : null;
-            hqB = state.hqB ? state.hqB.clone() as DrawRobot : null;
-
-            towersA = {};
-            for (a in state.towersA) {
-                towersA[a] = state.towersA[a].clone();
-            }
-
-            towersB = {};
-            for (a in state.towersB) {
-                towersB[a] = state.towersB[a].clone();
+            archonsB = {};
+            for (a in state.archonsB) {
+                archonsB[a] = state.archonsB[a].clone();
             }
 
             unitCounts = {};
@@ -129,9 +110,9 @@
                 unitCounts[Team.B][robotType] = state.unitCounts[Team.B][robotType];
             }
 
-            oreMined = [];
-            for (i = 0; i < state.oreMined.length; i++) {
-                oreMined.push(state.oreMined[i].concat());
+            rubble = [];
+            for (i = 0; i < state.rubble.length; i++) {
+                rubble.push(state.rubble[i].concat());
             }
 
             roundNum = state.roundNum;
@@ -174,45 +155,14 @@
                 }
             }
 
-            for (a in airRobots) {
-                o = airRobots[a] as DrawRobot;
-                o.updateRound();
-                if (!o.isAlive()) {
-                    if (o.parent) {
-                        o.parent.removeChild(o);
-                    }
-                    delete airRobots[a];
-                }
-            }
-
-            for (a in towersA) {
-                o = towersA[a] as DrawRobot;
+            for (a in archonsA) {
+                o = archonsA[a] as DrawRobot;
                 o.updateRound();
             }
 
-            for (a in towersB) {
-                o = towersB[a] as DrawRobot;
+            for (a in archonsB) {
+                o = archonsB[a] as DrawRobot;
                 o.updateRound();
-            }
-
-            if (hqA) {
-                hqA.updateRound();
-                if (!hqA.isAlive()) {
-                    if (hqA.parent) {
-                        hqA.parent.removeChild(hqA);
-                    }
-                    hqA = null;
-                }
-            }
-
-            if (hqB) {
-                hqB.updateRound();
-                if (!hqB.isAlive()) {
-                    if (hqB.parent) {
-                        hqB.parent.removeChild(hqB);
-                    }
-                    hqB = null;
-                }
             }
         }
 
@@ -226,13 +176,11 @@
 
         private function getRobot(id:uint):DrawRobot {
             if (groundRobots[id]) return groundRobots[id] as DrawRobot;
-            if (airRobots[id]) return airRobots[id] as DrawRobot;
             return null;
         }
 
         private function removeRobot(id:uint):void {
             if (groundRobots[id]) delete groundRobots[id];
-            if (airRobots[id]) delete airRobots[id];
         }
 
         private function translateCoordinates(loc:MapLocation):MapLocation {
@@ -259,17 +207,16 @@
             var robot:DrawRobot = getRobot(s.getRobotID());
             robot.destroyUnit();
 
-            if (robot.getType() == RobotType.HQ) {
-                var hq:DrawRobot = robot.getTeam() == Team.A ? hqA : hqB;
-                hq.destroyUnit();
-            }
-
-            if (robot.getType() == RobotType.TOWER) {
-                var tower:DrawRobot = robot.getTeam() == Team.A ? towersA[robot.getRobotID()] : towersB[robot.getRobotID()];
+            if (robot.getType() == RobotType.ARCHON) {
+                var tower:DrawRobot = robot.getTeam() == Team.A
+                        ? archonsA[robot.getRobotID()]
+                        : archonsB[robot.getRobotID()];
                 tower.destroyUnit();
             }
 
-            unitCounts[robot.getTeam()][robot.getType()]--;
+            if (Team.isPlayer(robot.getTeam())) {
+                unitCounts[robot.getTeam()][robot.getType()]--;
+            }
         }
 
         override public function visitHealthChangeSignal(s:HealthChangeSignal):* {
@@ -280,14 +227,11 @@
                 var robot:DrawRobot = getRobot(robotIDs[i]);
                 robot.setEnergon(healths[i]);
 
-                if (robot.getType() == RobotType.HQ) {
-                    var hq:DrawRobot = robot.getTeam() == Team.A ? hqA : hqB;
-                    hq.setEnergon(healths[i]);
-                }
-
-                if (robot.getType() == RobotType.TOWER) {
-                    var tower:DrawRobot = robot.getTeam() == Team.A ? towersA[robot.getRobotID()] : towersB[robot.getRobotID()];
-                    tower.setEnergon(healths[i]);
+                if (robot.getType() == RobotType.ARCHON) {
+                    var archon:DrawRobot = robot.getTeam() == Team.A
+                            ? archonsA[robot.getRobotID()]
+                            : archonsB[robot.getRobotID()];
+                    archon.setEnergon(healths[i]);
                 }
             }
         }
@@ -296,9 +240,9 @@
             getRobot(s.getRobotID()).setIndicatorString(s.getIndicatorString(), s.getIndex());
         }
 
-        override public function visitLocationOreChangeSignal(s:LocationOreChangeSignal):* {
+        override public function visitRubbleChangeSignal(s:RubbleChangeSignal):* {
             var loc:MapLocation = translateCoordinates(s.getLocation());
-            oreMined[loc.getY()][loc.getX()] = s.getOre();
+            rubble[loc.getY()][loc.getX()] = s.getRubble();
         }
 
         override public function visitMovementSignal(s:MovementSignal):* {
@@ -310,29 +254,22 @@
             robot.setLocation(s.getLocation());
             robot.spawn(s.getDelay());
 
-            if (s.getRobotType() == RobotType.HQ) {
-                if (s.getTeam() == Team.A) hqA = robot.clone() as DrawRobot;
-                if (s.getTeam() == Team.B) hqB = robot.clone() as DrawRobot;
+            if (s.getRobotType() == RobotType.ARCHON) {
+                if (s.getTeam() == Team.A) archonsA[s.getRobotID()] = robot.clone();
+                if (s.getTeam() == Team.B) archonsB[s.getRobotID()] = robot.clone();
             }
 
-            if (s.getRobotType() == RobotType.TOWER) {
-                if (s.getTeam() == Team.A) towersA[s.getRobotID()] = robot.clone();
-                if (s.getTeam() == Team.B) towersB[s.getRobotID()] = robot.clone();
-            }
+            groundRobots[s.getRobotID()] = robot;
 
-            if (RobotType.isAir(s.getRobotType())) {
-                airRobots[s.getRobotID()] = robot;
-            } else {
-                groundRobots[s.getRobotID()] = robot;
+            if (Team.isPlayer(s.getTeam())) {
+                unitCounts[s.getTeam()][s.getRobotType()]++;
             }
-            unitCounts[s.getTeam()][s.getRobotType()]++;
         }
 
         override public function visitTeamOreSignal(s:TeamOreSignal):* {
             aPoints = s.getOre(Team.A);
             bPoints = s.getOre(Team.B);
         }
-
     }
 
 }

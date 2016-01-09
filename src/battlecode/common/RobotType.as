@@ -1,170 +1,116 @@
 ﻿package battlecode.common {
 
     public class RobotType {
-        public static const HQ:String = "HQ";
-        public static const TOWER:String = "TOWER";
-
-        public static const SUPPLYDEPOT:String = "SUPPLYDEPOT";
-        public static const TECHNOLOGYINSTITUTE:String = "TECHNOLOGYINSTITUTE";
-        public static const BARRACKS:String = "BARRACKS";
-        public static const HELIPAD:String = "HELIPAD";
-        public static const TRAININGFIELD:String = "TRAININGFIELD";
-        public static const TANKFACTORY:String = "TANKFACTORY";
-        public static const MINERFACTORY:String = "MINERFACTORY";
-        public static const HANDWASHSTATION:String = "HANDWASHSTATION";
-        public static const AEROSPACELAB:String = "AEROSPACELAB";
-
-        public static const BEAVER:String = "BEAVER";
-        public static const COMPUTER:String = "COMPUTER";
+        public static const ARCHON:String = "ARCHON";
+        public static const SCOUT:String = "SCOUT";
         public static const SOLDIER:String = "SOLDIER";
-        public static const BASHER:String = "BASHER";
-        public static const MINER:String = "MINER";
-        public static const DRONE:String = "DRONE";
-        public static const TANK:String = "TANK";
-        public static const COMMANDER:String = "COMMANDER";
-        public static const LAUNCHER:String = "LAUNCHER";
-        public static const MISSILE:String = "MISSILE";
+        public static const GUARD:String = "GUARD";
+        public static const VIPER:String = "VIPER";
+        public static const TURRET:String = "TURRET";
+        public static const TTM:String = "TTM";
+
+        public static const ZOMBIEDEN:String = "ZOMBIEDEN";
+        public static const STANDARDZOMBIE:String = "STANDARDZOMBIE";
+        public static const FASTZOMBIE:String = "FASTZOMBIE";
+        public static const RANGEDZOMBIE:String = "RANGEDZOMBIE";
+        public static const BIGZOMBIE:String = "BIGZOMBIE";
 
         public function RobotType() {
         }
 
         public static function values():Array {
             return [
-                HQ,
-                TOWER,
-                SUPPLYDEPOT,
-                TECHNOLOGYINSTITUTE,
-                BARRACKS,
-                HELIPAD,
-                TRAININGFIELD,
-                TANKFACTORY,
-                MINERFACTORY,
-                AEROSPACELAB,
-                HANDWASHSTATION,
-                BEAVER,
-                COMPUTER,
+                ARCHON,
+                SCOUT,
                 SOLDIER,
-                BASHER,
-                MINER,
-                DRONE,
-                TANK,
-                COMMANDER,
-                LAUNCHER,
-                MISSILE
-            ];
-        }
-
-        public static function buildings():Array {
-            return [
-                SUPPLYDEPOT,
-                TECHNOLOGYINSTITUTE,
-                BARRACKS,
-                HELIPAD,
-                TRAININGFIELD,
-                TANKFACTORY,
-                MINERFACTORY,
-                AEROSPACELAB,
-                HANDWASHSTATION
+                GUARD,
+                VIPER,
+                TURRET,
+                TTM,
+                ZOMBIEDEN,
+                STANDARDZOMBIE,
+                FASTZOMBIE,
+                RANGEDZOMBIE,
+                BIGZOMBIE
             ];
         }
 
         public static function units():Array {
             return [
+                ARCHON,
                 SOLDIER,
-                BASHER,
-                COMMANDER,
-                TANK,
-                LAUNCHER,
-                MISSILE,
-                BEAVER,
-                MINER,
-                COMPUTER,
-                DRONE
+                GUARD,
+                VIPER,
+                TURRET,
+                TTM
             ];
         }
 
-        public static function ground():Array {
+        public static function zombies():Array {
             return [
-                SOLDIER,
-                BASHER,
-                COMMANDER,
-                TANK,
-                LAUNCHER,
-                BEAVER,
-                MINER,
-                COMPUTER
-            ];
-        }
-
-        public static function air():Array {
-            return [
-                MISSILE,
-                DRONE
+                ZOMBIEDEN,
+                STANDARDZOMBIE,
+                FASTZOMBIE,
+                RANGEDZOMBIE,
+                BIGZOMBIE
             ]
         }
 
         public static function maxEnergon(type:String):Number {
             switch (type) {
-                case HQ:
-                    return 2000;
-                case TOWER:
+                case ARCHON:
                     return 1000;
-                case SUPPLYDEPOT:
-                case TECHNOLOGYINSTITUTE:
-                case BARRACKS:
-                case HELIPAD:
-                case TRAININGFIELD:
-                case TANKFACTORY:
-                case MINERFACTORY:
-                case HANDWASHSTATION:
-                case AEROSPACELAB:
+                case SCOUT:
                     return 100;
-                case BEAVER:
-                    return 30;
-                case MINER:
-                    return 50;
-                case COMPUTER:
-                    return 1;
                 case SOLDIER:
-                    return 40;
-                case BASHER:
-                    return 50;
-                case DRONE:
-                    return 70;
-                case TANK:
-                    return 160;
-                case COMMANDER:
+                    return 60;
+                case GUARD:
+                    return 150;
+                case VIPER:
                     return 120;
-                case LAUNCHER:
-                    return 400;
-                case MISSILE:
-                    return 3;
+                case TURRET:
+                    return 100;
+                case TTM:
+                    return 100;
+                case ZOMBIEDEN:
+                    return 2000;
+                case STANDARDZOMBIE:
+                    return 60;
+                case RANGEDZOMBIE:
+                    return 60;
+                case FASTZOMBIE:
+                    return 80;
+                case BIGZOMBIE:
+                    return 500;
             }
             throw new ArgumentError("Unknown type: " + type);
         }
 
-        public static function movementDelay(type:String):uint {
+        // TODO these should be truncated for animation delays (but not diagonal calcs)
+        public static function movementDelay(type:String):Number {
             switch (type) {
-                case BEAVER:
+                case ARCHON:
                     return 2;
-                case MINER:
-                    return 2;
-                case COMPUTER:
-                    return 8;
+                case SCOUT:
+                    return 1.4;
                 case SOLDIER:
                     return 2;
-                case BASHER:
+                case GUARD:
                     return 2;
-                case DRONE:
-                    return 1;
-                case TANK:
+                case VIPER:
                     return 2;
-                case COMMANDER:
+                case TURRET:
+                    return 0;
+                case TTM:
                     return 2;
-                case LAUNCHER:
-                    return 4;
-                case MISSILE:
-                    return 1;
+                case STANDARDZOMBIE:
+                    return 3;
+                case RANGEDZOMBIE:
+                    return 3;
+                case FASTZOMBIE:
+                    return 1.4;
+                case BIGZOMBIE:
+                    return 3;
             }
             return 1;
         }
@@ -173,40 +119,32 @@
             return movementDelay(type) * Math.SQRT2;
         }
 
-        public static function attackDelay(type:String):uint {
+        public static function attackDelay(type:String):Number {
             switch (type) {
-                case BEAVER:
+                case ARCHON:
                     return 2;
-                case MINER:
-                    return 2;
-                case COMPUTER:
-                    return 0;
+                case SCOUT:
+                    return 1;
                 case SOLDIER:
                     return 2;
-                case BASHER:
-                    return 1;
-                case DRONE:
-                    return 3;
-                case TANK:
-                    return 3;
-                case COMMANDER:
-                    return 1;
-                case LAUNCHER:
+                case GUARD:
+                    return 2;
+                case VIPER:
+                    return 2;
+                case TURRET:
                     return 0;
-                case MISSILE:
-                    return 0;
+                case TTM:
+                    return 2;
+                case STANDARDZOMBIE:
+                    return 2;
+                case RANGEDZOMBIE:
+                    return 1;
+                case FASTZOMBIE:
+                    return 1;
+                case BIGZOMBIE:
+                    return 3;
             }
             return 0;
-        }
-
-        public static function isAir(type:String):Boolean {
-            switch (type) {
-                case DRONE:
-                case MISSILE:
-                    return true;
-                default:
-                    return false;
-            }
         }
     }
 }

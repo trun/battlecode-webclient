@@ -62,7 +62,7 @@
             return air;
         }
 
-        public static function showOre():Boolean {
+        public static function showRubble():Boolean {
             return ore;
         }
 

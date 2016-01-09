@@ -22,10 +22,8 @@
                     return createDeathSignal(signalXML);
                 case "sig.IndicatorStringSignal":
                     return createIndicatorStringSignal(signalXML);
-                case "sig.LocationOreChangeSignal":
-                    return createLocationOreChangeSignal(signalXML);
-                case "sig.MineSignal":
-                    return null; // TODO
+                case "sig.RubbleChangeSignal":
+                    return createRubbleChangeSignal(signalXML);
                 case "sig.MovementSignal":
                     return createMovementSignal(signalXML);
                 case "sig.HealthChangeSignal":
@@ -93,10 +91,10 @@
             return new IndicatorStringSignal(robotID, index, str);
         }
 
-        public static function createLocationOreChangeSignal(signalXML:XML):LocationOreChangeSignal {
+        public static function createRubbleChangeSignal(signalXML:XML):RubbleChangeSignal {
             var loc:MapLocation = ParseUtils.parseLocation(signalXML.attribute("loc"));
-            var ore:Number = parseFloat(signalXML.attribute("ore"));
-            return new LocationOreChangeSignal(loc, ore);
+            var amount:Number = parseFloat(signalXML.attribute("amount"));
+            return new RubbleChangeSignal(loc, amount);
         }
 
         public static function createSpawnSignal(signalXML:XML):SpawnSignal {

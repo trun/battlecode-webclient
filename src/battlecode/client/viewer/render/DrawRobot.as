@@ -251,7 +251,7 @@
             }
 
             // draw direction
-            this.imageCanvas.rotation = directionToRotation(direction);
+            //this.imageCanvas.rotation = directionToRotation(direction);
 
             if (force) {
                 this.image.width = getImageSize(true);
@@ -304,7 +304,7 @@
         ///////////////////////////////////////////////////////
 
         private function drawEnergonBar():void {
-            if (!RenderConfiguration.showEnergon() && !(getType() == RobotType.HQ || getType() == RobotType.TOWER))
+            if (!RenderConfiguration.showEnergon() && getType() != RobotType.ARCHON)
                 return;
 
             var ratio:Number = energon / maxEnergon;
@@ -430,10 +430,6 @@
 
         private function getUnitScale(type:String):Number {
             switch (type) {
-                case RobotType.HQ:
-                    return 2.0;
-                case RobotType.TOWER:
-                    return 1.5;
                 default:
                     return 1.0;
             }
