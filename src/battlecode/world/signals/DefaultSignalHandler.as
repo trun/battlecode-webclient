@@ -33,6 +33,10 @@
             return null;
         }
 
+        public function visitPartsChangeSignal(s:PartsChangeSignal):* {
+            return null;
+        }
+
         public function visitMovementSignal(s:MovementSignal):* {
             return null;
         }

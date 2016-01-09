@@ -24,6 +24,8 @@
                     return createIndicatorStringSignal(signalXML);
                 case "sig.RubbleChangeSignal":
                     return createRubbleChangeSignal(signalXML);
+                case "sig.PartsChangeSignal":
+                    return createPartsChangeSignal(signalXML);
                 case "sig.MovementSignal":
                     return createMovementSignal(signalXML);
                 case "sig.HealthChangeSignal":
@@ -95,6 +97,12 @@
             var loc:MapLocation = ParseUtils.parseLocation(signalXML.attribute("loc"));
             var amount:Number = parseFloat(signalXML.attribute("amount"));
             return new RubbleChangeSignal(loc, amount);
+        }
+
+        public static function createPartsChangeSignal(signalXML:XML):PartsChangeSignal {
+            var loc:MapLocation = ParseUtils.parseLocation(signalXML.attribute("loc"));
+            var amount:Number = parseFloat(signalXML.attribute("amount"));
+            return new PartsChangeSignal(loc, amount);
         }
 
         public static function createSpawnSignal(signalXML:XML):SpawnSignal {

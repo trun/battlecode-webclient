@@ -34,11 +34,14 @@
         public static const ARCHON_A:Class;
         [Embed('/img/units/archon1.png')]
         public static const ARCHON_B:Class;
+        [Embed('/img/units/archon2.png')]
+        public static const ARCHON_NEUTRAL:Class;
+
         [Embed('/img/units/scout0.png')]
         public static const SCOUT_A:Class;
         [Embed('/img/units/scout1.png')]
         public static const SCOUT_B:Class;
-        [Embed('/img/units/archon0.png')]
+        [Embed('/img/units/soldier0.png')]
         public static const SOLDIER_A:Class;
         [Embed('/img/units/soldier1.png')]
         public static const SOLDIER_B:Class;
@@ -58,6 +61,18 @@
         public static const TTM_A:Class;
         [Embed('/img/units/ttm1.png')]
         public static const TTM_B:Class;
+
+        // zombie avatars
+        [Embed('/img/units/zombieden3.png')]
+        public static const ZOMBIEDEN_ZOMBIE:Class;
+        [Embed('/img/units/standardzombie3.png')]
+        public static const STANDARDZOMBIE_ZOMBIE:Class;
+        [Embed('/img/units/rangedzombie3.png')]
+        public static const RANGEDZOMBIE_ZOMBIE:Class;
+        [Embed('/img/units/fastzombie3.png')]
+        public static const FASTZOMBIE_ZOMBIE:Class;
+        [Embed('/img/units/bigzombie3.png')]
+        public static const BIGZOMBIE_ZOMBIE:Class;
         
         // explosions images
         [Embed('/img/explode/explode64_f01.png')]

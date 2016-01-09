@@ -10,6 +10,7 @@
     public class DrawState extends DefaultSignalHandler {
         // state
         private var groundRobots:Object;
+        private var zombieRobots:Object;
         private var archonsA:Object; // id -> DrawRobot
         private var archonsB:Object; // id -> DrawRobot
 
@@ -21,6 +22,7 @@
 
         // rubble
         private var rubble:Array; // Number[][]
+        private var parts:Array; // Number[][]
 
         // immutables
         private var map:GameMap;
@@ -28,6 +30,7 @@
 
         public function DrawState(map:GameMap) {
             groundRobots = {};
+            zombieRobots = {};
             archonsA = {};
             archonsB = {};
 
@@ -38,7 +41,7 @@
             unitCounts = {};
             unitCounts[Team.A] = {};
             unitCounts[Team.B] = {};
-            for each (var robotType:String in RobotType.values()) {
+            for each (var robotType:String in RobotType.units()) {
                 unitCounts[Team.A][robotType] = 0;
                 unitCounts[Team.B][robotType] = 0;
             }
@@ -46,12 +49,23 @@
             this.map = map;
             this.origin = map.getOrigin();
 
+            var i:int = 0, j:int = 0;
+
             var initialRubble:Array = map.getInitialRubble();
             rubble = [];
-            for (var i:int = 0; i < map.getHeight(); i++) {
+            for (i = 0; i < map.getHeight(); i++) {
                 rubble.push(new Array(map.getWidth()));
-                for (var j:int = 0; j < map.getWidth(); j++) {
+                for (j = 0; j < map.getWidth(); j++) {
                     rubble[i][j] = initialRubble[i][j];
+                }
+            }
+
+            var initialParts:Array = map.getInitialParts();
+            parts = [];
+            for (i = 0; i < map.getHeight(); i++) {
+                parts.push(new Array(map.getWidth()));
+                for (j = 0; j < map.getWidth(); j++) {
+                    parts[i][j] = initialParts[i][j];
                 }
             }
         }
@@ -62,6 +76,10 @@
 
         public function getGroundRobots():Object {
             return groundRobots;
+        }
+
+        public function getZombieRobots():Object {
+            return zombieRobots;
         }
 
         public function getArchons(team:String):Object {
@@ -79,6 +97,10 @@
         public function getRubble():Array {
             return rubble;
         }
+        
+        public function getParts():Array {
+            return parts;
+        }
 
         ///////////////////////////////////////////////////////
         /////////////////// CORE FUNCTIONS ////////////////////
@@ -90,6 +112,11 @@
             groundRobots = {};
             for (a in state.groundRobots) {
                 groundRobots[a] = state.groundRobots[a].clone();
+            }
+
+            zombieRobots = {};
+            for (a in state.zombieRobots) {
+                zombieRobots[a] = state.zombieRobots[a].clone();
             }
 
             archonsA = {};
@@ -113,6 +140,11 @@
             rubble = [];
             for (i = 0; i < state.rubble.length; i++) {
                 rubble.push(state.rubble[i].concat());
+            }
+
+            parts = [];
+            for (i = 0; i < state.parts.length; i++) {
+                parts.push(state.parts[i].concat());
             }
 
             roundNum = state.roundNum;
@@ -155,6 +187,17 @@
                 }
             }
 
+            for (a in zombieRobots) {
+                o = zombieRobots[a] as DrawRobot;
+                o.updateRound();
+                if (!o.isAlive()) {
+                    if (o.parent) {
+                        o.parent.removeChild(o);
+                    }
+                    delete zombieRobots[a];
+                }
+            }
+
             for (a in archonsA) {
                 o = archonsA[a] as DrawRobot;
                 o.updateRound();
@@ -176,11 +219,13 @@
 
         private function getRobot(id:uint):DrawRobot {
             if (groundRobots[id]) return groundRobots[id] as DrawRobot;
+            if (zombieRobots[id]) return zombieRobots[id] as DrawRobot;
             return null;
         }
 
         private function removeRobot(id:uint):void {
             if (groundRobots[id]) delete groundRobots[id];
+            if (zombieRobots[id]) delete zombieRobots[id];
         }
 
         private function translateCoordinates(loc:MapLocation):MapLocation {
@@ -241,8 +286,17 @@
         }
 
         override public function visitRubbleChangeSignal(s:RubbleChangeSignal):* {
+            // robots can clear rubble for OOB locations
+            if (!map.isOnMap(s.getLocation())) {
+                return;
+            }
             var loc:MapLocation = translateCoordinates(s.getLocation());
             rubble[loc.getY()][loc.getX()] = s.getRubble();
+        }
+
+        override public function visitPartsChangeSignal(s:PartsChangeSignal):* {
+            var loc:MapLocation = translateCoordinates(s.getLocation());
+            parts[loc.getY()][loc.getX()] = s.getParts();
         }
 
         override public function visitMovementSignal(s:MovementSignal):* {
@@ -259,7 +313,11 @@
                 if (s.getTeam() == Team.B) archonsB[s.getRobotID()] = robot.clone();
             }
 
-            groundRobots[s.getRobotID()] = robot;
+            if (RobotType.isZombie(s.getRobotType())) {
+                zombieRobots[s.getRobotID()] = robot;
+            } else {
+                groundRobots[s.getRobotID()] = robot;
+            }
 
             if (Team.isPlayer(s.getTeam())) {
                 unitCounts[s.getTeam()][s.getRobotType()]++;

@@ -1,6 +1,4 @@
 ﻿package battlecode.client.viewer.render {
-    import battlecode.common.RobotType;
-    
     import mx.controls.Image;
     import mx.core.UIComponent;
 
@@ -76,7 +74,10 @@
         private function getExplosionImage():Class {
             if (round < 8) {
                 return ImageAssets["EXPLODE_" + (round + 1)];
-            }else {
+            } else if (overrideSize) {
+                // TODO a less ghetto way of indicating this exists in the HUD
+                return ImageAssets.ARCHON_NEUTRAL;
+            } else {
                 return ImageAssets.EXPLODE_8;
             }
         }

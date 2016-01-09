@@ -359,7 +359,7 @@
             var targetOffsetX:Number = (targetLocation.getX() - location.getX()) * getImageSize();
             var targetOffsetY:Number = (targetLocation.getY() - location.getY()) * getImageSize();
 
-            this.graphics.lineStyle(2, team == Team.A ? 0xFF0000 : 0x0000FF);
+            this.graphics.lineStyle(2, getAttackColor());
             this.graphics.moveTo(0, 0);
             this.graphics.lineTo(targetOffsetX - drawX, targetOffsetY - drawY);
             this.graphics.drawCircle(targetOffsetX - drawX, targetOffsetY - drawY, getImageSize() / 2 * .6);
@@ -426,6 +426,15 @@
             if (overrideSize)
                 return 1.0;
             return RenderConfiguration.getScalingFactor();
+        }
+
+        private function getAttackColor():uint {
+            switch (team) {
+                case Team.A: return 0xFF0000;
+                case Team.B: return 0x0000FF;
+                case Team.ZOMBIE: return 0x33CC33;
+            }
+            return 0x000000;
         }
 
         private function getUnitScale(type:String):Number {

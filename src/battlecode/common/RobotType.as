@@ -37,7 +37,7 @@
 
         public static function units():Array {
             return [
-                ARCHON,
+                SCOUT,
                 SOLDIER,
                 GUARD,
                 VIPER,
@@ -145,6 +145,18 @@
                     return 3;
             }
             return 0;
+        }
+
+        public static function isZombie(type:String):Boolean {
+            switch (type) {
+                case ZOMBIEDEN:
+                case STANDARDZOMBIE:
+                case FASTZOMBIE:
+                case RANGEDZOMBIE:
+                case BIGZOMBIE:
+                    return true;
+            }
+            return false;
         }
     }
 }

@@ -21,9 +21,10 @@
         // various canvases for layering and quick toggling of features
         private var mapCanvas:UIComponent;
         private var gridCanvas:UIComponent;
-        private var partsCanvas:UIComponent;
         private var rubbleCanvas:UIComponent;
+        private var partsCanvas:UIComponent;
         private var groundUnitCanvas:UIComponent;
+        private var zombieUnitCanvas:UIComponent;
 
         // optimizations for caching
         private var lastRound:uint = 0;
@@ -38,18 +39,20 @@
 
             this.mapCanvas = new UIComponent();
             this.gridCanvas = new UIComponent();
-            this.partsCanvas = new UIComponent();
             this.rubbleCanvas = new UIComponent();
+            this.partsCanvas = new UIComponent();
             this.groundUnitCanvas = new UIComponent();
+            this.zombieUnitCanvas = new UIComponent();
 
             this.mapCanvas.cacheAsBitmap = true;
             this.gridCanvas.cacheAsBitmap = true;
 
             this.addChild(mapCanvas);
-            this.addChild(partsCanvas);
             this.addChild(rubbleCanvas);
+            this.addChild(partsCanvas);
             this.addChild(gridCanvas);
             this.addChild(groundUnitCanvas);
+            this.addChild(zombieUnitCanvas);
         }
 
         ///////////////////////////////////////////////////////
@@ -81,6 +84,7 @@
             drawGridlines();
             drawUnits();
             drawRubble();
+            drawParts();
 
             var o:DrawObject;
 
@@ -182,30 +186,42 @@
                     if (density <= 0) {
                         continue;
                     }
-                    // green
-                    //var scalarR:uint = (1 - density) * 0x99 + 0x33;
-                    //var scalarG:uint = 0xFF - (1 - density) * 0x33;
-                    //var scalarB:uint = (1 - density) * 0xCC;
-
-                    // orange
-                    //var scalarR:uint = 0xFF - (1 - density) * 0x33;
-                    //var scalarG:uint = (1 - density) * 0x33 + 0x99;
-                    //var scalarB:uint = (1 - density) * 0x99 + 0x33;
-
-                    // purple
-                    //var scalarR:uint = (1 - density) * 0x66 + 0x66;
-                    //var scalarG:uint = (1 - density) * 0x33;
-                    //var scalarB:uint = (1 - density) * 0x33 + 0x99;
 
                     // grey
-                    var scalarR:uint = (1 - density) * 0x66 + 0x66;
-                    var scalarG:uint = (1 - density) * 0x66 + 0x66;
-                    var scalarB:uint = (1 - density) * 0x66 + 0x66;
+                    var scalarR:uint = (1 - density) * 0xFF;
+                    var scalarG:uint = (1 - density) * 0xFF;
+                    var scalarB:uint = (1 - density) * 0xFF;
 
                     var colorTransform:ColorTransform = new ColorTransform(0, 0, 0, 1, scalarR, scalarG, scalarB, 0);
                     this.rubbleCanvas.graphics.beginFill(colorTransform.color, 1.0);
-                    this.rubbleCanvas.graphics.drawRect(j * getGridSize(), i * getGridSize(), getGridSize(), getGridSize());
+                    this.rubbleCanvas.graphics.drawRect(j * g, i * g, g, g);
                     this.rubbleCanvas.graphics.endFill();
+                }
+            }
+        }
+
+        private function drawParts():void {
+            var terrain:Array = controller.match.getMap().getTerrainTiles();
+            var parts:Array = controller.currentState.getParts();
+            var i:uint, j:uint;
+
+            this.partsCanvas.graphics.clear();
+            this.partsCanvas.graphics.lineStyle();
+            var g:Number = getGridSize();
+            for (i = 0; i < parts.length; i++) {
+                for (j = 0; j < parts[i].length; j++) {
+                    var tile:TerrainTile = terrain[i][j] as TerrainTile;
+                    if (tile.getType() == TerrainTile.VOID) {
+                        continue;
+                    }
+                    var density:Number = Math.min(1, parts[i][j] / 200);
+                    if (density <= 0) {
+                        continue;
+                    }
+
+                    this.partsCanvas.graphics.beginFill(0xCC33CC, 0.7);
+                    this.partsCanvas.graphics.drawCircle(j * g + g / 2, i * g + g / 2, density * g / 2);
+                    this.partsCanvas.graphics.endFill();
                 }
             }
         }
@@ -213,9 +229,13 @@
         private function drawUnits():void {
             var loc:MapLocation, i:uint, j:uint, robot:DrawRobot;
             var groundRobots:Object = controller.currentState.getGroundRobots();
+            var zombieRobots:Object = controller.currentState.getZombieRobots();
 
             while (groundUnitCanvas.numChildren > 0)
                 groundUnitCanvas.removeChildAt(0);
+
+            while (zombieUnitCanvas.numChildren > 0)
+                zombieUnitCanvas.removeChildAt(0);
 
             for each (robot in groundRobots) {
                 loc = robot.getLocation();
@@ -227,11 +247,23 @@
                 groundUnitCanvas.addChild(robot);
                 robot.draw();
             }
+
+            for each (robot in zombieRobots) {
+                loc = robot.getLocation();
+                j = (loc.getX() - origin.getX());
+                i = (loc.getY() - origin.getY());
+                robot.x = j * getGridSize() + getGridSize() / 2;
+                robot.y = i * getGridSize() + getGridSize() / 2;
+                robot.addEventListener(MouseEvent.CLICK, onRobotSelect, false, 0, true);
+                zombieUnitCanvas.addChild(robot);
+                robot.draw();
+            }
         }
 
         private function updateUnits():void {
             var loc:MapLocation, i:uint, j:uint, robot:DrawRobot;
             var groundRobots:Object = controller.currentState.getGroundRobots();
+            var zombieRobots:Object = controller.currentState.getZombieRobots();
 
             for each (robot in groundRobots) {
                 loc = robot.getLocation();
@@ -245,6 +277,19 @@
                 }
                 robot.draw();
             }
+
+            for each (robot in zombieRobots) {
+                loc = robot.getLocation();
+                j = (loc.getX() - origin.getX());
+                i = (loc.getY() - origin.getY());
+                robot.x = j * getGridSize() + getGridSize() / 2;
+                robot.y = i * getGridSize() + getGridSize() / 2;
+                if (!robot.parent && robot.isAlive()) {
+                    robot.addEventListener(MouseEvent.CLICK, onRobotSelect, false, 0, true);
+                    zombieUnitCanvas.addChild(robot);
+                }
+                robot.draw();
+            }
         }
 
         ///////////////////////////////////////////////////////
@@ -254,6 +299,7 @@
         private function onEnterFrame(e:Event):void {
             gridCanvas.visible = RenderConfiguration.showGridlines();
             groundUnitCanvas.visible = RenderConfiguration.showGround();
+            zombieUnitCanvas.visible = RenderConfiguration.showGround(); // TODO showZombies
             partsCanvas.visible = RenderConfiguration.showRubble(); // TODO showParts
             rubbleCanvas.visible = RenderConfiguration.showRubble();
         }
@@ -264,6 +310,7 @@
             }
             updateUnits();
             drawRubble();
+            drawParts();
 
             lastRound = e.currentRound;
 

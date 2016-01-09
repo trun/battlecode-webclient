@@ -16,6 +16,8 @@
 
         function visitRubbleChangeSignal(s:RubbleChangeSignal):*;
 
+        function visitPartsChangeSignal(s:PartsChangeSignal):*;
+
         function visitMovementSignal(s:MovementSignal):*;
 
         function visitTeamOreSignal(s:TeamOreSignal):*;

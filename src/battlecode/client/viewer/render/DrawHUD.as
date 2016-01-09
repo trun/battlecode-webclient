@@ -20,16 +20,13 @@ import mx.events.ResizeEvent;
         private var team:String;
 
         private var pointLabel:Label;
-        private var hqBox:DrawHUDHQ;
         private var archonBoxes:Object; // id -> DrawHUDArchon
-        private var buildingLabel:Label;
-        private var buildingBoxes:Array;
         private var unitLabel:Label;
         private var unitBoxes:Array;
         private var winMarkerCanvas:Canvas;
 
         private var lastRound:uint = 0;
-        private var maxTowers:uint = 0;
+        private var maxArchons:uint = 0;
 
         private var formatter:NumberFormatter;
 
@@ -66,19 +63,6 @@ import mx.events.ResizeEvent;
 
             addChild(pointLabel);
 
-            hqBox = new DrawHUDHQ();
-            addChild(hqBox);
-
-            buildingLabel = new Label();
-            buildingLabel.width = width;
-            buildingLabel.height = 30;
-            buildingLabel.setStyle("color", 0xFFFFFF);
-            buildingLabel.setStyle("fontSize", 18);
-            buildingLabel.setStyle("textAlign", "center");
-            buildingLabel.setStyle("fontFamily", "Courier New");
-            buildingLabel.text = "Buildings";
-            addChild(buildingLabel);
-
             unitLabel = new Label();
             unitLabel.width = width;
             unitLabel.height = 30;
@@ -91,16 +75,9 @@ import mx.events.ResizeEvent;
 
             archonBoxes = {};
 
-//            buildingBoxes = new Array();
-//            for each (var building:String in RobotType.buildings()) {
-//                var buildingBox:DrawHUDUnit = new DrawHUDUnit(building, team);
-//                buildingBoxes.push(buildingBox);
-//                addChild(buildingBox);
-//            }
-
             unitBoxes = new Array();
-            for each (var unit:String in RobotType.units()) {
-                var unitBox:DrawHUDUnit = new DrawHUDUnit(unit, team);
+            for each (var unitType:String in RobotType.units()) {
+                var unitBox:DrawHUDUnit = new DrawHUDUnit(unitType, team);
                 unitBoxes.push(unitBox);
                 addChild(unitBox);
             }
@@ -112,10 +89,8 @@ import mx.events.ResizeEvent;
             addChild(winMarkerCanvas);
 
             repositionWinMarkers();
-            resizeHQBox();
-            drawTowerBoxes();
+            drawArchonBoxes();
             drawUnitCounts();
-            drawBuildingCounts();
         }
 
         private function onRoundChange(e:MatchEvent):void {
@@ -123,7 +98,6 @@ import mx.events.ResizeEvent;
             pointLabel.text = formatter.format(points);
 
             if (e.currentRound <= lastRound) {
-                hqBox.removeRobot();
                 drawWinMarkers();
             }
             lastRound = e.currentRound;
@@ -139,19 +113,14 @@ import mx.events.ResizeEvent;
                 tower.draw();
                 towerCount++;
             }
-            maxTowers = Math.max(maxTowers, towerCount);
-            drawTowerBoxes();
+            maxArchons = Math.max(maxArchons, towerCount);
+            drawArchonBoxes();
 
             for each (var unitBox:DrawHUDUnit in unitBoxes) {
                 unitBox.setCount(controller.currentState.getUnitCount(unitBox.getType(), team));
             }
 
-            for each (var buildingBox:DrawHUDUnit in buildingBoxes) {
-                buildingBox.setCount(controller.currentState.getUnitCount(buildingBox.getType(), team));
-            }
-
             drawUnitCounts();
-            drawBuildingCounts();
 
             if (controller.currentRound == controller.match.getRounds()) {
                 drawWinMarkers();
@@ -160,7 +129,6 @@ import mx.events.ResizeEvent;
 
         private function onMatchChange(e:MatchEvent):void {
             pointLabel.text = "0";
-            hqBox.removeRobot();
 
             // clear tower boxes
             for (var a:String in archonBoxes) {
@@ -170,69 +138,32 @@ import mx.events.ResizeEvent;
                 }
             }
             archonBoxes = {};
-            maxTowers = 0;
+            maxArchons = 0;
 
             drawWinMarkers();
         }
 
-        private function resizeHQBox():void {
-            var boxSize:Number = Math.min(100, (height - 70 - pointLabel.height - winMarkerCanvas.height) - 20);
-            hqBox.resize(boxSize);
-            hqBox.x = (width - boxSize) / 2;
-            hqBox.y = 50;
-        }
-
-        private function drawTowerBoxes():void {
-            var top:Number = hqBox.height + hqBox.y + 10;
+        private function drawArchonBoxes():void {
+            var top:Number = 50;
             var i:uint = 0;
             for (var a:String in archonBoxes) {
-                var towerBox:DrawHUDArchon = archonBoxes[a];
-                towerBox.x = (width - towerBox.width * 3) / 2 + (i % 3) * towerBox.width;
-                towerBox.y = ((towerBox.height + 10) * Math.floor(i / 3)) + top;
+                var archonBox:DrawHUDArchon = archonBoxes[a];
+                archonBox.x = (width - archonBox.width * 3) / 2 + (i % 3) * archonBox.width;
+                archonBox.y = ((archonBox.height + 10) * Math.floor(i / 3)) + top;
                 i++;
             }
         }
 
         private function drawUnitCounts():void {
-            var towerBoxTop:Number = Math.ceil(maxTowers / 3.0) * (DrawHUDArchon.HEIGHT + 10);
-            var top:Number = hqBox.height + hqBox.y + towerBoxTop + 10;
+            var towerBoxTop:Number = Math.ceil(maxArchons / 3.0) * (DrawHUDArchon.HEIGHT + 10);
+            var top:Number = towerBoxTop + 50;
             unitLabel.y = top + 10;
             top = unitLabel.height + unitLabel.y + 5;
             var i:uint = 0;
             for each (var unitBox:DrawHUDUnit in unitBoxes) {
                 unitBox.x = (width - unitBox.width * 3) / 2 + (i % 3) * unitBox.width;
                 unitBox.y = ((unitBox.height + 10) * Math.floor(i / 3)) + top;
-                if (unitBox.getCount() > 0) {
-                    unitBox.visible = true;
-                    i++;
-                } else {
-                    unitBox.visible = false;
-                }
-            }
-        }
-
-        private function drawBuildingCounts():void {
-            var topUnitBox:DrawHUDUnit = unitBoxes[unitBoxes.length-1];
-            for (var j:int = unitBoxes.length - 1; j >= 0; j--) {
-                topUnitBox = unitBoxes[j];
-                if (topUnitBox.visible) {
-                    break;
-                }
-            }
-
-            var top:Number = topUnitBox.height + topUnitBox.y + 10;
-            buildingLabel.y = top + 10;
-            top = buildingLabel.height + buildingLabel.y + 5;
-            var i:uint = 0;
-            for each (var buildingBox:DrawHUDUnit in buildingBoxes) {
-                buildingBox.x = (width - buildingBox.width * 3) / 2 + (i % 3) * buildingBox.width;
-                buildingBox.y = ((buildingBox.height + 10) * Math.floor(i / 3)) + top;
-                if (buildingBox.getCount() > 0) {
-                    buildingBox.visible = true;
-                    i++;
-                } else {
-                    buildingBox.visible = false;
-                }
+                i++;
             }
         }
 
@@ -264,10 +195,8 @@ import mx.events.ResizeEvent;
 
         private function onResize(e:ResizeEvent):void {
             repositionWinMarkers();
-            resizeHQBox();
-            drawTowerBoxes();
+            drawArchonBoxes();
             drawUnitCounts();
-            drawBuildingCounts();
         }
 
     }
