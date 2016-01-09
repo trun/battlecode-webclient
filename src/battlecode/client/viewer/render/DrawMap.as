@@ -210,11 +210,12 @@
                     if (tile.getType() == TerrainTile.VOID) {
                         continue;
                     }
-                    var density:Number = Math.min(1, parts[i][j] / 200);
-                    if (density <= 0) {
+
+                    if (parts[i][j] <= 0) {
                         continue;
                     }
 
+                    var density:Number = Math.max(.25, Math.min(1, parts[i][j] / 200));
                     this.partsCanvas.graphics.beginFill(0xCC33CC, 0.7);
                     this.partsCanvas.graphics.drawCircle(j * g + g / 2, i * g + g / 2, density * g / 2);
                     this.partsCanvas.graphics.endFill();
