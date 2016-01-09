@@ -182,18 +182,14 @@
                     if (tile.getType() == TerrainTile.VOID) {
                         continue;
                     }
+
                     var density:Number = Math.min(1, rubble[i][j] / 100);
-                    if (density <= 0) {
+                    if (density <= .5) {
                         continue;
                     }
 
-                    // grey
-                    var scalarR:uint = (1 - density) * 0xFF;
-                    var scalarG:uint = (1 - density) * 0xFF;
-                    var scalarB:uint = (1 - density) * 0xFF;
-
-                    var colorTransform:ColorTransform = new ColorTransform(0, 0, 0, 1, scalarR, scalarG, scalarB, 0);
-                    this.rubbleCanvas.graphics.beginFill(colorTransform.color, 1.0);
+                    var color:uint = density < 1 ? 0x999999 : 0x000000;
+                    this.rubbleCanvas.graphics.beginFill(color, 1.0);
                     this.rubbleCanvas.graphics.drawRect(j * g, i * g, g, g);
                     this.rubbleCanvas.graphics.endFill();
                 }
