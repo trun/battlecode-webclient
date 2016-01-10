@@ -368,7 +368,6 @@
             this.graphics.lineStyle(2, getAttackColor());
             this.graphics.moveTo(0, 0);
             this.graphics.lineTo(targetOffsetX - drawX, targetOffsetY - drawY);
-            this.graphics.drawCircle(targetOffsetX - drawX, targetOffsetY - drawY, getImageSize() / 2 * .6);
         }
 
         private function drawMovement():void {
