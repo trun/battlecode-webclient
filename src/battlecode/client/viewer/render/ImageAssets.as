@@ -43,26 +43,38 @@
         public static const SCOUT_A:Class;
         [Embed('/img/units/scout1.png')]
         public static const SCOUT_B:Class;
+        [Embed('/img/units/scout2.png')]
+        public static const SCOUT_NEUTRAL:Class;
         [Embed('/img/units/soldier0.png')]
         public static const SOLDIER_A:Class;
         [Embed('/img/units/soldier1.png')]
         public static const SOLDIER_B:Class;
+        [Embed('/img/units/soldier2.png')]
+        public static const SOLDIER_NEUTRAL:Class;
         [Embed('/img/units/guard0.png')]
         public static const GUARD_A:Class;
         [Embed('/img/units/guard1.png')]
         public static const GUARD_B:Class;
+        [Embed('/img/units/guard2.png')]
+        public static const GUARD_NEUTRAL:Class;
         [Embed('/img/units/viper0.png')]
         public static const VIPER_A:Class;
         [Embed('/img/units/viper1.png')]
         public static const VIPER_B:Class;
+        [Embed('/img/units/viper2.png')]
+        public static const VIPER_NEUTRAL:Class;
         [Embed('/img/units/turret0.png')]
         public static const TURRET_A:Class;
         [Embed('/img/units/turret1.png')]
         public static const TURRET_B:Class;
+        [Embed('/img/units/turret2.png')]
+        public static const TURRET_NEUTRAL:Class;
         [Embed('/img/units/ttm0.png')]
         public static const TTM_A:Class;
         [Embed('/img/units/ttm1.png')]
         public static const TTM_B:Class;
+        [Embed('/img/units/ttm2.png')]
+        public static const TTM_NEUTRAL:Class;
 
         // zombie avatars
         [Embed('/img/units/zombieden3.png')]
