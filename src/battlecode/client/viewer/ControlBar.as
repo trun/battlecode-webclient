@@ -14,14 +14,17 @@
     import mx.binding.utils.BindingUtils;
     import mx.binding.utils.ChangeWatcher;
     import mx.containers.HBox;
+    import mx.containers.TitleWindow;
     import mx.containers.VBox;
     import mx.controls.Button;
     import mx.controls.HSlider;
     import mx.controls.Label;
     import mx.controls.Spacer;
     import mx.core.UITextField;
+    import mx.events.CloseEvent;
     import mx.events.FlexEvent;
     import mx.events.SliderEvent;
+    import mx.managers.PopUpManager;
 
     public class ControlBar extends HBox {
         private var controller:MatchController;
@@ -36,6 +39,7 @@
         private var stepForwardButton:Button;
         private var stepBackwardButton:Button;
         private var fullscreenButton:Button;
+        private var infoButton:Button;
 
         private var roundSlider:HSlider;
         private var roundLabel:Label;
@@ -140,6 +144,11 @@
             fullscreenButton.setStyle("icon", ImageAssets.ENTER_FULLSCREEN_ICON);
             addChild(fullscreenButton);
 
+            infoButton = new Button();
+            infoButton.buttonMode = true;
+            infoButton.setStyle("icon", ImageAssets.INFO_ICON);
+            addChild(infoButton);
+
             fpsLabel = new Label();
             fpsLabel.minWidth = 50;
             addChild(fpsLabel);
@@ -178,6 +187,7 @@
             stepBackwardButton.addEventListener(MouseEvent.CLICK, onStepBackwardButtonClick);
             stepForwardButton.addEventListener(MouseEvent.CLICK, onStepForwardButtonClick);
             fullscreenButton.addEventListener(MouseEvent.CLICK, onFullscreenButtonClick);
+            infoButton.addEventListener(MouseEvent.CLICK, onInfoButtonClick);
             roundSlider.addEventListener(SliderEvent.CHANGE, onRoundSliderChange);
             roundSlider.addEventListener(SliderEvent.THUMB_PRESS, onRoundSliderThumbPress);
             roundSlider.addEventListener(SliderEvent.THUMB_RELEASE, onRoundSliderThumbRelease);
@@ -250,7 +260,6 @@
         }
 
         private function onFullscreenButtonClick(e:MouseEvent):void {
-            //stage.displayState = stage.displayState == "fullScreen" ? "normal" : "fullScreen";
             if (stage.fullScreenSourceRect) {
                 stage.fullScreenSourceRect = null;
                 stage.displayState = "normal";
@@ -258,6 +267,22 @@
                 stage.fullScreenSourceRect = new Rectangle(0, 0, stage.fullScreenWidth, stage.fullScreenHeight);
                 stage.displayState = "fullScreen";
             }
+        }
+
+        private function onInfoButtonClick(e:MouseEvent):void {
+            var infoModal:TitleWindow = PopUpManager.createPopUp(this.parent, InfoModal, true) as TitleWindow;
+
+            var infoModalClose:Function = function(e:Event):void {
+                PopUpManager.removePopUp(infoModal);
+                controller.playing = true;
+            };
+
+            infoModal.addEventListener(CloseEvent.CLOSE, infoModalClose);
+            infoModal.addEventListener(MouseEvent.CLICK, infoModalClose);
+
+            controller.playing = false;
+            PopUpManager.bringToFront(infoModal);
+            PopUpManager.centerPopUp(infoModal);
         }
 
         private function onRoundSliderChange(e:SliderEvent):void {

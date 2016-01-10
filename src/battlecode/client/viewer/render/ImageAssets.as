@@ -28,6 +28,8 @@
         public static const ENTER_FULLSCREEN_ICON:Class;
         [Embed('/img/client/icons/arrow_in.png')]
         public static const EXIT_FULLSCREEN_ICON:Class;
+        [Embed('/img/client/icons/information.png')]
+        public static const INFO_ICON:Class;
 
         // unit avatars
         [Embed('/img/units/archon0.png')]

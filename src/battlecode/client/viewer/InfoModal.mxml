@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" borderAlpha="1" showCloseButton="true" title="About">
+  <mx:VBox>
+    <mx:Text>
+      <mx:text>B - toggle rendering of broadcasts (off by default)</mx:text>
+    </mx:Text>
+    <mx:Text>
+      <mx:text>D - toggle discrete movement (off by default)</mx:text>
+    </mx:Text>
+    <mx:Text>
+      <mx:text>X - toggle rendering of explosions (on by default)</mx:text>
+    </mx:Text>
+    <mx:Text>
+      <mx:text>E - toggle rendering of health bars (on by default)</mx:text>
+    </mx:Text>
+    <mx:Text>
+      <mx:text>H - toggle rendering of unit layers (all, player units, zombies, none)</mx:text>
+    </mx:Text>
+    <mx:Text>
+      <mx:text>G - toggle rendering of grid lines (on by default)</mx:text>
+    </mx:Text>
+    <mx:Text>
+      <mx:text>R - toggle rendering of rubble (on by default)</mx:text>
+    </mx:Text>
+    <mx:Text>
+      <mx:text>P - toggle rendering of part pickups (on by default)</mx:text>
+    </mx:Text>
+    <mx:Text>
+      <mx:text>K - toggle keyframe processing (slow)</mx:text>
+    </mx:Text>
+    <mx:Text>
+      <mx:text>Spacebar - Toggle play / pause</mx:text>
+    </mx:Text>
+  </mx:VBox>
+</mx:TitleWindow>
