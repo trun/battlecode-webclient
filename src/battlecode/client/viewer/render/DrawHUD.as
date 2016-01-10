@@ -102,18 +102,18 @@ import mx.events.ResizeEvent;
             }
             lastRound = e.currentRound;
 
-            var towers:Object = controller.currentState.getArchons(team);
-            var towerCount:uint = 0;
-            for each (var tower:DrawRobot in towers) {
-                if (!archonBoxes[tower.getRobotID()]) {
-                    archonBoxes[tower.getRobotID()] = new DrawHUDArchon();
-                    addChild(archonBoxes[tower.getRobotID()]);
+            var archons:Object = controller.currentState.getArchons(team);
+            var archonCount:uint = 0;
+            for each (var archon:DrawRobot in archons) {
+                if (!archonBoxes[archon.getRobotID()]) {
+                    archonBoxes[archon.getRobotID()] = new DrawHUDArchon();
+                    addChild(archonBoxes[archon.getRobotID()]);
                 }
-                archonBoxes[tower.getRobotID()].setRobot(tower);
-                tower.draw();
-                towerCount++;
+                archonBoxes[archon.getRobotID()].setRobot(archon);
+                archon.draw();
+                archonCount++;
             }
-            maxArchons = Math.max(maxArchons, towerCount);
+            maxArchons = Math.max(maxArchons, archonCount);
             drawArchonBoxes();
 
             for each (var unitBox:DrawHUDUnit in unitBoxes) {
@@ -130,7 +130,7 @@ import mx.events.ResizeEvent;
         private function onMatchChange(e:MatchEvent):void {
             pointLabel.text = "0";
 
-            // clear tower boxes
+            // clear archon boxes
             for (var a:String in archonBoxes) {
                 archonBoxes[a].removeRobot();
                 if (archonBoxes[a].parent == this) {
@@ -155,8 +155,8 @@ import mx.events.ResizeEvent;
         }
 
         private function drawUnitCounts():void {
-            var towerBoxTop:Number = Math.ceil(maxArchons / 3.0) * (DrawHUDArchon.HEIGHT + 10);
-            var top:Number = towerBoxTop + 50;
+            var archonBoxTop:Number = Math.ceil(maxArchons / 3.0) * (DrawHUDArchon.HEIGHT + 10);
+            var top:Number = archonBoxTop + 50;
             unitLabel.y = top + 10;
             top = unitLabel.height + unitLabel.y + 5;
             var i:uint = 0;

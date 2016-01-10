@@ -92,6 +92,10 @@
                 o.draw(true);
             }
 
+            for each (o in controller.currentState.getZombieRobots()) {
+                o.draw(true);
+            }
+
             this.scrollRect = new Rectangle(this.mapCanvas.x, this.mapCanvas.y,
                     getMapWidth() * RenderConfiguration.getScalingFactor(),
                     getMapHeight() * RenderConfiguration.getScalingFactor());
@@ -227,6 +231,7 @@
             var loc:MapLocation, i:uint, j:uint, robot:DrawRobot;
             var groundRobots:Object = controller.currentState.getGroundRobots();
             var zombieRobots:Object = controller.currentState.getZombieRobots();
+            var g:Number = getGridSize();
 
             while (groundUnitCanvas.numChildren > 0)
                 groundUnitCanvas.removeChildAt(0);
@@ -238,8 +243,8 @@
                 loc = robot.getLocation();
                 j = (loc.getX() - origin.getX());
                 i = (loc.getY() - origin.getY());
-                robot.x = j * getGridSize() + getGridSize() / 2;
-                robot.y = i * getGridSize() + getGridSize() / 2;
+                robot.x = j * g + g / 2;
+                robot.y = i * g + g / 2;
                 robot.addEventListener(MouseEvent.CLICK, onRobotSelect, false, 0, true);
                 groundUnitCanvas.addChild(robot);
                 robot.draw();
@@ -249,8 +254,8 @@
                 loc = robot.getLocation();
                 j = (loc.getX() - origin.getX());
                 i = (loc.getY() - origin.getY());
-                robot.x = j * getGridSize() + getGridSize() / 2;
-                robot.y = i * getGridSize() + getGridSize() / 2;
+                robot.x = j * g + g / 2;
+                robot.y = i * g + g / 2;
                 robot.addEventListener(MouseEvent.CLICK, onRobotSelect, false, 0, true);
                 zombieUnitCanvas.addChild(robot);
                 robot.draw();
@@ -261,13 +266,14 @@
             var loc:MapLocation, i:uint, j:uint, robot:DrawRobot;
             var groundRobots:Object = controller.currentState.getGroundRobots();
             var zombieRobots:Object = controller.currentState.getZombieRobots();
+            var g:Number = getGridSize();
 
             for each (robot in groundRobots) {
                 loc = robot.getLocation();
                 j = (loc.getX() - origin.getX());
                 i = (loc.getY() - origin.getY());
-                robot.x = j * getGridSize() + getGridSize() / 2;
-                robot.y = i * getGridSize() + getGridSize() / 2;
+                robot.x = j * g + g / 2;
+                robot.y = i * g + g / 2;
                 if (!robot.parent && robot.isAlive()) {
                     robot.addEventListener(MouseEvent.CLICK, onRobotSelect, false, 0, true);
                     groundUnitCanvas.addChild(robot);
@@ -279,8 +285,8 @@
                 loc = robot.getLocation();
                 j = (loc.getX() - origin.getX());
                 i = (loc.getY() - origin.getY());
-                robot.x = j * getGridSize() + getGridSize() / 2;
-                robot.y = i * getGridSize() + getGridSize() / 2;
+                robot.x = j * g + g / 2;
+                robot.y = i * g + g / 2;
                 if (!robot.parent && robot.isAlive()) {
                     robot.addEventListener(MouseEvent.CLICK, onRobotSelect, false, 0, true);
                     zombieUnitCanvas.addChild(robot);
