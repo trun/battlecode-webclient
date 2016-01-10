@@ -20,8 +20,8 @@ ant build
  -  E - toggle rendering of heath bars (on by default)
  -  H - toggle rendering of unit layers (all, player units, zombies, none)
  -  G - toggle rendering of grid lines (on by default)
- -  B - toggle rendering of rubble (on by default)
- -  B - toggle rendering of part pickups (on by default)
+ -  R - toggle rendering of rubble (on by default)
+ -  P - toggle rendering of part pickups (on by default)
  -  K - toggle keyframe processing (slow)
  -  Spacebar - toggle play / pause
 
