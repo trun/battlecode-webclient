@@ -7,12 +7,13 @@
         private static var broadcast:Boolean = false;
         private static var discrete:Boolean = false;
         private static var energon:Boolean = true;
-        private static var gridlines:Boolean = false;
-        private static var ore:Boolean = true;
+        private static var gridlines:Boolean = true;
+        private static var rubble:Boolean = true;
+        private static var parts:Boolean = true;
         private static var hats:Boolean = true;
         private static var explosions:Boolean = true;
         private static var ground:Boolean = true;
-        private static var air:Boolean = true;
+        private static var zombies:Boolean = true;
         private static var tournament:Boolean = false;
 
         public function RenderConfiguration() {
@@ -58,12 +59,16 @@
             return ground;
         }
 
-        public static function showAir():Boolean {
-            return air;
+        public static function showZombies():Boolean {
+            return zombies;
         }
 
         public static function showRubble():Boolean {
-            return ore;
+            return rubble;
+        }
+
+        public static function showParts():Boolean {
+            return parts;
         }
 
         public static function showHats():Boolean {
@@ -94,8 +99,12 @@
             explosions = !explosions;
         }
 
-        public static function toggleOre():void {
-            ore = !ore;
+        public static function toggleRubble():void {
+            rubble = !rubble;
+        }
+
+        public static function toggleParts():void {
+            parts = !parts;
         }
 
         public static function toggleHats():void {
@@ -103,18 +112,18 @@
         }
 
         public static function toggleDrawHeight():void {
-            if (!air && !ground) {
+            if (!zombies && !ground) {
                 ground = true;
-                air = true;
-            } else if(ground && !air) {
+                zombies = true;
+            } else if(ground && !zombies) {
                 ground = false;
-                air = true;
-            } else if(air && !ground) {
+                zombies = true;
+            } else if(zombies && !ground) {
                 ground = false;
-                air = false;
+                zombies = false;
             } else {
                 ground = true;
-                air = false;
+                zombies = false;
             }
         }
 

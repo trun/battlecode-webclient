@@ -296,8 +296,8 @@
         private function onEnterFrame(e:Event):void {
             gridCanvas.visible = RenderConfiguration.showGridlines();
             groundUnitCanvas.visible = RenderConfiguration.showGround();
-            zombieUnitCanvas.visible = RenderConfiguration.showGround(); // TODO showZombies
-            partsCanvas.visible = RenderConfiguration.showRubble(); // TODO showParts
+            zombieUnitCanvas.visible = RenderConfiguration.showZombies();
+            partsCanvas.visible = RenderConfiguration.showParts();
             rubbleCanvas.visible = RenderConfiguration.showRubble();
         }
 

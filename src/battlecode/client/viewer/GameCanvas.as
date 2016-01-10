@@ -147,13 +147,17 @@
                 case "k":
                     controller.keyframeRate = (controller.keyframeRate) ? 0 : 50; // toggle keyframing
                     break;
-                case "M":
-                case "m":
-                    RenderConfiguration.toggleOre();
-                    break;
                 case "O":
                 case "o":
                     RenderConfiguration.toggleHats();
+                    break;
+                case "P":
+                case "p":
+                    RenderConfiguration.toggleParts();
+                    break;
+                case "R":
+                case "r":
+                    RenderConfiguration.toggleRubble();
                     break;
                 case "S":
                 case "s":
