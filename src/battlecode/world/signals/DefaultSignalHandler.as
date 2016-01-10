@@ -44,6 +44,10 @@
         public function visitTeamResourceSignal(s:TeamResourceSignal):* {
             return null;
         }
+
+        public function visitInfectionSignal(s:InfectionSignal):* {
+            return null;
+        }
     }
 
 }

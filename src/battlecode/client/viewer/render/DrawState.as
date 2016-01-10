@@ -277,6 +277,26 @@
             }
         }
 
+        override public function visitInfectionSignal(s:InfectionSignal):* {
+            var robotIDs:Array = s.getRobotIDs();
+            var zombieTurns:Array = s.getZombieTurns();
+            var viperTurns:Array = s.getViperTurns();
+
+            for (var i:uint; i < robotIDs.length; i++) {
+                var robot:DrawRobot = getRobot(robotIDs[i]);
+                robot.setZombieInfectedTurns(zombieTurns[i]);
+                robot.setViperInfectedTurns(viperTurns[i]);
+
+                if (robot.getType() == RobotType.ARCHON) {
+                    var archon:DrawRobot = robot.getTeam() == Team.A
+                            ? archonsA[robot.getRobotID()]
+                            : archonsB[robot.getRobotID()];
+                    archon.setZombieInfectedTurns(zombieTurns[i]);
+                    archon.setViperInfectedTurns(viperTurns[i]);
+                }
+            }
+        }
+
         override public function visitIndicatorStringSignal(s:IndicatorStringSignal):* {
             getRobot(s.getRobotID()).setIndicatorString(s.getIndicatorString(), s.getIndex());
         }

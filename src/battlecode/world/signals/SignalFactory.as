@@ -32,6 +32,8 @@
                     return createSpawnSignal(signalXML);
                 case "sig.TeamResourceSignal":
                     return createTeamResourceSignal(signalXML);
+                case "sig.InfectionSignal":
+                    return createInfectionSignal(signalXML);
             }
             return null;
         }
@@ -111,6 +113,25 @@
             var team:String = signalXML.attribute("team").toString();
             var resource:Number = parseFloat(signalXML.attribute("resource"));
             return new TeamResourceSignal(team, resource);
+        }
+
+        public static function createInfectionSignal(signalXML:XML):InfectionSignal {
+            var robotIDs:Array = signalXML.attribute("robotIDs").split(",");
+            robotIDs = robotIDs.map(function (element:*, index:int, arr:Array):uint {
+                return parseInt(element);
+            });
+
+            var zombieTurns:Array = signalXML.attribute("zombieInfectedTurns").split(",");
+            zombieTurns = zombieTurns.map(function (element:*, index:int, arr:Array):uint {
+                return parseInt(element);
+            });
+
+            var viperTurns:Array = signalXML.attribute("viperInfectedTurns").split(",");
+            viperTurns = viperTurns.map(function (element:*, index:int, arr:Array):uint {
+                return parseInt(element);
+            });
+
+            return new InfectionSignal(robotIDs, zombieTurns, viperTurns);
         }
     }
 

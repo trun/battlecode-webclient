@@ -6,6 +6,8 @@
     import battlecode.common.Team;
     import battlecode.events.RobotEvent;
 
+    import flash.filters.GlowFilter;
+
     import mx.containers.Canvas;
     import mx.controls.Image;
     import mx.core.UIComponent;
@@ -47,6 +49,8 @@
         private var alive:Boolean = true;
         private var hats:Array;
         private var hatImages:Array;
+        private var zombieTurns:uint = 0;
+        private var viperTurns:uint = 0;
 
         public function DrawRobot(robotID:uint, type:String, team:String, overrideSize:Number = 0) {
             this.robotID = robotID;
@@ -102,6 +106,8 @@
             d.alive = alive;
             d.hats = hats.concat();
             d.hatImages = new Array();
+            d.zombieTurns = zombieTurns;
+            d.viperTurns = viperTurns;
 
             d.actions = new Vector.<DrawAction>(actions.length);
             for each (var o:DrawAction in actions) {
@@ -152,6 +158,14 @@
 
         public function setEnergon(amt:Number):void {
             this.energon = Math.min(Math.max(0, amt), maxEnergon);
+        }
+
+        public function setZombieInfectedTurns(turns:uint):void {
+            this.zombieTurns = turns;
+        }
+
+        public function setViperInfectedTurns(turns:uint):void {
+            this.viperTurns = turns;
         }
 
         public function setSelected(val:Boolean):void {
@@ -279,6 +293,15 @@
             drawSelected();
             drawHats();
 
+            // add filters to show infections
+            var filters:Array = [];
+            if (viperTurns > 0) {
+                filters.push(new GlowFilter(0xFF00FF, 1, 12, 12));
+            } else if (zombieTurns > 0) {
+                filters.push(new GlowFilter(0x00FF00, 1, 12, 12));
+            }
+            this.image.filters = filters;
+
             // draw animations
             broadcastAnimation.draw(force);
         }
@@ -311,7 +334,6 @@
             this.graphics.endFill();
             this.graphics.lineStyle(.5, 0xFFFFFF);
             this.graphics.drawRect(-size / 2, size / 2, size, 5 * getImageScale());
-
         }
 
         private function drawActionBar(action:DrawAction):void {
@@ -416,7 +438,7 @@
             switch (team) {
                 case Team.A: return 0xFF0000;
                 case Team.B: return 0x0000FF;
-                case Team.ZOMBIE: return 0x33CC33;
+                case Team.ZOMBIE: return 0x33FF33;
             }
             return 0x000000;
         }

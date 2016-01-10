@@ -22,6 +22,8 @@
 
         function visitTeamResourceSignal(s:TeamResourceSignal):*;
 
+        function visitInfectionSignal(s:InfectionSignal):*;
+
     }
 
 }
