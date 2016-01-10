@@ -271,10 +271,11 @@
 
         private function onInfoButtonClick(e:MouseEvent):void {
             var infoModal:TitleWindow = PopUpManager.createPopUp(this.parent, InfoModal, true) as TitleWindow;
+            var playing:Boolean = controller.playing;
 
             var infoModalClose:Function = function(e:Event):void {
                 PopUpManager.removePopUp(infoModal);
-                controller.playing = true;
+                controller.playing = playing;
             };
 
             infoModal.addEventListener(CloseEvent.CLOSE, infoModalClose);
