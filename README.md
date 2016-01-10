@@ -1,4 +1,4 @@
-Copyright (c) 2010-2015 Trevor Rundell. MIT Licensed.
+Copyright (c) 2010-2016 Trevor Rundell. MIT Licensed.
 
 # Requirements
 
@@ -12,30 +12,17 @@ Be sure to set your `FLEX_HOME` environment variable and then run...
 ant build
 ```
 
-# Examples
-
-## 2013
-
--  [2013 Seeding Tournament (Vegan Police vs at least it's not a startup)](http://www.battlecode.org/tournaments/watch/Seeding/222)
-
-## 2010
-
--  [2010 Qualifying Tournament (You Must Construct Additional Pylons vs Little)](http://battlecode.mit.edu/2010/watch-tournament/182/)
-
-## 2009
-
--  [2009 Final Tournament (gtg ice skating lessons vs JIT In My Pants)](http://battlecode.mit.edu:8080/webclient/?match=005-r02-000-team093-team070-theeye-crisscross-downthedrain.xml.deflated)
--  [2009 Final Tournament (My Other Language is English vs We'll do it Live)](http://battlecode.mit.edu:8080/webclient/?match=009-r02b-000-team009-team010-theeye-crisscross-downthedrain.xml.deflated)
-
-## Hotkeys
+## Hotkeys for 2016
 
  -  B - toggle rendering of broadcasts (off by default)
  -  D - toggle discrete movement (off by default)
  -  X - toggle rendering of explosions (on by default)
- -  E - toggle rendering of energy bars (on by default)
- -  H - toggle rendering of unit heights (all, soliders, encampments, none)
- -  G - toggle rendering of grid lines (off by default)
- -  M - toggle rendering of mines (on by default)
- -  O - toggle hats (on by default)
+ -  E - toggle rendering of heath bars (on by default)
+ -  H - toggle rendering of unit layers (all, player units, zombies, none)
+ -  G - toggle rendering of grid lines (on by default)
+ -  B - toggle rendering of rubble (on by default)
+ -  B - toggle rendering of part pickups (on by default)
  -  K - toggle keyframe processing (slow)
  -  Spacebar - toggle play / pause
+
+**Note that most hotkeys do not work in fullscreen mode due to security restrictions of the Flash Player runtime.**
