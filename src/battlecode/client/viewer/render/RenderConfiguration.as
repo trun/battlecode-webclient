@@ -1,4 +1,5 @@
 ﻿package battlecode.client.viewer.render {
+    import flash.net.SharedObject;
 
     public class RenderConfiguration {
         public static const GRID_SIZE:Number = 32.0;
@@ -17,6 +18,43 @@
         private static var tournament:Boolean = false;
 
         public function RenderConfiguration() {
+        }
+
+        public static function loadConfiguration():void {
+            try {
+                var so:SharedObject = SharedObject.getLocal("webclient-settings");
+                var s:Object = so.data.settings;
+                broadcast = s.broadcast != null ? s.broadcast : broadcast;
+                discrete = s.discrete != null ? s.discrete : discrete;
+                energon = s.energon != null ? s.energon : energon;
+                gridlines = s.gridlines != null ? s.gridlines : gridlines;
+                rubble = s.rubble != null ? s.rubble : rubble;
+                parts = s.parts != null ? s.parts : parts;
+                explosions = s.explosions != null ? s.explosions : explosions;
+                trace("Loaded settings from SharedObject");
+            } catch (e:Error) {
+                trace("Could not load settings from SharedObject");
+            }
+        }
+
+        public static function saveConfiguration():void {
+            try {
+                var so:SharedObject = SharedObject.getLocal("webclient-settings");
+                var settings:Object = {
+                    broadcast: broadcast,
+                    discrete: discrete,
+                    energon: energon,
+                    gridlines: gridlines,
+                    rubble: rubble,
+                    parts: parts,
+                    explosions: explosions
+                };
+                so.data.settings = settings;
+                so.flush();
+                trace("Successfully saved settings to SharedObject");
+            } catch (e:Error) {
+                trace("Could not save settings to SharedObject");
+            }
         }
 
         public static function setScalingFactor(val:Number):void {
@@ -81,30 +119,37 @@
 
         public static function toggleBroadcast():void {
             broadcast = !broadcast;
+            saveConfiguration();
         }
 
         public static function toggleDiscrete():void {
             discrete = !discrete;
+            saveConfiguration();
         }
 
         public static function toggleEnergon():void {
             energon = !energon;
+            saveConfiguration();
         }
 
         public static function toggleGridlines():void {
             gridlines = !gridlines;
+            saveConfiguration();
         }
 
         public static function toggleExplosions():void {
             explosions = !explosions;
+            saveConfiguration();
         }
 
         public static function toggleRubble():void {
             rubble = !rubble;
+            saveConfiguration();
         }
 
         public static function toggleParts():void {
             parts = !parts;
+            saveConfiguration();
         }
 
         public static function toggleHats():void {

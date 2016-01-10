@@ -46,6 +46,9 @@
             progressBar = new MatchLoadProgressBar(matchLoader);
             addChild(progressBar);
 
+            // load the render configuration
+            RenderConfiguration.loadConfiguration();
+
             // load the match file
             matchLoader.addEventListener(ParseEvent.COMPLETE, onMatchParseComplete);
 
