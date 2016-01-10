@@ -40,7 +40,7 @@
         private var selected:Boolean = false;
 
         private var robotID:uint;
-        private var type:String;
+        private var robotType:String;
         private var team:String;
         private var location:MapLocation;
         private var direction:String;
@@ -52,21 +52,21 @@
         private var zombieTurns:uint = 0;
         private var viperTurns:uint = 0;
 
-        public function DrawRobot(robotID:uint, type:String, team:String, overrideSize:Number = 0) {
+        public function DrawRobot(robotID:uint, robotType:String, team:String, overrideSize:Number = 0) {
             this.robotID = robotID;
-            this.type = type;
+            this.robotType = robotType;
             this.team = team;
-            this.maxEnergon = RobotType.maxEnergon(type);
+            this.maxEnergon = RobotType.maxEnergon(robotType);
             this.movementDelay = 1;
-            this.hats = new Array();
-            this.hatImages = new Array();
+            this.hats = [];
+            this.hatImages = [];
 
             this.actions = new Vector.<DrawAction>();
 
             this.overrideSize = overrideSize;
 
             // set the unit avatar image
-            var avatarClass:Class = ImageAssets.getRobotAvatar(type, team);
+            var avatarClass:Class = ImageAssets.getRobotAvatar(robotType, team);
             this.imageCanvas = new UIComponent();
             this.image = new Image();
             this.image.source = avatarClass;
@@ -93,19 +93,19 @@
             this.broadcastAnimation = new BroadcastAnimation(0, team);
             this.addChild(broadcastAnimation);
 
-            this.explosionAnimation = new ExplosionAnimation(type);
+            this.explosionAnimation = new ExplosionAnimation(robotType);
             this.addChild(explosionAnimation);
         }
 
         public function clone():DrawObject {
-            var d:DrawRobot = new DrawRobot(robotID, type, team, overrideSize);
+            var d:DrawRobot = new DrawRobot(robotID, robotType, team, overrideSize);
             d.location = location;
             d.energon = energon;
             d.movementDelay = movementDelay;
             d.targetLocation = targetLocation;
             d.alive = alive;
             d.hats = hats.concat();
-            d.hatImages = new Array();
+            d.hatImages = [];
             d.zombieTurns = zombieTurns;
             d.viperTurns = viperTurns;
 
@@ -133,7 +133,7 @@
         }
 
         public function getType():String {
-            return type;
+            return robotType;
         }
 
         public function getTeam():String {
@@ -152,9 +152,9 @@
             return indicatorStrings[index];
         }
 
-        public function setType(type:String):void {
-            this.type = type;
-            this.image.source = ImageAssets.getRobotAvatar(type, team);
+        public function setType(robotType:String):void {
+            this.robotType = robotType;
+            this.image.source = ImageAssets.getRobotAvatar(robotType, team);
         }
 
         public function setLocation(location:MapLocation):void {
@@ -190,7 +190,7 @@
 
         public function attack(targetLocation:MapLocation):void {
             this.targetLocation = targetLocation;
-            this.addAction(new DrawAction(ActionType.ATTACKING, RobotType.attackDelay(type)));
+            this.addAction(new DrawAction(ActionType.ATTACKING, RobotType.attackDelay(robotType)));
         }
 
         public function spawn(delay:uint):void {
@@ -427,14 +427,16 @@
         ///////////////////////////////////////////////////////
 
         private function getImageSize(scale:Boolean = false):Number {
-            if (overrideSize)
+            if (overrideSize) {
                 return overrideSize;
-            return RenderConfiguration.getGridSize() * (scale ? getUnitScale(type) : 1.0);
+            }
+            return RenderConfiguration.getGridSize() * (scale ? getUnitScale() : 1.0);
         }
 
         private function getImageScale():Number {
-            if (overrideSize)
+            if (overrideSize) {
                 return 1.0;
+            }
             return RenderConfiguration.getScalingFactor();
         }
 
@@ -447,8 +449,8 @@
             return 0x000000;
         }
 
-        private function getUnitScale(type:String):Number {
-            switch (type) {
+        private function getUnitScale():Number {
+            switch (this.robotType) {
                 case RobotType.ZOMBIEDEN:
                     return 0.75;
                 default:
@@ -456,12 +458,8 @@
             }
         }
 
-        private function getUnitOffset(type:String):Number {
-            return 0;
-        }
-
-        private function directionToRotation(dir:String):int {
-            switch (dir) {
+        private function directionToRotation():int {
+            switch (this.direction) {
                 case Direction.NORTH:
                     return -90;
                 case Direction.NORTH_EAST:
@@ -483,8 +481,8 @@
             }
         }
 
-        private function directionOffsetX(dir:String):int {
-            switch (dir) {
+        private function directionOffsetX():int {
+            switch (this.direction) {
                 case Direction.NORTH_EAST:
                     return +1;
                 case Direction.NORTH_WEST:
@@ -506,8 +504,8 @@
             }
         }
 
-        private function directionOffsetY(dir:String):int {
-            switch (dir) {
+        private function directionOffsetY():int {
+            switch (this.direction) {
                 case Direction.NORTH_EAST:
                     return -1;
                 case Direction.NORTH_WEST:
@@ -533,14 +531,14 @@
             if (RenderConfiguration.showDiscrete()) {
                 return 0;
             }
-            return -1 * getImageSize() * directionOffsetX(direction) * (rounds / movementDelay);
+            return -1 * getImageSize() * directionOffsetX() * (rounds / movementDelay);
         }
 
         private function calculateDrawY(rounds:uint):Number {
             if (RenderConfiguration.showDiscrete()) {
                 return 0;
             }
-            return -1 * getImageSize() * directionOffsetY(direction) * (rounds / movementDelay);
+            return -1 * getImageSize() * directionOffsetY() * (rounds / movementDelay);
         }
 
 
