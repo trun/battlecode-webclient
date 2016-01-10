@@ -127,11 +127,11 @@
             rollingFramerates.push(framerate);
             while (rollingFramerates.length > limit)
                 rollingFramerates.shift();
-            var total:uint = 0;
+            var total:Number = 0;
             for (var i:uint = 0; i < rollingFramerates.length; i++) {
                 total += rollingFramerates[i];
             }
-            _fps = total / rollingFramerates.length;
+            _fps = Math.ceil(total / rollingFramerates.length);
 
             // update
             _currentRound = value;
