@@ -152,6 +152,11 @@
             return indicatorStrings[index];
         }
 
+        public function setType(type:String):void {
+            this.type = type;
+            this.image.source = ImageAssets.getRobotAvatar(type, team);
+        }
+
         public function setLocation(location:MapLocation):void {
             this.location = location;
         }
@@ -203,13 +208,13 @@
             this.alive = false;
         }
 
-        public function moveToLocation(location:MapLocation):void {
+        public function moveToLocation(location:MapLocation, delay:uint):void {
             this.direction = this.location.directionTo(location);
             this.movementDelay = Direction.isDiagonal(direction) ?
-                    RobotType.movementDelayDiagonal(type) :
-                    RobotType.movementDelay(type);
+                    delay * Math.SQRT2 :
+                    delay;
             this.location = location;
-            this.addAction(new DrawAction(ActionType.MOVING, movementDelay));
+            this.addAction(new DrawAction(ActionType.MOVING, this.movementDelay));
         }
 
         public function wearHat(hat:int):void {

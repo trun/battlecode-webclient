@@ -316,7 +316,7 @@
         }
 
         override public function visitMovementSignal(s:MovementSignal):* {
-            getRobot(s.getRobotID()).moveToLocation(s.getTargetLoc());
+            getRobot(s.getRobotID()).moveToLocation(s.getTargetLoc(), s.getDelay());
         }
 
         override public function visitSpawnSignal(s:SpawnSignal):* {
@@ -346,6 +346,17 @@
             } else if (s.getTeam() == Team.B) {
                 bPoints = s.getResource();
             }
+        }
+
+        override public function visitTypeChangeSignal(s:TypeChangeSignal):* {
+            var r:DrawRobot = getRobot(s.getRobotID());
+
+            if (Team.isPlayer(r.getTeam())) {
+                unitCounts[r.getTeam()][r.getType()]--;
+                unitCounts[r.getTeam()][s.getType()]++;
+            }
+
+            r.setType(s.getType());
         }
     }
 

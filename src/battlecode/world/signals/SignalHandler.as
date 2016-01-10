@@ -24,6 +24,8 @@
 
         function visitInfectionSignal(s:InfectionSignal):*;
 
+        function visitTypeChangeSignal(s:TypeChangeSignal):*;
+
     }
 
 }

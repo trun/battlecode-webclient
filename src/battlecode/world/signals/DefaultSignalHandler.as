@@ -48,6 +48,10 @@
         public function visitInfectionSignal(s:InfectionSignal):* {
             return null;
         }
+
+        public function visitTypeChangeSignal(s:TypeChangeSignal):* {
+            return null;
+        }
     }
 
 }

@@ -28,12 +28,14 @@
                     return createMovementSignal(signalXML);
                 case "sig.HealthChangeSignal":
                     return createHealthChangeSignal(signalXML);
+                case "sig.InfectionSignal":
+                    return createInfectionSignal(signalXML);
                 case "sig.SpawnSignal":
                     return createSpawnSignal(signalXML);
                 case "sig.TeamResourceSignal":
                     return createTeamResourceSignal(signalXML);
-                case "sig.InfectionSignal":
-                    return createInfectionSignal(signalXML);
+                case "sig.TypeChangeSignal":
+                    return createTypeChangeSignal(signalXML);
             }
             return null;
         }
@@ -133,6 +135,12 @@
 
             return new InfectionSignal(robotIDs, zombieTurns, viperTurns);
         }
-    }
+
+        public static function createTypeChangeSignal(signalXML:XML):TypeChangeSignal {
+            var robotID:uint = parseInt(signalXML.attribute("robotID"));
+            var type:String = signalXML.attribute("type").toString();
+            return new TypeChangeSignal(robotID, type);
+        }
+     }
 
 }
