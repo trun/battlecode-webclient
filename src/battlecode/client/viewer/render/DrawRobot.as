@@ -211,8 +211,10 @@
             this.broadcastAnimation.broadcast();
         }
 
-        public function destroyUnit():void {
-            this.explosionAnimation.explode();
+        public function destroyUnit(explode:Boolean):void {
+            if (explode) {
+                this.explosionAnimation.explode();
+            }
             this.alive = false;
         }
 

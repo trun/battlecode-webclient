@@ -54,7 +54,8 @@
 
         public static function createDeathSignal(signalXML:XML):DeathSignal {
             var robotID:uint = parseInt(signalXML.attribute("objectID"));
-            return new DeathSignal(robotID);
+            var deathByActivation:Boolean = ParseUtils.parseBoolean(signalXML.attribute("deathByActivation"));
+            return new DeathSignal(robotID, deathByActivation);
         }
 
         public static function createMovementSignal(signalXML:XML):MovementSignal {

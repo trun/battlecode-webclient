@@ -245,13 +245,13 @@
 
         override public function visitDeathSignal(s:DeathSignal):* {
             var robot:DrawRobot = getRobot(s.getRobotID());
-            robot.destroyUnit();
+            robot.destroyUnit(!s.getDeathByActivation());
 
             if (robot.getType() == RobotType.ARCHON) {
-                var tower:DrawRobot = robot.getTeam() == Team.A
+                var archon:DrawRobot = robot.getTeam() == Team.A
                         ? archonsA[robot.getRobotID()]
                         : archonsB[robot.getRobotID()];
-                tower.destroyUnit();
+                archon.destroyUnit(!s.getDeathByActivation());
             }
 
             if (Team.isPlayer(robot.getTeam())) {
