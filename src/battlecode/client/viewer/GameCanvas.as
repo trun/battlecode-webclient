@@ -1,6 +1,7 @@
 ﻿package battlecode.client.viewer {
     import battlecode.client.viewer.render.DrawHUD;
     import battlecode.client.viewer.render.DrawMap;
+    import battlecode.client.viewer.render.DrawMiniMap;
     import battlecode.client.viewer.render.RenderConfiguration;
     import battlecode.common.Team;
     import battlecode.events.MatchEvent;
@@ -14,6 +15,7 @@
     import mx.binding.utils.ChangeWatcher;
     import mx.containers.HBox;
     import mx.containers.VBox;
+    import mx.controls.Spacer;
     import mx.events.FlexEvent;
 
     /*
@@ -34,6 +36,8 @@
         private var sideBox:VBox; // container for sidebar
         private var sideBoxA:VBox;
         private var sideBoxB:VBox;
+        private var sideSpacer:Spacer;
+        private var drawMiniMap:DrawMiniMap;
         private var drawMap:DrawMap;
 
         public function GameCanvas(controller:MatchController) {
@@ -47,6 +51,7 @@
             this.sideBox = new VBox();
             this.sideBoxA = new DrawHUD(controller, Team.A);
             this.sideBoxB = new DrawHUD(controller, Team.B);
+            this.drawMiniMap = new DrawMiniMap(controller);
 
             this.controller = controller;
             this.controller.addEventListener(MatchEvent.ROUND_CHANGE, onRoundChange);
@@ -65,6 +70,7 @@
             sideBox.setStyle("paddingTop", 0);
             sideBox.setStyle("paddingBottom", 0);
             sideBox.setStyle("paddingRight", 0);
+            sideBox.setStyle("backgroundColor", 0x333333);
 
             vbox.percentWidth = 100;
             vbox.percentHeight = 100;
@@ -79,6 +85,11 @@
             sideBox.addChild(sideBoxB);
             this.addChild(vbox);
             vbox.addChild(drawMap);
+
+            sideSpacer = new Spacer();
+            sideSpacer.percentHeight = 100;
+            sideBox.addChild(sideSpacer);
+            sideBox.addChild(drawMiniMap);
 
             this.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationComplete);
         }
