@@ -5,6 +5,7 @@
     import battlecode.client.viewer.render.RenderConfiguration;
     import battlecode.common.Team;
     import battlecode.events.MatchEvent;
+    import battlecode.events.MiniMapEvent;
 
     import flash.display.InteractiveObject;
     import flash.events.Event;
@@ -130,19 +131,18 @@
             this.watchers.push(ChangeWatcher.watch(vbox, "width", onSizeChange));
             this.watchers.push(ChangeWatcher.watch(vbox, "height", onSizeChange));
 
+            this.drawMiniMap.addEventListener(MiniMapEvent.UPDATE_VIEWER, onUpdateViewer);
+
             centerMap();
 
             // can't be added until stage object is avail on creation complete
             this.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
         }
 
-        // TODO scrolling via minimap
-        private function onMapScroll(e:MouseEvent):void {
-            var r:Rectangle = drawMap.scrollRect;
-            var newX:Number = Math.max(0, Math.min(drawMap.getMapWidth() - vbox.width, r.x + e.delta));
-            drawMap.scrollRect = new Rectangle(newX, r.y, vbox.width, vbox.height);
-            var newY:Number = Math.max(0, Math.min(drawMap.getMapHeight() - vbox.height, r.y - e.delta));
-            drawMap.scrollRect = new Rectangle(r.x, newY, vbox.width, vbox.height);
+        private function onUpdateViewer(e:MiniMapEvent):void {
+            var x:Number = e.getViewerXPercent() * drawMap.getMapWidth();
+            var y:Number = e.getViewerYPercent() * drawMap.getMapHeight();
+            drawMap.scrollRect = new Rectangle(x, y, vbox.width, vbox.height);
         }
 
         private function onRoundChange(e:MatchEvent):void {

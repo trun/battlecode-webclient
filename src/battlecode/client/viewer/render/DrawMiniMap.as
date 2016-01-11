@@ -3,9 +3,11 @@
     import battlecode.common.MapLocation;
     import battlecode.common.Team;
     import battlecode.events.MatchEvent;
+    import battlecode.events.MiniMapEvent;
     import battlecode.world.GameMap;
 
     import flash.events.Event;
+    import flash.events.MouseEvent;
 
     import mx.containers.Canvas;
     import mx.core.UIComponent;
@@ -15,7 +17,8 @@
 
         private var mapCanvas:UIComponent;
         private var viewerCanvas:UIComponent;
-
+        private var viewerOffsetX:Number = 0;
+        private var viewerOffsetY:Number = 0;
         private var viewerWidthPercent:Number = 1;
         private var viewerHeightPercent:Number = 1;
 
@@ -29,6 +32,8 @@
             this.controller.addEventListener(MatchEvent.ROUND_CHANGE, onRoundChange);
             this.controller.addEventListener(MatchEvent.MATCH_CHANGE, onMatchChange);
             this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+            this.addEventListener(MouseEvent.MOUSE_DOWN, centerViewer);
+            this.addEventListener(MouseEvent.MOUSE_MOVE, centerViewer);
 
             this.mapCanvas = new UIComponent();
             this.viewerCanvas = new UIComponent();
@@ -37,15 +42,15 @@
             this.addChild(viewerCanvas);
         }
 
-        ///////////////////////////////////////////////////////
-        ////////////////// DRAWING METHODS ////////////////////
-        ///////////////////////////////////////////////////////
-
         public function setViewerBounds(viewerWidthPercent:Number, viewerHeightPercent:Number):void {
             this.viewerWidthPercent = viewerWidthPercent;
             this.viewerHeightPercent = viewerHeightPercent;
             drawViewer();
         }
+
+        ///////////////////////////////////////////////////////
+        ////////////////// DRAWING METHODS ////////////////////
+        ///////////////////////////////////////////////////////
 
         public function redrawAll():void {
             drawMap();
@@ -117,9 +122,19 @@
             var offsetX:uint = (width - (map.getWidth() * s)) / 2;
             var offsetY:uint = height - (map.getHeight() * s);
 
+            var viewerXPercent:Number = viewerOffsetX / (map.getWidth() * s);
+            var viewerYPercent:Number = viewerOffsetY / (map.getHeight() * s);
+
+            dispatchEvent(new MiniMapEvent(MiniMapEvent.UPDATE_VIEWER, viewerXPercent, viewerYPercent));
+
             viewerCanvas.graphics.clear();
             viewerCanvas.graphics.lineStyle(3, 0xFFFFFF);
-            viewerCanvas.graphics.drawRect(offsetX, offsetY, map.getWidth() * s * viewerWidthPercent, map.getHeight() * s * viewerHeightPercent);
+            viewerCanvas.graphics.drawRect(
+                    offsetX + viewerOffsetX,
+                    offsetY + viewerOffsetY,
+                    map.getWidth() * s * viewerWidthPercent,
+                    map.getHeight() * s * viewerHeightPercent
+            );
         }
 
         ///////////////////////////////////////////////////////
@@ -131,11 +146,43 @@
             viewerCanvas.visible = !RenderConfiguration.isScaleToFit();
         }
 
+        private function centerViewer(e:MouseEvent):void {
+            if (!e.buttonDown || RenderConfiguration.isScaleToFit()) {
+                return;
+            }
+
+            var map:GameMap = controller.match.getMap();
+            var s:uint = Math.min(width / map.getWidth(), height / map.getHeight());
+            var offsetX:uint = (width - (map.getWidth() * s)) / 2;
+            var offsetY:uint = height - (map.getHeight() * s);
+
+            var viewerWidth:Number = map.getWidth() * s * viewerWidthPercent;
+            var viewerHeight:Number = map.getHeight() * s * viewerHeightPercent;
+
+            // find the new center of the viewer box
+            var viewerCenterX:Number = e.localX - offsetX;
+            var viewerCenterY:Number = e.localY - offsetY;
+
+            // re-center the viewer box to keep it on the screen
+            viewerOffsetX = viewerCenterX - viewerWidth / 2;
+            viewerOffsetX = Math.max(viewerOffsetX, 0);
+            viewerOffsetX = Math.min(viewerOffsetX, map.getWidth() * s - viewerWidth);
+
+            viewerOffsetY = viewerCenterY - viewerHeight / 2;
+            viewerOffsetY = Math.max(viewerOffsetY, 0);
+            viewerOffsetY = Math.min(viewerOffsetY, map.getHeight() * s - viewerHeight);
+
+            drawViewer();
+        }
+
         private function onRoundChange(e:MatchEvent):void {
-            redrawAll();
+            drawMap();
         }
 
         private function onMatchChange(e:MatchEvent):void {
+            viewerOffsetX = 0;
+            viewerOffsetY = 0;
+
             redrawAll();
         }
 

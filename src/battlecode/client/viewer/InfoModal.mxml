@@ -26,6 +26,12 @@
       <mx:text>P - toggle rendering of part pickups (on by default)</mx:text>
     </mx:Text>
     <mx:Text>
+      <mx:text>Z - toggle zoom (scale-to-fit, full size)</mx:text>
+    </mx:Text>
+    <mx:Text>
+      <mx:text>M - toggle minimap (on by default)</mx:text>
+    </mx:Text>
+    <mx:Text>
       <mx:text>K - toggle keyframe processing (slow)</mx:text>
     </mx:Text>
     <mx:Text>
