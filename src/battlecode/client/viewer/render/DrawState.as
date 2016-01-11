@@ -169,7 +169,6 @@
         }
 
         public function applyStats(stats:RoundStats):void {
-            // points are applied by the TeamOreSignal this year
         }
 
         public function updateRound():void {

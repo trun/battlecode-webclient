@@ -248,6 +248,8 @@
                 robot.addEventListener(MouseEvent.CLICK, onRobotSelect, false, 0, true);
                 groundUnitCanvas.addChild(robot);
                 robot.draw();
+                robot.x += robot.getDrawX();
+                robot.y += robot.getDrawY();
             }
 
             for each (robot in zombieRobots) {
@@ -259,6 +261,8 @@
                 robot.addEventListener(MouseEvent.CLICK, onRobotSelect, false, 0, true);
                 zombieUnitCanvas.addChild(robot);
                 robot.draw();
+                robot.x += robot.getDrawX();
+                robot.y += robot.getDrawY();
             }
         }
 
@@ -279,6 +283,8 @@
                     groundUnitCanvas.addChild(robot);
                 }
                 robot.draw();
+                robot.x += robot.getDrawX();
+                robot.y += robot.getDrawY();
             }
 
             for each (robot in zombieRobots) {
@@ -292,6 +298,8 @@
                     zombieUnitCanvas.addChild(robot);
                 }
                 robot.draw();
+                robot.x += robot.getDrawX();
+                robot.y += robot.getDrawY();
             }
         }
 

@@ -148,6 +148,14 @@
             return selected;
         }
 
+        public function getDrawX():Number {
+            return drawX;
+        }
+
+        public function getDrawY():Number {
+            return drawY;
+        }
+
         public function getIndicatorString(index:uint):String {
             return indicatorStrings[index];
         }
@@ -214,7 +222,7 @@
                     delay * Math.SQRT2 :
                     delay;
             this.location = location;
-            this.addAction(new DrawAction(ActionType.MOVING, this.movementDelay));
+            this.addAction(new DrawAction(ActionType.MOVING, Math.max(0, this.movementDelay - 1)));
         }
 
         public function wearHat(hat:int):void {
@@ -284,9 +292,6 @@
                 switch (o.getType()) {
                     case ActionType.ATTACKING:
                         drawAttack();
-                        break;
-                    case ActionType.MOVING:
-                        drawMovement();
                         break;
                     case ActionType.SPAWNING:
                         drawActionBar(o);
@@ -373,13 +378,6 @@
             this.graphics.lineStyle(2, getAttackColor());
             this.graphics.moveTo(0, 0);
             this.graphics.lineTo(targetOffsetX - drawX, targetOffsetY - drawY);
-        }
-
-        private function drawMovement():void {
-            if (RenderConfiguration.showDiscrete()) return;
-
-            this.x += drawX;
-            this.y += drawY;
         }
 
         private function drawSelected():void {
