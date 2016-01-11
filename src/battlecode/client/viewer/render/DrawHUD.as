@@ -9,6 +9,7 @@
     import flash.filters.DropShadowFilter;
 
     import mx.containers.Canvas;
+    import mx.containers.HBox;
     import mx.containers.VBox;
     import mx.controls.Label;
 import mx.controls.Spacer;
@@ -19,9 +20,10 @@ import mx.events.ResizeEvent;
         private var controller:MatchController;
         private var team:String;
 
+        private var teamNameBox:HBox;
+        private var teamNameLabel:Label;
         private var pointLabel:Label;
         private var archonBoxes:Object; // id -> DrawHUDArchon
-        private var unitLabel:Label;
         private var unitBoxes:Array;
         private var winMarkerCanvas:Canvas;
 
@@ -38,40 +40,55 @@ import mx.events.ResizeEvent;
             controller.addEventListener(MatchEvent.MATCH_CHANGE, onMatchChange);
             addEventListener(ResizeEvent.RESIZE, onResize);
 
-            width = 180;
-            percentHeight = 100;
+            width = 250;
+            height = 150;
             autoLayout = false;
 
             horizontalScrollPolicy = "off";
             verticalScrollPolicy = "off";
 
+            teamNameBox = new HBox();
+            teamNameBox.horizontalScrollPolicy = "off";
+            teamNameBox.verticalScrollPolicy = "off";
+            teamNameBox.autoLayout = false;
+            teamNameBox.width = width - 10;
+            teamNameBox.height = 40;
+            teamNameBox.x = 5;
+            teamNameBox.y = 5;
+            teamNameBox.setStyle("backgroundColor", team == Team.A ? 0xFF6666 : 0x9999FF);
+            addChild(teamNameBox);
+
+            teamNameLabel = new Label();
+            teamNameLabel.width = teamNameBox.width - 10;
+            teamNameLabel.height = teamNameBox.height - 10;
+            teamNameLabel.x = 5;
+            teamNameLabel.y = 5;
+            teamNameLabel.filters = [ new DropShadowFilter(3, 45, 0x333333, 1, 2, 2) ];
+            teamNameLabel.setStyle("color", 0xFFFFFF);
+            teamNameLabel.setStyle("fontSize", 24);
+            teamNameLabel.setStyle("fontWeight", "bold");
+            teamNameLabel.setStyle("textAlign", "left");
+            teamNameLabel.setStyle("fontFamily", "Courier New");
+            teamNameBox.addChild(teamNameLabel);
+
+            winMarkerCanvas = new Canvas();
+            winMarkerCanvas.width = teamNameBox.width;
+            winMarkerCanvas.height = teamNameBox.height;
+            teamNameBox.addChild(winMarkerCanvas);
+
             pointLabel = new Label();
             pointLabel.width = width;
             pointLabel.height = 30;
             pointLabel.x = 0;
-            pointLabel.y = 10;
+            pointLabel.y = 50;
             pointLabel.filters = [ new DropShadowFilter(3, 45, 0x333333, 1, 2, 2) ];
             pointLabel.setStyle("color", team == Team.A ? 0xFF6666 : 0x9999FF);
             pointLabel.setStyle("fontSize", 24);
             pointLabel.setStyle("fontWeight", "bold");
             pointLabel.setStyle("textAlign", "center");
             pointLabel.setStyle("fontFamily", "Courier New");
-
-            winMarkerCanvas = new Canvas();
-            winMarkerCanvas.width = width;
-            winMarkerCanvas.height = 40;
-
+            pointLabel.visible = false; // TODO where to put this?
             addChild(pointLabel);
-
-            unitLabel = new Label();
-            unitLabel.width = width;
-            unitLabel.height = 30;
-            unitLabel.setStyle("color", 0xFFFFFF);
-            unitLabel.setStyle("fontSize", 18);
-            unitLabel.setStyle("textAlign", "center");
-            unitLabel.setStyle("fontFamily", "Courier New");
-            unitLabel.text = "Units";
-            addChild(unitLabel);
 
             archonBoxes = {};
 
@@ -86,9 +103,6 @@ import mx.events.ResizeEvent;
             formatter.rounding = "down";
             formatter.precision = 0;
 
-            addChild(winMarkerCanvas);
-
-            repositionWinMarkers();
             drawArchonBoxes();
             drawUnitCounts();
         }
@@ -97,9 +111,6 @@ import mx.events.ResizeEvent;
             var points:Number = controller.currentState.getPoints(team);
             pointLabel.text = formatter.format(points);
 
-            if (e.currentRound <= lastRound) {
-                drawWinMarkers();
-            }
             lastRound = e.currentRound;
 
             var archons:Object = controller.currentState.getArchons(team);
@@ -128,6 +139,10 @@ import mx.events.ResizeEvent;
         }
 
         private function onMatchChange(e:MatchEvent):void {
+            teamNameLabel.text = team == Team.A
+                    ? controller.match.getTeamA()
+                    : controller.match.getTeamB();
+
             pointLabel.text = "0";
 
             // clear archon boxes
@@ -144,31 +159,23 @@ import mx.events.ResizeEvent;
         }
 
         private function drawArchonBoxes():void {
-            var top:Number = 50;
+            var top:Number = teamNameBox.height + teamNameBox.y;
             var i:uint = 0;
             for (var a:String in archonBoxes) {
                 var archonBox:DrawHUDArchon = archonBoxes[a];
-                archonBox.x = (width - archonBox.width * 3) / 2 + (i % 3) * archonBox.width;
-                archonBox.y = ((archonBox.height + 10) * Math.floor(i / 3)) + top;
+                archonBox.x = 5 + i * (archonBox.width + 5);
+                archonBox.y = top;
                 i++;
             }
         }
 
         private function drawUnitCounts():void {
-            var archonBoxTop:Number = Math.ceil(maxArchons / 3.0) * (DrawHUDArchon.HEIGHT + 10);
-            var top:Number = archonBoxTop + 50;
-            unitLabel.y = top + 10;
-            top = unitLabel.height + unitLabel.y + 5;
+            var top:Number = teamNameBox.height + teamNameBox.y + DrawHUDArchon.HEIGHT + 10;
             var i:uint = 0;
             for each (var unitBox:DrawHUDUnit in unitBoxes) {
-                if (unitBox.getCount() > 0) {
-                    unitBox.x = (width - unitBox.width * 3) / 2 + (i % 3) * unitBox.width;
-                    unitBox.y = ((unitBox.height + 10) * Math.floor(i / 3)) + top;
-                    unitBox.visible = true;
-                    i++;
-                } else {
-                    unitBox.visible = false;
-                }
+                unitBox.x = 5 + i * (unitBox.width + 5);
+                unitBox.y = top;
+                i++;
             }
         }
 
@@ -176,17 +183,17 @@ import mx.events.ResizeEvent;
             var matches:Vector.<Match> = controller.getMatches();
             winMarkerCanvas.graphics.clear();
             var i:uint, wins:uint = 0;
+            var r:Number = (winMarkerCanvas.height - 20) / 2;
             var numMatches:int =
                     (controller.currentRound == controller.match.getRounds()) ?
                             controller.currentMatch :
                             controller.currentMatch - 1;
             for (i = 0; i <= numMatches; i++) {
                 if (matches[i].getWinner() == team) {
-                    var x:Number = (winMarkerCanvas.height - 5) / 2 + wins * winMarkerCanvas.height + 30;
-                    var y:Number = (winMarkerCanvas.height - 5) / 2;
-                    var r:Number = (winMarkerCanvas.height - 5) / 2;
-                    winMarkerCanvas.graphics.lineStyle(2, 0x000000);
-                    winMarkerCanvas.graphics.beginFill((team == Team.A) ? 0xFF6666 : 0x9999FF);
+                    var x:Number = winMarkerCanvas.width - (r + 10) - (wins * (r * 2 + 5));
+                    var y:Number = winMarkerCanvas.height / 2;
+                    winMarkerCanvas.graphics.lineStyle();
+                    winMarkerCanvas.graphics.beginFill(0xFFFFFF);
                     winMarkerCanvas.graphics.drawCircle(x, y, r);
                     winMarkerCanvas.graphics.endFill();
                     wins++;
@@ -194,12 +201,7 @@ import mx.events.ResizeEvent;
             }
         }
 
-        private function repositionWinMarkers():void {
-            winMarkerCanvas.y = height - winMarkerCanvas.height - 20;
-        }
-
         private function onResize(e:ResizeEvent):void {
-            repositionWinMarkers();
             drawArchonBoxes();
             drawUnitCounts();
         }

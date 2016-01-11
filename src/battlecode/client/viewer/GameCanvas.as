@@ -31,6 +31,7 @@
         private var watchers:Vector.<ChangeWatcher>;
 
         private var vbox:VBox; // container for map
+        private var sideBox:VBox; // container for sidebar
         private var sideBoxA:VBox;
         private var sideBoxB:VBox;
         private var drawMap:DrawMap;
@@ -43,6 +44,7 @@
 
             this.vbox = new VBox();
             this.drawMap = new DrawMap(controller);
+            this.sideBox = new VBox();
             this.sideBoxA = new DrawHUD(controller, Team.A);
             this.sideBoxB = new DrawHUD(controller, Team.B);
 
@@ -57,6 +59,13 @@
             this.setStyle("horizontalGap", 0);
             this.setStyle("verticalGap", 0);
 
+            sideBox.width = 250;
+            sideBox.percentHeight = 100;
+            sideBox.setStyle("paddingLeft", 0);
+            sideBox.setStyle("paddingTop", 0);
+            sideBox.setStyle("paddingBottom", 0);
+            sideBox.setStyle("paddingRight", 0);
+
             vbox.percentWidth = 100;
             vbox.percentHeight = 100;
             vbox.autoLayout = false;
@@ -65,9 +74,10 @@
             vbox.setStyle("paddingBottom", 0);
             vbox.setStyle("paddingRight", 0);
 
-            this.addChild(sideBoxA);
+            this.addChild(sideBox);
+            sideBox.addChild(sideBoxA);
+            sideBox.addChild(sideBoxB);
             this.addChild(vbox);
-            this.addChild(sideBoxB);
             vbox.addChild(drawMap);
 
             this.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationComplete);

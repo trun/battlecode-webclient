@@ -1,4 +1,6 @@
 package battlecode.client.viewer.render {
+    import battlecode.common.Team;
+
     import mx.containers.Canvas;
     import mx.controls.Image;
     import mx.controls.Label;
@@ -45,7 +47,13 @@ package battlecode.client.viewer.render {
         }
 
         public function setCount(count:int):void {
-            countLabel.text = count.toString();
+            if (count == 0) {
+                image.source = ImageAssets.getRobotAvatar(type, Team.NEUTRAL);
+                countLabel.text = "";
+            } else {
+                image.source = ImageAssets.getRobotAvatar(type, team);
+                countLabel.text = count.toString();
+            }
         }
 
         public function getCount():int {

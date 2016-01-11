@@ -37,10 +37,10 @@
 
         public static function units():Array {
             return [
-                SCOUT,
                 SOLDIER,
                 GUARD,
                 VIPER,
+                SCOUT,
                 TURRET,
                 TTM
             ];
