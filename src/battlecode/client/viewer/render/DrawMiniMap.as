@@ -12,7 +12,12 @@
 
     public class DrawMiniMap extends Canvas {
         private var controller:MatchController;
+
         private var mapCanvas:UIComponent;
+        private var viewerCanvas:UIComponent;
+
+        private var viewerWidthPercent:Number = 1;
+        private var viewerHeightPercent:Number = 1;
 
         public function DrawMiniMap(controller:MatchController) {
             super();
@@ -26,15 +31,25 @@
             this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 
             this.mapCanvas = new UIComponent();
+            this.viewerCanvas = new UIComponent();
+
             this.addChild(mapCanvas);
+            this.addChild(viewerCanvas);
         }
 
         ///////////////////////////////////////////////////////
         ////////////////// DRAWING METHODS ////////////////////
         ///////////////////////////////////////////////////////
 
+        public function setViewerBounds(viewerWidthPercent:Number, viewerHeightPercent:Number):void {
+            this.viewerWidthPercent = viewerWidthPercent;
+            this.viewerHeightPercent = viewerHeightPercent;
+            drawViewer();
+        }
+
         public function redrawAll():void {
             drawMap();
+            drawViewer();
         }
 
         private function drawMap():void {
@@ -96,12 +111,24 @@
             }
         }
 
+        private function drawViewer():void {
+            var map:GameMap = controller.match.getMap();
+            var s:uint = Math.min(width / map.getWidth(), height / map.getHeight());
+            var offsetX:uint = (width - (map.getWidth() * s)) / 2;
+            var offsetY:uint = height - (map.getHeight() * s);
+
+            viewerCanvas.graphics.clear();
+            viewerCanvas.graphics.lineStyle(3, 0xFFFFFF);
+            viewerCanvas.graphics.drawRect(offsetX, offsetY, map.getWidth() * s * viewerWidthPercent, map.getHeight() * s * viewerHeightPercent);
+        }
+
         ///////////////////////////////////////////////////////
         //////////////////// EVENT HANDLERS ///////////////////
         ///////////////////////////////////////////////////////
 
         private function onEnterFrame(e:Event):void {
             mapCanvas.visible = RenderConfiguration.showMinimap();
+            viewerCanvas.visible = !RenderConfiguration.isScaleToFit();
         }
 
         private function onRoundChange(e:MatchEvent):void {

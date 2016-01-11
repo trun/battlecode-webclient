@@ -116,6 +116,10 @@
                 drawMap.scrollRect = new Rectangle(0, 0, containerWidth, containerHeight);
                 drawMap.x = 0;
                 drawMap.y = 0;
+
+                var viewerWidthPercent:Number = containerWidth / drawMap.getMapWidth();
+                var viewerHeightPercent:Number = containerHeight / drawMap.getMapHeight();
+                drawMiniMap.setViewerBounds(viewerWidthPercent, viewerHeightPercent);
             }
         }
 
