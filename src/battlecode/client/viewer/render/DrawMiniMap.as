@@ -2,14 +2,10 @@
     import battlecode.client.viewer.MatchController;
     import battlecode.common.MapLocation;
     import battlecode.common.Team;
-    import battlecode.common.TerrainTile;
     import battlecode.events.MatchEvent;
     import battlecode.world.GameMap;
 
     import flash.events.Event;
-    import flash.events.MouseEvent;
-    import flash.geom.ColorTransform;
-    import flash.geom.Rectangle;
 
     import mx.containers.Canvas;
     import mx.core.UIComponent;
@@ -27,6 +23,7 @@
             this.controller = controller;
             this.controller.addEventListener(MatchEvent.ROUND_CHANGE, onRoundChange);
             this.controller.addEventListener(MatchEvent.MATCH_CHANGE, onMatchChange);
+            this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 
             this.mapCanvas = new UIComponent();
             this.addChild(mapCanvas);
@@ -102,6 +99,10 @@
         ///////////////////////////////////////////////////////
         //////////////////// EVENT HANDLERS ///////////////////
         ///////////////////////////////////////////////////////
+
+        private function onEnterFrame(e:Event):void {
+            mapCanvas.visible = RenderConfiguration.showMinimap();
+        }
 
         private function onRoundChange(e:MatchEvent):void {
             redrawAll();

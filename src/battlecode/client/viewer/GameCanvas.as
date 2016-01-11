@@ -187,6 +187,10 @@
                 case "k":
                     controller.keyframeRate = (controller.keyframeRate) ? 0 : 50; // toggle keyframing
                     break;
+                case "M":
+                case "m":
+                    RenderConfiguration.toggleMinimap();
+                    break;
                 case "O":
                 case "o":
                     RenderConfiguration.toggleHats();

@@ -17,6 +17,7 @@
         private static var zombies:Boolean = true;
         private static var tournament:Boolean = false;
         private static var scaleToFit:Boolean = true;
+        private static var minimap:Boolean = true;
 
         public function RenderConfiguration() {
         }
@@ -32,9 +33,10 @@
                 rubble = s.rubble != null ? s.rubble : rubble;
                 parts = s.parts != null ? s.parts : parts;
                 explosions = s.explosions != null ? s.explosions : explosions;
-                trace("Loaded settings from SharedObject");
+                scaleToFit = s.scaleToFit != null ? s.scaleToFit : scaleToFit;
+                minimap = s.minimap != null ? s.minimap : minimap;
             } catch (e:Error) {
-                trace("Could not load settings from SharedObject");
+                trace("Could not load settings from SharedObject: " + e.toString());
             }
         }
 
@@ -48,13 +50,14 @@
                     gridlines: gridlines,
                     rubble: rubble,
                     parts: parts,
-                    explosions: explosions
+                    explosions: explosions,
+                    scaleToFit: scaleToFit,
+                    minimap: minimap
                 };
                 so.data.settings = settings;
                 so.flush();
-                trace("Successfully saved settings to SharedObject");
             } catch (e:Error) {
-                trace("Could not save settings to SharedObject");
+                trace("Could not save settings to SharedObject: " + e.toString());
             }
         }
 
@@ -114,6 +117,10 @@
             return hats;
         }
 
+        public static function showMinimap():Boolean {
+            return minimap;
+        }
+
         public static function isScaleToFit():Boolean {
             return scaleToFit;
         }
@@ -163,6 +170,12 @@
 
         public static function toggleScaleToFit():void {
             scaleToFit = !scaleToFit;
+            saveConfiguration();
+        }
+
+        public static function toggleMinimap():void {
+            minimap = !minimap;
+            saveConfiguration();
         }
 
         public static function toggleDrawHeight():void {
