@@ -22,15 +22,12 @@ import mx.events.ResizeEvent;
 
         private var teamNameBox:HBox;
         private var teamNameLabel:Label;
-        private var pointLabel:Label;
+        private var winMarkerCanvas:Canvas;
         private var archonBoxes:Object; // id -> DrawHUDArchon
         private var unitBoxes:Array;
-        private var winMarkerCanvas:Canvas;
 
         private var lastRound:uint = 0;
         private var maxArchons:uint = 0;
-
-        private var formatter:NumberFormatter;
 
         public function DrawHUD(controller:MatchController, team:String) {
             this.controller = controller;
@@ -76,20 +73,6 @@ import mx.events.ResizeEvent;
             winMarkerCanvas.height = teamNameBox.height;
             teamNameBox.addChild(winMarkerCanvas);
 
-            pointLabel = new Label();
-            pointLabel.width = width;
-            pointLabel.height = 30;
-            pointLabel.x = 0;
-            pointLabel.y = 50;
-            pointLabel.filters = [ new DropShadowFilter(3, 45, 0x333333, 1, 2, 2) ];
-            pointLabel.setStyle("color", team == Team.A ? 0xFF6666 : 0x9999FF);
-            pointLabel.setStyle("fontSize", 24);
-            pointLabel.setStyle("fontWeight", "bold");
-            pointLabel.setStyle("textAlign", "center");
-            pointLabel.setStyle("fontFamily", "Courier New");
-            pointLabel.visible = false; // TODO where to put this?
-            addChild(pointLabel);
-
             archonBoxes = {};
 
             unitBoxes = new Array();
@@ -99,18 +82,11 @@ import mx.events.ResizeEvent;
                 addChild(unitBox);
             }
 
-            formatter = new NumberFormatter();
-            formatter.rounding = "down";
-            formatter.precision = 0;
-
             drawArchonBoxes();
             drawUnitCounts();
         }
 
         private function onRoundChange(e:MatchEvent):void {
-            var points:Number = controller.currentState.getPoints(team);
-            pointLabel.text = formatter.format(points);
-
             lastRound = e.currentRound;
 
             var archons:Object = controller.currentState.getArchons(team);
@@ -142,8 +118,6 @@ import mx.events.ResizeEvent;
             teamNameLabel.text = team == Team.A
                     ? controller.match.getTeamA()
                     : controller.match.getTeamB();
-
-            pointLabel.text = "0";
 
             // clear archon boxes
             for (var a:String in archonBoxes) {
