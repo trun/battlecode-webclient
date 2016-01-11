@@ -8,6 +8,8 @@
     import flash.display.InteractiveObject;
     import flash.events.Event;
     import flash.events.KeyboardEvent;
+    import flash.events.MouseEvent;
+    import flash.geom.Rectangle;
 
     import mx.binding.utils.ChangeWatcher;
     import mx.containers.HBox;
@@ -81,10 +83,19 @@
             var mapHeight:uint = drawMap.getMapHeight();
             var scalingFactor:Number = Math.min(containerWidth / mapWidth, containerHeight / mapHeight);
 
-            RenderConfiguration.setScalingFactor(scalingFactor);
-            drawMap.redrawAll();
-            drawMap.x = (containerWidth - (mapWidth * scalingFactor)) / 2;
-            drawMap.y = 0;
+            if (RenderConfiguration.isScaleToFit()) {
+                RenderConfiguration.setScalingFactor(scalingFactor);
+                drawMap.redrawAll();
+                drawMap.scrollRect = null;
+                drawMap.x = (containerWidth - (mapWidth * scalingFactor)) / 2;
+                drawMap.y = 0;
+            } else {
+                RenderConfiguration.setScalingFactor(1);
+                drawMap.redrawAll();
+                drawMap.scrollRect = new Rectangle(0, 0, containerWidth, containerHeight);
+                drawMap.x = 0;
+                drawMap.y = 0;
+            }
         }
 
         private function onCreationComplete(e:Event):void {
@@ -100,8 +111,16 @@
             this.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
         }
 
-        private function onRoundChange(e:MatchEvent):void {
+        // TODO scrolling via minimap
+        private function onMapScroll(e:MouseEvent):void {
+            var r:Rectangle = drawMap.scrollRect;
+            var newX:Number = Math.max(0, Math.min(drawMap.getMapWidth() - vbox.width, r.x + e.delta));
+            drawMap.scrollRect = new Rectangle(newX, r.y, vbox.width, vbox.height);
+            var newY:Number = Math.max(0, Math.min(drawMap.getMapHeight() - vbox.height, r.y - e.delta));
+            drawMap.scrollRect = new Rectangle(r.x, newY, vbox.width, vbox.height);
+        }
 
+        private function onRoundChange(e:MatchEvent):void {
         }
 
         private function onMatchChange(e:MatchEvent):void {
@@ -167,14 +186,26 @@
                 case "x":
                     RenderConfiguration.toggleExplosions();
                     break;
+                case "Z":
+                case "z":
+                    RenderConfiguration.toggleScaleToFit();
+                    centerMap();
+                    break;
                 case " ":
+                    // hack to prevent space bar from activating other buttons
                     var focusObj:InteractiveObject = this.stage.focus;
-                    this.stage.focus = null; // hack to prevent space bar from activating other buttons
+                    this.stage.focus = null;
                     this.stage.focus = focusObj;
+
+                    // advance to next match if this one is done
                     if (controller.currentRound == controller.match.getRounds() && controller.currentMatch < controller.totalMatches) {
                         controller.currentMatch++;
                     }
-                    controller.playing = !controller.playing; // toggle play/pause
+
+                    // toggle play / pause if we're not at the end of a match
+                    if (controller.currentRound < controller.match.getRounds()) {
+                        controller.playing = !controller.playing;
+                    }
                     break;
             }
         }

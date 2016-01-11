@@ -16,6 +16,7 @@
         private static var ground:Boolean = true;
         private static var zombies:Boolean = true;
         private static var tournament:Boolean = false;
+        private static var scaleToFit:Boolean = true;
 
         public function RenderConfiguration() {
         }
@@ -113,6 +114,10 @@
             return hats;
         }
 
+        public static function isScaleToFit():Boolean {
+            return scaleToFit;
+        }
+
         public static function isTournament():Boolean {
             return tournament;
         }
@@ -154,6 +159,10 @@
 
         public static function toggleHats():void {
             hats = !hats;
+        }
+
+        public static function toggleScaleToFit():void {
+            scaleToFit = !scaleToFit;
         }
 
         public static function toggleDrawHeight():void {

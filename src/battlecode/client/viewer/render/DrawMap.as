@@ -96,9 +96,9 @@
                 o.draw(true);
             }
 
-            this.scrollRect = new Rectangle(this.mapCanvas.x, this.mapCanvas.y,
-                    getMapWidth() * RenderConfiguration.getScalingFactor(),
-                    getMapHeight() * RenderConfiguration.getScalingFactor());
+//            this.scrollRect = new Rectangle(this.mapCanvas.x, this.mapCanvas.y,
+//                    getMapWidth() * RenderConfiguration.getScalingFactor(),
+//                    getMapHeight() * RenderConfiguration.getScalingFactor());
         }
 
         private function drawMap():void {
