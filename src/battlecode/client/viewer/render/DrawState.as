@@ -15,8 +15,10 @@
         private var archonsB:Object; // id -> DrawRobot
 
         // stats
-        private var aPoints:Number;
-        private var bPoints:Number;
+        private var aPartCount:Number;
+        private var bPartCount:Number;
+        private var aArmyValue:Number;
+        private var bArmyValue:Number;
         private var roundNum:uint;
         private var unitCounts:Object;
 
@@ -34,14 +36,16 @@
             archonsA = {};
             archonsB = {};
 
-            aPoints = 0;
-            bPoints = 0;
+            aPartCount = 0;
+            bPartCount = 0;
+            aArmyValue = 0;
+            bArmyValue = 0;
             roundNum = 1;
 
             unitCounts = {};
             unitCounts[Team.A] = {};
             unitCounts[Team.B] = {};
-            for each (var robotType:String in RobotType.units()) {
+            for each (var robotType:String in RobotType.values()) {
                 unitCounts[Team.A][robotType] = 0;
                 unitCounts[Team.B][robotType] = 0;
             }
@@ -86,8 +90,12 @@
             return team == Team.A ? archonsA : archonsB;
         }
 
-        public function getPoints(team:String):uint {
-            return (team == Team.A) ? aPoints : bPoints;
+        public function getPartCount(team:String):uint {
+            return (team == Team.A) ? aPartCount : bPartCount;
+        }
+
+        public function getArmyValue(team:String):uint {
+            return (team == Team.A) ? aArmyValue : bArmyValue;
         }
 
         public function getUnitCount(type:String, team:String):int {
@@ -128,6 +136,11 @@
             for (a in state.archonsB) {
                 archonsB[a] = state.archonsB[a].clone();
             }
+
+            aPartCount = state.aPartCount;
+            bPartCount = state.bPartCount;
+            aArmyValue = state.aArmyValue;
+            bArmyValue = state.bArmyValue;
 
             unitCounts = {};
             unitCounts[Team.A] = {};
@@ -210,6 +223,13 @@
 
         private function processEndOfRound():void {
             roundNum++;
+
+            aArmyValue = 0;
+            bArmyValue = 0;
+            for each (var robotType:String in RobotType.values()) {
+                aArmyValue += unitCounts[Team.A][robotType] * RobotType.partValue(robotType);
+                bArmyValue += unitCounts[Team.B][robotType] * RobotType.partValue(robotType);
+            }
         }
 
         ///////////////////////////////////////////////////////
@@ -341,9 +361,9 @@
 
         override public function visitTeamResourceSignal(s:TeamResourceSignal):* {
             if (s.getTeam() == Team.A) {
-                aPoints = s.getResource();
+                aPartCount = s.getResource();
             } else if (s.getTeam() == Team.B) {
-                bPoints = s.getResource();
+                bPartCount = s.getResource();
             }
         }
 

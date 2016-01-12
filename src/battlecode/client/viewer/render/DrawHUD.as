@@ -19,7 +19,7 @@
 
         private var teamNameBox:HBox;
         private var teamNameLabel:Label;
-        private var partsLabel:Label;
+        private var pointsLabel:Label;
         private var winMarkerCanvas:Canvas;
         private var archonBoxes:Object; // id -> DrawHUDArchon
         private var unitBoxes:Array;
@@ -69,19 +69,20 @@
             winMarkerCanvas.height = teamNameBox.height;
             teamNameBox.addChild(winMarkerCanvas);
 
-            partsLabel = new Label();
-            partsLabel.width = width;
-            partsLabel.height = 30;
-            partsLabel.x = 5;
-            partsLabel.y = teamNameBox.height + teamNameBox.y + DrawHUDArchon.HEIGHT + DrawHUDUnit.HEIGHT + 10;
-            partsLabel.filters = [ new DropShadowFilter(3, 45, 0x333333, 1, 2, 2) ];
-            partsLabel.setStyle("color", 0xFFC65C);
-            partsLabel.setStyle("fontSize", 18);
-            partsLabel.setStyle("fontWeight", "bold");
-            partsLabel.setStyle("textAlign", "left");
-            partsLabel.setStyle("fontFamily", "Courier New");
-            partsLabel.text = "\u25CF 1000";
-            //addChild(partsLabel);
+            pointsLabel = new Label();
+            pointsLabel.width = 80;
+            pointsLabel.height = 30;
+            pointsLabel.x = 165;
+            pointsLabel.y = teamNameBox.height + teamNameBox.y + 5;
+            pointsLabel.toolTip = "Total Army Value + Spare Parts";
+            pointsLabel.filters = [ new DropShadowFilter(3, 45, 0x333333, 1, 2, 2) ];
+            pointsLabel.truncateToFit = false;
+            pointsLabel.setStyle("color", team == Team.A ? 0xFF6666 : 0x9999FF);
+            pointsLabel.setStyle("fontSize", 24);
+            pointsLabel.setStyle("fontWeight", "bold");
+            pointsLabel.setStyle("textAlign", "right");
+            pointsLabel.setStyle("fontFamily", "Courier New");
+            addChild(pointsLabel);
 
             archonBoxes = {};
 
@@ -117,7 +118,9 @@
 
             drawUnitCounts();
 
-            partsLabel.text = "\u25CF " + controller.currentState.getPoints(team);
+            var partCount:uint = controller.currentState.getPartCount(team);
+            var armyValue:uint = controller.currentState.getArmyValue(team);
+            pointsLabel.text = "" + (partCount + armyValue);
 
             if (controller.currentRound == controller.match.getRounds()) {
                 drawWinMarkers();

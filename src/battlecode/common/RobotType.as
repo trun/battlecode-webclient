@@ -86,7 +86,6 @@
             throw new ArgumentError("Unknown type: " + type);
         }
 
-        // TODO these should be truncated for animation delays (but not diagonal calcs)
         public static function movementDelay(type:String):Number {
             switch (type) {
                 case ARCHON:
@@ -145,6 +144,27 @@
                     return 3;
             }
             return 0;
+        }
+
+        public static function partValue(type:String):Number {
+            switch (type) {
+                case ARCHON:
+                    return 0;
+                case SCOUT:
+                    return 40;
+                case SOLDIER:
+                    return 30;
+                case GUARD:
+                    return 30;
+                case VIPER:
+                    return 100;
+                case TURRET:
+                    return 125;
+                case TTM:
+                    return 125;
+                default:
+                    return 0;
+            }
         }
 
         public static function isZombie(type:String):Boolean {
