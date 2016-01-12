@@ -35,6 +35,8 @@
 
             this.percentWidth = 100;
             this.percentHeight = 100;
+            this.verticalScrollPolicy = "off";
+            this.horizontalScrollPolicy = "off";
 
             this.vbox = new VBox();
             this.drawMap = new DrawMap(controller);

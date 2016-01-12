@@ -32,6 +32,8 @@
             // resize component
             percentWidth = 100;
             percentHeight = 100;
+            verticalScrollPolicy = "off";
+            horizontalScrollPolicy = "off";
             setStyle("verticalGap", 0);
             setStyle("verticalAlign", "middle");
             setStyle("horizontalAlign", "center");

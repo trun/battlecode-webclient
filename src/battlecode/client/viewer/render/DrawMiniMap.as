@@ -26,7 +26,7 @@
             super();
 
             this.width = 250;
-            this.height = 300;
+            this.height = 250;
             this.buttonMode = true;
 
             this.controller = controller;
