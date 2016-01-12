@@ -69,7 +69,7 @@
                     if (parts[i][j] > 0) {
                         colorsRow.push(0xFFC65C);
                     } else if (rubble[i][j] > 100) {
-                        colorsRow.push(0x000000);
+                        colorsRow.push(0x333333);
                     } else if (rubble[i][j] > 50) {
                         colorsRow.push(0x999999);
                     } else {

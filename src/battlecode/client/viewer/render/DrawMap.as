@@ -96,9 +96,10 @@
                 o.draw(true);
             }
 
-//            this.scrollRect = new Rectangle(this.mapCanvas.x, this.mapCanvas.y,
-//                    getMapWidth() * RenderConfiguration.getScalingFactor(),
-//                    getMapHeight() * RenderConfiguration.getScalingFactor());
+            // TODO does this need to be in GameCanvas now?
+            //this.scrollRect = new Rectangle(this.mapCanvas.x, this.mapCanvas.y,
+            //        getMapWidth() * RenderConfiguration.getScalingFactor(),
+            //        getMapHeight() * RenderConfiguration.getScalingFactor());
         }
 
         private function drawMap():void {
@@ -127,33 +128,6 @@
                         this.mapCanvas.graphics.beginFill(colorTransform.color, 1.0);
                         this.mapCanvas.graphics.drawRect(j * g, i * g, g, g);
                         this.mapCanvas.graphics.endFill();
-                    }
-                }
-            }
-
-            // draw void outlines
-            for (i = 0; i < map.getHeight(); i++) {
-                for (j = 0; j < map.getWidth(); j++) {
-                    tile = terrain[i][j] as TerrainTile;
-                    if (tile.getType() == TerrainTile.VOID) {
-                        this.mapCanvas.graphics.lineStyle(2, 0xFFFFFF);
-                        if (i > 0 && terrain[i-1][j].getType() == TerrainTile.LAND) {
-                            this.mapCanvas.graphics.moveTo(j * g, i * g);
-                            this.mapCanvas.graphics.lineTo((j + 1) * g, i * g);
-                        }
-                        if (j > 0 && terrain[i][j-1].getType() == TerrainTile.LAND) {
-                            this.mapCanvas.graphics.moveTo(j * g, i * g);
-                            this.mapCanvas.graphics.lineTo(j * g, (i + 1) * g);
-                        }
-                        if (i < map.getHeight() - 1 && terrain[i+1][j].getType() == TerrainTile.LAND) {
-                            this.mapCanvas.graphics.moveTo(j * g, (i + 1) * g);
-                            this.mapCanvas.graphics.lineTo((j + 1) * g, (i + 1) * g);
-                        }
-                        if (j < map.getWidth() - 1 && terrain[i][j+1].getType() == TerrainTile.LAND) {
-                            this.mapCanvas.graphics.moveTo((j + 1) * g, i * g);
-                            this.mapCanvas.graphics.lineTo((j + 1) * g, (i + 1) * g);
-                        }
-                        this.mapCanvas.graphics.lineStyle();
                     }
                 }
             }
@@ -192,7 +166,7 @@
                         continue;
                     }
 
-                    var color:uint = density < 1 ? 0x999999 : 0x000000;
+                    var color:uint = density < 1 ? 0x999999 : 0x333333;
                     this.rubbleCanvas.graphics.beginFill(color, 1.0);
                     this.rubbleCanvas.graphics.drawRect(j * g, i * g, g, g);
                     this.rubbleCanvas.graphics.endFill();
