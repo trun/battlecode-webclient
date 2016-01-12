@@ -70,7 +70,7 @@
 
             archonBoxes = {};
 
-            unitBoxes = new Array();
+            unitBoxes = [];
             for each (var unitType:String in RobotType.units()) {
                 var unitBox:DrawHUDUnit = new DrawHUDUnit(unitType, team);
                 unitBoxes.push(unitBox);
