@@ -5,6 +5,8 @@
     import battlecode.events.MatchEvent;
     import battlecode.serial.Match;
 
+    import flash.events.Event;
+
     import flash.filters.DropShadowFilter;
 
     import mx.containers.Canvas;
@@ -21,6 +23,7 @@
         private var teamNameLabel:Label;
         private var pointsLabel:Label;
         private var winMarkerCanvas:Canvas;
+        private var pointsCanvas:Canvas;
         private var archonBoxes:Object; // id -> DrawHUDArchon
         private var unitBoxes:Array;
         private var maxArchons:uint = 0;
@@ -32,6 +35,7 @@
             controller.addEventListener(MatchEvent.ROUND_CHANGE, onRoundChange);
             controller.addEventListener(MatchEvent.MATCH_CHANGE, onMatchChange);
             addEventListener(ResizeEvent.RESIZE, onResize);
+            addEventListener(Event.ENTER_FRAME, onEnterFrame);
 
             width = 250;
             height = 150;
@@ -69,6 +73,11 @@
             winMarkerCanvas.height = teamNameBox.height;
             teamNameBox.addChild(winMarkerCanvas);
 
+            pointsCanvas = new Canvas();
+            pointsCanvas.width = teamNameBox.width;
+            pointsCanvas.height = teamNameBox.height;
+            teamNameBox.addChild(pointsCanvas);
+
             pointsLabel = new Label();
             pointsLabel.width = 80;
             pointsLabel.height = 30;
@@ -97,6 +106,11 @@
             drawUnitCounts();
         }
 
+        private function onEnterFrame(e:Event):void {
+            pointsLabel.visible = RenderConfiguration.showHUDPointLabel();
+            pointsCanvas.visible = RenderConfiguration.showHUDPointBar();
+        }
+
         private function onRoundChange(e:MatchEvent):void {
             var archons:Object = controller.currentState.getArchons(team);
             var archonCount:uint = 0;
@@ -110,17 +124,14 @@
                 archonCount++;
             }
             maxArchons = Math.max(maxArchons, archonCount);
-            drawArchonBoxes();
 
             for each (var unitBox:DrawHUDUnit in unitBoxes) {
                 unitBox.setCount(controller.currentState.getUnitCount(unitBox.getType(), team));
             }
 
+            drawArchonBoxes();
             drawUnitCounts();
-
-            var partCount:uint = controller.currentState.getPartCount(team);
-            var armyValue:uint = controller.currentState.getArmyValue(team);
-            pointsLabel.text = "" + (partCount + armyValue);
+            drawPointsBar();
 
             if (controller.currentRound == controller.match.getRounds()) {
                 drawWinMarkers();
@@ -142,6 +153,7 @@
             archonBoxes = {};
             maxArchons = 0;
 
+            drawPointsBar();
             drawWinMarkers();
         }
 
@@ -188,9 +200,23 @@
             }
         }
 
+        private function drawPointsBar():void {
+            var partCount:uint = controller.currentState.getPartCount(team);
+            var armyValue:uint = controller.currentState.getArmyValue(team);
+            pointsLabel.text = "" + (partCount + armyValue);
+
+            var w:Number = Math.min(1, (partCount + armyValue) / 5000) * pointsCanvas.width;
+            pointsCanvas.graphics.clear();
+            pointsCanvas.graphics.lineStyle();
+            pointsCanvas.graphics.beginFill(0xFFFFFF, 0.5);
+            pointsCanvas.graphics.drawRect(0, pointsCanvas.height - 4, w, 4);
+            pointsCanvas.graphics.endFill();
+        }
+
         private function onResize(e:ResizeEvent):void {
             drawArchonBoxes();
             drawUnitCounts();
+            drawPointsBar();
         }
 
     }

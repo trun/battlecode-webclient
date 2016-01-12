@@ -18,6 +18,8 @@
         private static var tournament:Boolean = false;
         private static var scaleToFit:Boolean = true;
         private static var minimap:Boolean = true;
+        private static var pointLabel:Boolean = true;
+        private static var pointBar:Boolean = false;
 
         public function RenderConfiguration() {
         }
@@ -34,6 +36,8 @@
                 parts = s.parts != null ? s.parts : parts;
                 explosions = s.explosions != null ? s.explosions : explosions;
                 minimap = s.minimap != null ? s.minimap : minimap;
+                pointLabel = s.pointLabel != null ? s.pointLabel : pointLabel;
+                pointBar = s.pointBar != null ? s.pointBar : pointBar;
             } catch (e:Error) {
                 trace("Could not load settings from SharedObject: " + e.toString());
             }
@@ -50,7 +54,9 @@
                     rubble: rubble,
                     parts: parts,
                     explosions: explosions,
-                    minimap: minimap
+                    minimap: minimap,
+                    pointLabel: pointLabel,
+                    pointBar: pointBar
                 };
                 so.data.settings = settings;
                 so.flush();
@@ -127,6 +133,14 @@
             return tournament;
         }
 
+        public static function showHUDPointLabel():Boolean {
+            return pointLabel;
+        }
+
+        public static function showHUDPointBar():Boolean {
+            return pointBar;
+        }
+
         public static function toggleBroadcast():void {
             broadcast = !broadcast;
             saveConfiguration();
@@ -180,10 +194,10 @@
             if (!zombies && !ground) {
                 ground = true;
                 zombies = true;
-            } else if(ground && !zombies) {
+            } else if (ground && !zombies) {
                 ground = false;
                 zombies = true;
-            } else if(zombies && !ground) {
+            } else if (zombies && !ground) {
                 ground = false;
                 zombies = false;
             } else {
@@ -192,6 +206,21 @@
             }
         }
 
+        public static function toggleHUDPointDisplay():void {
+            if (!pointLabel && !pointBar) {
+                pointLabel = true;
+                pointBar = false;
+            } else if (pointLabel && !pointBar) {
+                pointLabel = false;
+                pointBar = true;
+            } else if (!pointLabel && pointBar) {
+                pointLabel = true;
+                pointBar = true;
+            } else {
+                pointLabel = false;
+                pointBar = false;
+            }
+        }
     }
 
 }

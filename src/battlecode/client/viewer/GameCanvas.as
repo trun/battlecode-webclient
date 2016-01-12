@@ -154,6 +154,10 @@
             if (e.ctrlKey || e.altKey) return;
 
             switch (String.fromCharCode(e.charCode)) {
+                case "A":
+                case "a":
+                    RenderConfiguration.toggleHUDPointDisplay();
+                    break;
                 case "B":
                 case "b":
                     RenderConfiguration.toggleBroadcast();
