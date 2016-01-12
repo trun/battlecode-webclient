@@ -22,6 +22,8 @@ ant build
  -  G - toggle rendering of grid lines (on by default)
  -  R - toggle rendering of rubble (on by default)
  -  P - toggle rendering of part pickups (on by default)
+ -  Z - toggle zoom (scale-to-fit, full size)
+ -  M - toggle minimap (on by default)
  -  K - toggle keyframe processing (slow)
  -  Spacebar - toggle play / pause
 
