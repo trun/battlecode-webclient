@@ -132,7 +132,7 @@
             unitCounts = {};
             unitCounts[Team.A] = {};
             unitCounts[Team.B] = {};
-            for (var robotType:String in RobotType.values()) {
+            for each (var robotType:String in RobotType.values()) {
                 unitCounts[Team.A][robotType] = state.unitCounts[Team.A][robotType];
                 unitCounts[Team.B][robotType] = state.unitCounts[Team.B][robotType];
             }
