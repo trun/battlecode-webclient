@@ -30,6 +30,10 @@
         public static const EXIT_FULLSCREEN_ICON:Class;
         [Embed('/img/client/icons/information.png')]
         public static const INFO_ICON:Class;
+        [Embed('/img/client/icons/zoom_in.png')]
+        public static const ZOOM_IN_ICON:Class;
+        [Embed('/img/client/icons/zoom_out.png')]
+        public static const ZOOM_OUT_ICON:Class;
 
         // unit avatars
         [Embed('/img/units/archon0.png')]

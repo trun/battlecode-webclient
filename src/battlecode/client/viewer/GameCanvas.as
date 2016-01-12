@@ -10,7 +10,6 @@
     import flash.display.InteractiveObject;
     import flash.events.Event;
     import flash.events.KeyboardEvent;
-    import flash.events.MouseEvent;
     import flash.geom.Rectangle;
 
     import mx.binding.utils.ChangeWatcher;
@@ -19,16 +18,6 @@
     import mx.controls.Spacer;
     import mx.events.FlexEvent;
 
-    /*
-     * ----------------------
-     * |       Dom Bar      |
-     * |--------------------|
-     * |                    |
-     * |       DrawMap      |
-     * |                    |
-     * |                    |
-     * ----------------------
-     */
     public class GameCanvas extends HBox {
         private var controller:MatchController;
         private var watchers:Vector.<ChangeWatcher>;
