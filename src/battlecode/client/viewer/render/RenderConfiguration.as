@@ -220,6 +220,7 @@
                 pointLabel = false;
                 pointBar = false;
             }
+            saveConfiguration();
         }
     }
 
