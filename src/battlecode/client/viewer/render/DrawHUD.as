@@ -1,5 +1,4 @@
 ﻿package battlecode.client.viewer.render {
-
     import battlecode.client.viewer.MatchController;
     import battlecode.common.RobotType;
     import battlecode.common.Team;
@@ -12,9 +11,7 @@
     import mx.containers.HBox;
     import mx.containers.VBox;
     import mx.controls.Label;
-import mx.controls.Spacer;
-import mx.events.ResizeEvent;
-    import mx.formatters.NumberFormatter;
+    import mx.events.ResizeEvent;
 
     public class DrawHUD extends VBox {
         private var controller:MatchController;
@@ -25,8 +22,6 @@ import mx.events.ResizeEvent;
         private var winMarkerCanvas:Canvas;
         private var archonBoxes:Object; // id -> DrawHUDArchon
         private var unitBoxes:Array;
-
-        private var lastRound:uint = 0;
         private var maxArchons:uint = 0;
 
         public function DrawHUD(controller:MatchController, team:String) {
@@ -87,8 +82,6 @@ import mx.events.ResizeEvent;
         }
 
         private function onRoundChange(e:MatchEvent):void {
-            lastRound = e.currentRound;
-
             var archons:Object = controller.currentState.getArchons(team);
             var archonCount:uint = 0;
             for each (var archon:DrawRobot in archons) {
