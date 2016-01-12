@@ -33,12 +33,13 @@ package battlecode.client.viewer.render {
             countLabel.height = 30;
             countLabel.x = 0;
             countLabel.y = image.height + 5;
+            countLabel.truncateToFit = false;
             countLabel.setStyle("color", 0xFFFFFF);
             countLabel.setStyle("fontSize", 18);
             countLabel.setStyle("fontWeight", "bold");
             countLabel.setStyle("textAlign", "center");
             countLabel.setStyle("fontFamily", "Courier New");
-            countLabel.text = "00";
+            countLabel.text = "0";
 
             addChild(countLabel);
 
