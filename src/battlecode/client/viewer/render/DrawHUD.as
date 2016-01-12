@@ -19,6 +19,7 @@
 
         private var teamNameBox:HBox;
         private var teamNameLabel:Label;
+        private var partsLabel:Label;
         private var winMarkerCanvas:Canvas;
         private var archonBoxes:Object; // id -> DrawHUDArchon
         private var unitBoxes:Array;
@@ -68,6 +69,20 @@
             winMarkerCanvas.height = teamNameBox.height;
             teamNameBox.addChild(winMarkerCanvas);
 
+            partsLabel = new Label();
+            partsLabel.width = width;
+            partsLabel.height = 30;
+            partsLabel.x = 5;
+            partsLabel.y = teamNameBox.height + teamNameBox.y + DrawHUDArchon.HEIGHT + DrawHUDUnit.HEIGHT + 10;
+            partsLabel.filters = [ new DropShadowFilter(3, 45, 0x333333, 1, 2, 2) ];
+            partsLabel.setStyle("color", 0xFFC65C);
+            partsLabel.setStyle("fontSize", 18);
+            partsLabel.setStyle("fontWeight", "bold");
+            partsLabel.setStyle("textAlign", "left");
+            partsLabel.setStyle("fontFamily", "Courier New");
+            partsLabel.text = "\u25CF 1000";
+            //addChild(partsLabel);
+
             archonBoxes = {};
 
             unitBoxes = [];
@@ -101,6 +116,8 @@
             }
 
             drawUnitCounts();
+
+            partsLabel.text = "\u25CF " + controller.currentState.getPoints(team);
 
             if (controller.currentRound == controller.match.getRounds()) {
                 drawWinMarkers();

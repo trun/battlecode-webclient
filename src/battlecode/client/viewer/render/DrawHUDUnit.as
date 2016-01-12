@@ -6,6 +6,8 @@ package battlecode.client.viewer.render {
     import mx.controls.Label;
 
     public class DrawHUDUnit extends Canvas {
+        public static const HEIGHT:Number = 60;
+
         private var image:Image;
         private var countLabel:Label;
         private var type:String;
@@ -13,7 +15,7 @@ package battlecode.client.viewer.render {
 
         public function DrawHUDUnit(type:String, team:String) {
             width = 35;
-            height = 60;
+            height = HEIGHT;
 
             horizontalScrollPolicy = "off";
             verticalScrollPolicy = "off";

@@ -33,7 +33,6 @@
                 rubble = s.rubble != null ? s.rubble : rubble;
                 parts = s.parts != null ? s.parts : parts;
                 explosions = s.explosions != null ? s.explosions : explosions;
-                scaleToFit = s.scaleToFit != null ? s.scaleToFit : scaleToFit;
                 minimap = s.minimap != null ? s.minimap : minimap;
             } catch (e:Error) {
                 trace("Could not load settings from SharedObject: " + e.toString());
@@ -51,7 +50,6 @@
                     rubble: rubble,
                     parts: parts,
                     explosions: explosions,
-                    scaleToFit: scaleToFit,
                     minimap: minimap
                 };
                 so.data.settings = settings;

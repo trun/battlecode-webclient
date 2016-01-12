@@ -27,6 +27,7 @@
 
             this.width = 250;
             this.height = 300;
+            this.buttonMode = true;
 
             this.controller = controller;
             this.controller.addEventListener(MatchEvent.ROUND_CHANGE, onRoundChange);
@@ -90,7 +91,7 @@
                 } else if (o.getTeam() == Team.B) {
                     colors[i][j] = 0x9999FF;
                 } else {
-                    colors[i][j] = 0xFFFF33; // TODO better neutral color
+                    colors[i][j] = 0xFFFF33;
                 }
             }
 
