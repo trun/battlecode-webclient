@@ -56,12 +56,15 @@
 
             if (this.parentApplication.parameters) {
                 var params:Object = this.parentApplication.parameters;
+                if (params.tournament == "true") {
+                    RenderConfiguration.setTournamentMode(true);
+                }
+                if (params.teamA != null || params.teamB != null) {
+                    matchLoader.setTeamNames(params.teamA, params.teamB);
+                }
                 if (params.match) {
                     matchLoader.load(params.match);
                     return;
-                }
-                if (params.tournament == "true") {
-                    RenderConfiguration.setTournamentMode(true);
                 }
             }
 

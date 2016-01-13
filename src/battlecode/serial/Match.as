@@ -13,14 +13,17 @@
         private var stats:Array; // RoundStats[]
 
         private var teamA:String, teamB:String;
+        private var nameA:String, nameB:String;
         private var mapName:String;
 
-        public function Match(gameMap:GameMap, deltas:Array, stats:Array, teamA:String, teamB:String, mapName:String, winner:String, maxRounds:uint, maxInitialOre:uint) {
+        public function Match(gameMap:GameMap, deltas:Array, stats:Array, teamA:String, teamB:String, nameA:String, nameB:String, mapName:String, winner:String, maxRounds:uint, maxInitialOre:uint) {
             this.gameMap = gameMap;
             this.deltas = deltas;
             this.stats = stats;
             this.teamA = teamA;
             this.teamB = teamB;
+            this.nameA = nameA;
+            this.nameB = nameB;
             this.mapName = mapName;
             this.winner = winner;
             this.rounds = deltas.length;
@@ -54,6 +57,14 @@
 
         public function getTeamB():String {
             return teamB;
+        }
+
+        public function getNameA():String {
+            return nameA;
+        }
+
+        public function getNameB():String {
+            return nameB;
         }
 
         public function getMapName():String {

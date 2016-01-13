@@ -28,6 +28,7 @@
         private var matches:Vector.<Match>;
         private var numMatches:uint = 0;
         private var builder:MatchBuilder;
+        private var nameA:String, nameB:String;
 
         private var gamesXML:XMLList;
         private var currentIndex:uint = 0;
@@ -88,6 +89,11 @@
             dispatchEvent(new Event(Event.COMPLETE));
         }
 
+        public function setTeamNames(nameA:String, nameB:String):void {
+            this.nameA = nameA;
+            this.nameB = nameB;
+        }
+
         public function getMatches():Vector.<Match> {
             return matches;
         }
@@ -128,6 +134,7 @@
                     case "ser.MatchHeader":
                         builder = new MatchBuilder();
                         builder.setHeader(node);
+                        builder.setTeamNames(nameA, nameB);
                         break;
                     case "ser.MatchFooter":
                         builder.setFooter(node);

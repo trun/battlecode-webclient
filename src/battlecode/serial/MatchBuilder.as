@@ -7,7 +7,7 @@ package battlecode.serial {
 
 import flash.xml.XMLNode;
 
-public class MatchBuilder {
+    public class MatchBuilder {
         private var matchNum:int = 0;
         private var gameMap:GameMap;
         private var maxRounds:uint;
@@ -15,7 +15,9 @@ public class MatchBuilder {
         private var deltas:Array; // RoundDelta[]
         private var stats:Array; // RoundStats[]
 
-        private var teamA:String, teamB:String, winner:String;
+        private var teamA:String, teamB:String;
+        private var nameA:String, nameB:String;
+        private var winner:String;
         private var mapName:String;
 
         public function MatchBuilder() {
@@ -84,6 +86,11 @@ public class MatchBuilder {
             maxRounds = parseInt(mapXml.attribute("rounds"));
         }
 
+        public function setTeamNames(nameA:String, nameB:String):void {
+            this.nameA = nameA;
+            this.nameB = nameB;
+        }
+
         public function setExtensibleMetadata(xml:XML):void {
             teamA = xml.attribute("team-a").toString();
             teamB = xml.attribute("team-b").toString();
@@ -116,7 +123,7 @@ public class MatchBuilder {
         }
 
         public function build():Match {
-            return new Match(gameMap, deltas, stats, teamA, teamB, mapName, winner, maxRounds, maxInitialOre);
+            return new Match(gameMap, deltas, stats, teamA, teamB, nameA, nameB, mapName, winner, maxRounds, maxInitialOre);
         }
 
     }

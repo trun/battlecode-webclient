@@ -56,11 +56,12 @@
             addChild(teamNameBox);
 
             teamNameLabel = new Label();
-            teamNameLabel.width = teamNameBox.width - 10;
+            teamNameLabel.width = teamNameBox.width - 60;
             teamNameLabel.height = teamNameBox.height - 10;
             teamNameLabel.x = 5;
             teamNameLabel.y = 5;
             teamNameLabel.filters = [ new DropShadowFilter(3, 45, 0x333333, 1, 2, 2) ];
+            teamNameLabel.truncateToFit = false;
             teamNameLabel.setStyle("color", 0xFFFFFF);
             teamNameLabel.setStyle("fontSize", 24);
             teamNameLabel.setStyle("fontWeight", "bold");
@@ -139,9 +140,23 @@
         }
 
         private function onMatchChange(e:MatchEvent):void {
-            teamNameLabel.text = team == Team.A
-                    ? controller.match.getTeamA()
-                    : controller.match.getTeamB();
+            var nameA:String = controller.match.getNameA() || controller.match.getTeamA();
+            var nameB:String = controller.match.getNameB() || controller.match.getTeamB();
+            teamNameLabel.text = team == Team.A ? nameA : nameB;
+            if (teamNameLabel.text.length <= 7) {
+                teamNameLabel.setStyle("fontSize", 24);
+                teamNameLabel.y = 5;
+            } else if (teamNameLabel.text.length <= 10) {
+                teamNameLabel.setStyle("fontSize", 20);
+                teamNameLabel.y = 7;
+            } else {
+                if (teamNameLabel.text.length > 18) {
+                    teamNameLabel.toolTip = teamNameLabel.text;
+                    teamNameLabel.text = teamNameLabel.text.substring(0, 17) + "\u2026";
+                }
+                teamNameLabel.setStyle("fontSize", 16);
+                teamNameLabel.y = 10;
+            }
 
             // clear archon boxes
             for (var a:String in archonBoxes) {
