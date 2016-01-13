@@ -267,7 +267,7 @@
             var robot:DrawRobot = getRobot(s.getRobotID());
             robot.destroyUnit(!s.getDeathByActivation());
 
-            if (robot.getType() == RobotType.ARCHON) {
+            if (robot.getType() == RobotType.ARCHON && Team.isPlayer(robot.getTeam())) {
                 var archon:DrawRobot = robot.getTeam() == Team.A
                         ? archonsA[robot.getRobotID()]
                         : archonsB[robot.getRobotID()];
@@ -287,7 +287,7 @@
                 var robot:DrawRobot = getRobot(robotIDs[i]);
                 robot.setEnergon(healths[i]);
 
-                if (robot.getType() == RobotType.ARCHON) {
+                if (robot.getType() == RobotType.ARCHON && Team.isPlayer(robot.getTeam())) {
                     var archon:DrawRobot = robot.getTeam() == Team.A
                             ? archonsA[robot.getRobotID()]
                             : archonsB[robot.getRobotID()];
@@ -306,7 +306,7 @@
                 robot.setZombieInfectedTurns(zombieTurns[i]);
                 robot.setViperInfectedTurns(viperTurns[i]);
 
-                if (robot.getType() == RobotType.ARCHON) {
+                if (robot.getType() == RobotType.ARCHON && Team.isPlayer(robot.getTeam())) {
                     var archon:DrawRobot = robot.getTeam() == Team.A
                             ? archonsA[robot.getRobotID()]
                             : archonsB[robot.getRobotID()];
@@ -343,7 +343,7 @@
             robot.setLocation(s.getLocation());
             robot.spawn(s.getDelay());
 
-            if (s.getRobotType() == RobotType.ARCHON) {
+            if (s.getRobotType() == RobotType.ARCHON && Team.isPlayer(robot.getTeam())) {
                 if (s.getTeam() == Team.A) archonsA[s.getRobotID()] = robot.clone();
                 if (s.getTeam() == Team.B) archonsB[s.getRobotID()] = robot.clone();
             }
