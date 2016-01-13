@@ -31,7 +31,8 @@
         private var indicatorStrings:Vector.<String> = new Vector.<String>(3, true);
 
         // movement animation
-        private var drawX:Number, drawY:Number;
+        private var drawX:Number = 0;
+        private var drawY:Number = 0;
         private var movementDelay:uint;
 
         // attack animation

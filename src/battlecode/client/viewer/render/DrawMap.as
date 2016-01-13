@@ -250,30 +250,30 @@
                 loc = robot.getLocation();
                 j = (loc.getX() - origin.getX());
                 i = (loc.getY() - origin.getY());
+                robot.draw();
                 robot.x = j * g + g / 2;
                 robot.y = i * g + g / 2;
+                robot.x += robot.getDrawX();
+                robot.y += robot.getDrawY();
                 if (!robot.parent && robot.isAlive()) {
                     robot.addEventListener(MouseEvent.CLICK, onRobotSelect, false, 0, true);
                     groundUnitCanvas.addChild(robot);
                 }
-                robot.draw();
-                robot.x += robot.getDrawX();
-                robot.y += robot.getDrawY();
             }
 
             for each (robot in zombieRobots) {
                 loc = robot.getLocation();
                 j = (loc.getX() - origin.getX());
                 i = (loc.getY() - origin.getY());
+                robot.draw();
                 robot.x = j * g + g / 2;
                 robot.y = i * g + g / 2;
+                robot.x += robot.getDrawX();
+                robot.y += robot.getDrawY();
                 if (!robot.parent && robot.isAlive()) {
                     robot.addEventListener(MouseEvent.CLICK, onRobotSelect, false, 0, true);
                     zombieUnitCanvas.addChild(robot);
                 }
-                robot.draw();
-                robot.x += robot.getDrawX();
-                robot.y += robot.getDrawY();
             }
         }
 
@@ -314,20 +314,12 @@
 
             if (controller.selectedRobot && controller.selectedRobot.parent) {
                 controller.selectedRobot.setSelected(false);
-                x = controller.selectedRobot.x;
-                y = controller.selectedRobot.y;
                 controller.selectedRobot.draw(true);
-                controller.selectedRobot.x = x;
-                controller.selectedRobot.y = y;
             }
 
             var robot:DrawRobot = e.currentTarget as DrawRobot;
             robot.setSelected(true);
-            x = robot.x;
-            y = robot.y;
             robot.draw(true);
-            robot.x = x;
-            robot.y = y;
             controller.selectedRobot = robot;
         }
 
