@@ -61,11 +61,11 @@
                 case ARCHON:
                     return 1000;
                 case SCOUT:
-                    return 100;
+                    return 80;
                 case SOLDIER:
                     return 60;
                 case GUARD:
-                    return 150;
+                    return 145;
                 case VIPER:
                     return 120;
                 case TURRET:
@@ -151,17 +151,17 @@
                 case ARCHON:
                     return 0;
                 case SCOUT:
-                    return 40;
+                    return 25;
                 case SOLDIER:
                     return 30;
                 case GUARD:
                     return 30;
                 case VIPER:
-                    return 100;
+                    return 120;
                 case TURRET:
-                    return 125;
+                    return 130;
                 case TTM:
-                    return 125;
+                    return 130;
                 default:
                     return 0;
             }
