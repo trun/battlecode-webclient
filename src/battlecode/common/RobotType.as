@@ -15,6 +15,81 @@
         public static const RANGEDZOMBIE:String = "RANGEDZOMBIE";
         public static const BIGZOMBIE:String = "BIGZOMBIE";
 
+        private static var constantsByRobotType:Object = {
+            ARCHON: {
+                maxHealth: 1000,
+                partCost: 0,
+                attackDelay: 2,
+                isZombie: false
+            },
+            SCOUT: {
+                maxHealth: 80,
+                partCost: 25,
+                attackDelay: 1,
+                isZombie: false
+            },
+            SOLDIER: {
+                maxHealth: 60,
+                partCost: 30,
+                attackDelay: 2,
+                isZombie: false
+            },
+            GUARD: {
+                maxHealth: 145,
+                partCost: 30,
+                attackDelay: 2,
+                isZombie: false
+            },
+            VIPER: {
+                maxHealth: 120,
+                partCost: 120,
+                attackDelay: 2,
+                isZombie: false
+            },
+            TURRET: {
+                maxHealth: 100,
+                partCost: 130,
+                attackDelay: 2,
+                isZombie: false
+            },
+            TTM: {
+                maxHealth: 100,
+                partCost: 130,
+                attackDelay: 0,
+                isZombie: false
+            },
+            ZOMBIEDEN: {
+                maxHealth: 2000,
+                partCost: 0,
+                attackDelay: 0,
+                isZombie: true
+            },
+            STANDARDZOMBIE: {
+                maxHealth: 60,
+                partCost: 0,
+                attackDelay: 2,
+                isZombie: true
+            },
+            RANGEDZOMBIE: {
+                maxHealth: 60,
+                partCost: 0,
+                attackDelay: 1,
+                isZombie: true
+            },
+            FASTZOMBIE: {
+                maxHealth: 80,
+                partCost: 0,
+                attackDelay: 1,
+                isZombie: true
+            },
+            BIGZOMBIE: {
+                maxHealth: 500,
+                partCost: 0,
+                attackDelay: 3,
+                isZombie: true
+            }
+        };
+
         public function RobotType() {
         }
 
@@ -56,127 +131,24 @@
             ]
         }
 
-        public static function maxEnergon(type:String):Number {
-            switch (type) {
-                case ARCHON:
-                    return 1000;
-                case SCOUT:
-                    return 80;
-                case SOLDIER:
-                    return 60;
-                case GUARD:
-                    return 145;
-                case VIPER:
-                    return 120;
-                case TURRET:
-                    return 100;
-                case TTM:
-                    return 100;
-                case ZOMBIEDEN:
-                    return 2000;
-                case STANDARDZOMBIE:
-                    return 60;
-                case RANGEDZOMBIE:
-                    return 60;
-                case FASTZOMBIE:
-                    return 80;
-                case BIGZOMBIE:
-                    return 500;
-            }
-            throw new ArgumentError("Unknown type: " + type);
+        public static function maxEnergon(robotType:String):Number {
+            return constantsByRobotType[robotType]['maxHealth'];
         }
 
-        public static function movementDelay(type:String):Number {
-            switch (type) {
-                case ARCHON:
-                    return 2;
-                case SCOUT:
-                    return 1.4;
-                case SOLDIER:
-                    return 2;
-                case GUARD:
-                    return 2;
-                case VIPER:
-                    return 2;
-                case TURRET:
-                    return 0;
-                case TTM:
-                    return 2;
-                case STANDARDZOMBIE:
-                    return 3;
-                case RANGEDZOMBIE:
-                    return 3;
-                case FASTZOMBIE:
-                    return 1.4;
-                case BIGZOMBIE:
-                    return 3;
-            }
-            return 1;
+        public static function attackDelay(robotType:String):Number {
+            return constantsByRobotType[robotType]['attackDelay'];
         }
 
-        public static function movementDelayDiagonal(type:String):uint {
-            return movementDelay(type) * Math.SQRT2;
+        public static function partValue(robotType:String):Number {
+            return constantsByRobotType[robotType]['partCost'];
         }
 
-        public static function attackDelay(type:String):Number {
-            switch (type) {
-                case ARCHON:
-                    return 2;
-                case SCOUT:
-                    return 1;
-                case SOLDIER:
-                    return 2;
-                case GUARD:
-                    return 2;
-                case VIPER:
-                    return 2;
-                case TURRET:
-                    return 0;
-                case TTM:
-                    return 2;
-                case STANDARDZOMBIE:
-                    return 2;
-                case RANGEDZOMBIE:
-                    return 1;
-                case FASTZOMBIE:
-                    return 1;
-                case BIGZOMBIE:
-                    return 3;
-            }
-            return 0;
+        public static function isZombie(robotType:String):Boolean {
+            return constantsByRobotType[robotType]['isZombie'];
         }
 
-        public static function partValue(type:String):Number {
-            switch (type) {
-                case ARCHON:
-                    return 0;
-                case SCOUT:
-                    return 25;
-                case SOLDIER:
-                    return 30;
-                case GUARD:
-                    return 30;
-                case VIPER:
-                    return 120;
-                case TURRET:
-                    return 130;
-                case TTM:
-                    return 130;
-                default:
-                    return 0;
-            }
-        }
-
-        public static function isZombie(type:String):Boolean {
-            switch (type) {
-                case ZOMBIEDEN:
-                case STANDARDZOMBIE:
-                case FASTZOMBIE:
-                case RANGEDZOMBIE:
-                case BIGZOMBIE:
-                    return true;
-            }
-            return false;
+        public static function setValues(robotType:String, constants:Object):void {
+            constantsByRobotType[robotType] = constants;
         }
     }
 }

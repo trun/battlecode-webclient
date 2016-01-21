@@ -131,6 +131,9 @@
                 var node:XML = gamesXML[currentIndex++];
                 var nodeName:String = node.name().toString();
                 switch (nodeName) {
+                    case "ser.StoredConstants":
+                        StoredConstantsLoader.loadConstants(node);
+                        break;
                     case "ser.MatchHeader":
                         builder = new MatchBuilder();
                         builder.setHeader(node);
