@@ -120,7 +120,7 @@
             Alert.show("Could not load the specified match file: File " + matchPath + " not found");
         }
 
-        private function onSecurityError(e:SecurityError):void {
+        private function onSecurityError(e:SecurityErrorEvent):void {
             trace("match load failed: " + e.toString());
             Alert.show("Could not load the specified match file: Security error");
         }
